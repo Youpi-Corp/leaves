@@ -17,7 +17,7 @@
   --light-brown: #d7ccc8;
 
   color-scheme: light dark;
-  background-color: var(--light-gray);
+  background-color: var(--white);
   color: var(--dark-gray);
 
   font-synthesis: none;
@@ -26,12 +26,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-  }
-}
-
 body {
   margin: 0;
   padding: 0;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+  }
 }

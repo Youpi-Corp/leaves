@@ -1,7 +1,5 @@
-@import '../../../index.css';
-
 .header {
-  background-color: var(--light-green);
+  background-color: var(--white-green);
   display: flex;
   align-items: center;
   width: 100%;
