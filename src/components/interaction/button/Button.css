@@ -1,12 +1,14 @@
 .button {
-  padding: 10px 15px;
+  height: 35px;
+  width: 140px;
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
   font-size: 16px;
+  font-size: small;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
 }
 
 .button:active {
@@ -14,8 +16,8 @@
 }
 
 .button-primary {
-  color: white;
   background-color: var(--primary-green);
+  color: white;
 }
 
 .button-primary:hover {
@@ -27,12 +29,15 @@
 }
 
 .button-secondary {
-  color: var(--dark-gray);
   background-color: white;
+  border: 1px solid var(--light-gray);
+  color: var(--dark-green);
 }
 
 .button-secondary:hover {
-  background-color: var(--light-gray);
+  background-color: var(--dark-green);
+  border-color: var(--dark-green);
+  color: white;
 }
 
 .button-tertiary {
@@ -41,6 +46,5 @@
 }
 
 .button-tertiary:hover {
-  color: white;
-  background-color: var(--primary-green);
+  background-color: var(--white-green);
 }
