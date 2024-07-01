@@ -1,15 +1,18 @@
-import Button from './components/interaction/button/Button'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import PagePoc from './pages/poc/PagePoc'
 import Header from './components/layout/header/Header'
-import WidgetCounter from './components/widget/WidgetCounter/front/widgetCounter'
+import LoginPage from './pages/login/LoginPage'
 
 function App() {
   return (
     <>
       <Header />
-      <Button style="primary">Primary</Button>
-      <Button style="secondary">Secondary</Button>
-      <Button style="tertiary">Tertiary</Button>
-      <WidgetCounter />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/widget" element={<PagePoc />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
