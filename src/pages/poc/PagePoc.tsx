@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import WidgetCounter from '../../components/widget/WidgetCounter/front/widgetCounter'
 import Button from '../../components/interaction/button/Button'
+import TextWidget from '../../components/widget/WidgetCounter/front/widgetText'
 
 const PagePoc = () => {
   const [counters, setCounters] = useState<number[]>([])
@@ -15,6 +16,7 @@ const PagePoc = () => {
       {counters.map((counter) => (
         <WidgetCounter key={counter} />
       ))}
+      <TextWidget />
     </div>
   )
 }
