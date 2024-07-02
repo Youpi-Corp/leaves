@@ -19,16 +19,10 @@ const WidgetCounter = () => {
 
   return (
     <div>
-      <Button onClick={decrement} style="tertiary">
-        -
-      </Button>
+      <Button onClick={decrement}>-</Button>
       <span>{count}</span>
-      <Button style="tertiary" onClick={increment}>
-        +
-      </Button>
-      <Button style="primary" onClick={validate}>
-        Validate
-      </Button>
+      <Button onClick={increment}>+</Button>
+      <Button onClick={validate}>Validate</Button>
     </div>
   )
 }

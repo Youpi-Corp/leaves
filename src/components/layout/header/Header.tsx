@@ -1,17 +1,14 @@
 import React from 'react'
-import './Header.css'
 
 const Header: React.FC = () => {
   return (
-    <header className="header">
-      <img
-        className="header-logo"
-        src="./brainforest.svg"
-        alt="Brainforest Logo"
-        width={30}
-        height={30}
-      />
-      <h2 className="header-title">Brainforest</h2>
+    <header className="bg-white shadow-sm p-4 flex items-center justify-between">
+      <div className="flex items-center">
+        <img className="h-8 w-8" src="./brainforest.svg" />
+        <h2 className="text-xl font-semibold ml-4 text-green-500">
+          Brainforest
+        </h2>
+      </div>
     </header>
   )
 }

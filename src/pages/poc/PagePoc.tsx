@@ -11,9 +11,7 @@ const PagePoc = () => {
 
   return (
     <div>
-      <Button style="secondary" onClick={addCounter}>
-        Add Counter
-      </Button>
+      <Button onClick={addCounter}>Add Counter</Button>
       {counters.map((counter) => (
         <WidgetCounter key={counter} />
       ))}
