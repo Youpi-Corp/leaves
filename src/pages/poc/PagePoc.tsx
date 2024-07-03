@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import WidgetCounter from '../../components/widget/WidgetCounter/front/widgetCounter'
-import Button from '../../components/interaction/button/Button'
+import PrimaryButton from '../../components/interaction/button/PrimaryButton'
 import EditableTextWidget from '../../components/widget/WidgetCounter/front/widgetText'
 
 const PagePoc = () => {
@@ -12,7 +12,7 @@ const PagePoc = () => {
 
   return (
     <div>
-      <Button onClick={addCounter}>Add Counter</Button>
+      <PrimaryButton onClick={addCounter}>Add Counter</PrimaryButton>
       {counters.map((counter) => (
         <WidgetCounter key={counter} />
       ))}

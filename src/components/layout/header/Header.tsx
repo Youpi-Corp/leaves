@@ -1,14 +1,28 @@
 import React from 'react'
+import LinkButton from '../../interaction/button/LinkButton'
+import PrimaryButton from '../../interaction/button/PrimaryButton'
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-white shadow-sm p-4 flex items-center justify-between">
+    <header className="bg-bfgreen-white shadow-sm p-4 flex items-center justify-between">
       <div className="flex items-center">
         <img className="h-8 w-8" src="./brainforest.svg" />
-        <h2 className="text-xl font-semibold ml-4 text-green-500">
+        <h1 className="text-xl font-semibold ml-4 text-bfgreen-base">
           Brainforest
-        </h2>
+        </h1>
+        <ul className="ml-6 flex space-x-4">
+          <li>
+            <LinkButton>Courses</LinkButton>
+          </li>
+          <li>
+            <LinkButton>Discover</LinkButton>
+          </li>
+          <li>
+            <LinkButton>Contribute</LinkButton>
+          </li>
+        </ul>
       </div>
+      <PrimaryButton className="ml-auto">Sign in</PrimaryButton>
     </header>
   )
 }

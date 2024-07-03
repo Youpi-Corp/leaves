@@ -1,42 +1,42 @@
-import { useState } from 'react';
-import Button from '../../../interaction/button/Button'
+import { useState } from 'react'
+import PrimaryButton from '../../../interaction/button/PrimaryButton'
 
 const EditableTextWidget = () => {
-  const [text, setText] = useState('Texte par défaut');
-  const [isEditing, setIsEditing] = useState(false);
+  const [text, setText] = useState('Texte par défaut')
+  const [isEditing, setIsEditing] = useState(false)
 
   const handleChange = (e) => {
-    setText(e.target.value);
+    setText(e.target.value)
   }
 
   const toggleEditing = () => {
-    setIsEditing(!isEditing);
+    setIsEditing(!isEditing)
   }
 
   const saveText = () => {
-    setIsEditing(false);
+    setIsEditing(false)
   }
 
   return (
     <div>
       {isEditing ? (
         <div>
-          <input 
+          <input
             type="text"
             value={text}
             onChange={handleChange}
-            style={{flex: 1, width:"60%", height:"50%"}}
+            style={{ flex: 1, width: '60%', height: '50%' }}
           />
-          <Button onClick={saveText}>Save</Button>
+          <PrimaryButton onClick={saveText}>Save</PrimaryButton>
         </div>
       ) : (
         <div>
           <span>{text}</span>
-          <Button onClick={toggleEditing}>...</Button>
+          <PrimaryButton onClick={toggleEditing}>...</PrimaryButton>
         </div>
       )}
     </div>
   )
 }
 
-export default EditableTextWidget;
+export default EditableTextWidget

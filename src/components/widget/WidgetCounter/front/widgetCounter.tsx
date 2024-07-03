@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Button from '../../../interaction/button/Button'
+import PrimaryButton from '../../../interaction/button/PrimaryButton'
 
 const WidgetCounter = () => {
   const [count, setCount] = useState(0)
@@ -19,10 +19,10 @@ const WidgetCounter = () => {
 
   return (
     <div>
-      <Button onClick={decrement}>-</Button>
+      <PrimaryButton onClick={decrement}>-</PrimaryButton>
       <span>{count}</span>
-      <Button onClick={increment}>+</Button>
-      <Button onClick={validate}>Validate</Button>
+      <PrimaryButton onClick={increment}>+</PrimaryButton>
+      <PrimaryButton onClick={validate}>Validate</PrimaryButton>
     </div>
   )
 }
