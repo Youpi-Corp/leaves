@@ -12,21 +12,18 @@ import {
 import 'react-resizable/css/styles.css'
 import DropArea from '../../components/interaction/dropArea/DropArea'
 import WidgetData from '../../types/WidgetData'
-import PositionedWidget from '../../components/widget/PositionedWidget'
-import TextWidget from '../../components/widget/TextWidget'
 import BaseWidget from '../../components/widget/BaseWidget'
 import WidgetShelf from '../../components/layout/shelf/WidgetShelf'
+import GenericWidget from '../../components/widget/GenericWidget'
 
 const WidgetPage = () => {
   const [availableWidgets] = useState([
-    'Widget A',
-    'Widget B',
-    'Widget C',
-    'Widget D',
-    'Widget E',
-    'Widget F',
-    'Text Widget',
+    { type: 'text', label: 'Text Widget' },
+    { type: 'button', label: 'Button Widget' },
+    { type: 'image', label: 'Image Widget' },
+    // Add more available widgets as needed
   ])
+
   const [droppedWidgets, setDroppedWidgets] = useState<WidgetData[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const dropAreaRef = useRef<HTMLDivElement>(null)
@@ -71,13 +68,16 @@ const WidgetPage = () => {
             ),
           }
           const widgetIndex = parseInt(active.id.toString().split('-')[1])
-          const isTextWidget = availableWidgets[widgetIndex] === 'Text Widget'
+          const widgetType = availableWidgets[widgetIndex].type
           const newWidget: WidgetData = {
             id: `widget-${droppedWidgets.length}`,
-            content: availableWidgets[widgetIndex],
+            type: widgetType,
+            content:
+              widgetType === 'text'
+                ? 'Editable text'
+                : { label: 'Click me', clicks: 0 },
             position,
             size: { width: 200, height: 100 },
-            ...(isTextWidget && { text: 'Editable text' }),
           }
           setDroppedWidgets((prev) => [...prev, newWidget])
         } else {
@@ -124,6 +124,14 @@ const WidgetPage = () => {
     )
   }
 
+  const handleContentChange = (id: string, newContent: any) => {
+    setDroppedWidgets((prev) =>
+      prev.map((widget) =>
+        widget.id === id ? { ...widget, content: newContent } : widget,
+      ),
+    )
+  }
+
   return (
     <DndContext
       sensors={sensors}
@@ -132,31 +140,24 @@ const WidgetPage = () => {
       onDragStart={handleDragStart}
     >
       <div className="flex h-screen">
-        <WidgetShelf widgets={availableWidgets} />
+        <WidgetShelf widgets={availableWidgets.map((widget) => widget.label)} />
         <div ref={dropAreaRef} className="flex-grow">
           <DropArea>
-            {droppedWidgets.map((widget) =>
-              widget.content === 'Text Widget' ? (
-                <TextWidget
-                  key={widget.id}
-                  {...widget}
-                  onResize={handleResize}
-                />
-              ) : (
-                <PositionedWidget
-                  key={widget.id}
-                  {...widget}
-                  onResize={handleResize}
-                />
-              ),
-            )}
+            {droppedWidgets.map((widget) => (
+              <GenericWidget
+                key={widget.id}
+                {...widget}
+                onContentChange={handleContentChange}
+                onResize={handleResize}
+              />
+            ))}
           </DropArea>
         </div>
       </div>
       <DragOverlay>
         {activeId && activeId.startsWith('shelf-') ? (
           <BaseWidget
-            content={availableWidgets[parseInt(activeId.split('-')[1])]}
+            content={availableWidgets[parseInt(activeId.split('-')[1])].label}
           />
         ) : null}
       </DragOverlay>
@@ -165,4 +166,3 @@ const WidgetPage = () => {
 }
 
 export default WidgetPage
-

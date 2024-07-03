@@ -1,4 +1,3 @@
-import React from 'react'
 import DraggableWidget from '../../widget/DraggableWidget'
 
 const WidgetShelf = ({ widgets }: { widgets: string[] }) => {

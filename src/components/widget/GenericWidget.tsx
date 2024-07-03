@@ -2,22 +2,35 @@ import React, { useRef, useState } from 'react'
 import { Resizable, ResizeCallbackData } from 'react-resizable'
 import { useDraggable } from '@dnd-kit/core'
 import WidgetData from '../../types/WidgetData'
+import TextWidget from './TextWidget'
+import ButtonWidget from './ButtonWidget'
+import ImageWidget from './ImageWidget'
 
-interface PositionedWidgetProps extends WidgetData {
-  onResize: (id: string, size: { width: number; height: number }) => void
+const widgetComponents: { [key: string]: React.ComponentType<any> } = {
+  text: TextWidget,
+  button: ButtonWidget,
+  image: ImageWidget,
+  // Add more widget types as needed
 }
 
-const PositionedWidget: React.FC<PositionedWidgetProps> = ({
-  id,
-  content,
-  position,
-  size,
-  onResize,
-}) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({ id })
+interface GenericWidgetProps extends WidgetData {
+  onResize: (id: string, newSize: { width: number; height: number }) => void
+  onContentChange: (id: string, newContent: any) => void
+}
+
+const GenericWidget: React.FC<GenericWidgetProps> = (props) => {
+  const { id, type, content, position, size, onResize, onContentChange } = props
   const [isResizing, setIsResizing] = useState(false)
   const headerRef = useRef<HTMLDivElement>(null)
+
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({ id })
+
+  const SpecificWidget = widgetComponents[type]
+
+  if (!SpecificWidget) {
+    return <div>Unknown widget type: {type}</div>
+  }
 
   const style: React.CSSProperties = {
     position: 'absolute',
@@ -34,7 +47,7 @@ const PositionedWidget: React.FC<PositionedWidgetProps> = ({
     style.transform = `translate3d(${transform.x}px, ${transform.y}px, 0)`
   }
 
-  const handleResize = (e: React.SyntheticEvent, data: ResizeCallbackData) => {
+  const handleResize = (_e: React.SyntheticEvent, data: ResizeCallbackData) => {
     onResize(id, { width: data.size.width, height: data.size.height })
   }
 
@@ -69,10 +82,18 @@ const PositionedWidget: React.FC<PositionedWidgetProps> = ({
         <div ref={headerRef} className="p-2 bg-gray-200 cursor-move">
           Drag here
         </div>
-        <div className="p-4">{content}</div>
+        <div className="p-4">
+          <SpecificWidget
+            {...props}
+            content={content}
+            onContentChange={(newContent: any) =>
+              onContentChange(id, newContent)
+            }
+          />
+        </div>
       </div>
     </Resizable>
   )
 }
 
-export default PositionedWidget
+export default GenericWidget
