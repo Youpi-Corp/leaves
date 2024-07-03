@@ -13,6 +13,7 @@ import 'react-resizable/css/styles.css'
 import DropArea from '../../components/interaction/dropArea/DropArea'
 import WidgetData from '../../types/WidgetData'
 import PositionedWidget from '../../components/widget/PositionedWidget'
+import TextWidget from '../../components/widget/TextWidget'
 import BaseWidget from '../../components/widget/BaseWidget'
 import WidgetShelf from '../../components/layout/shelf/WidgetShelf'
 
@@ -24,6 +25,7 @@ const WidgetPage = () => {
     'Widget D',
     'Widget E',
     'Widget F',
+    'Text Widget',
   ])
   const [droppedWidgets, setDroppedWidgets] = useState<WidgetData[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -69,11 +71,13 @@ const WidgetPage = () => {
             ),
           }
           const widgetIndex = parseInt(active.id.toString().split('-')[1])
+          const isTextWidget = availableWidgets[widgetIndex] === 'Text Widget'
           const newWidget: WidgetData = {
             id: `widget-${droppedWidgets.length}`,
             content: availableWidgets[widgetIndex],
             position,
-            size: { width: 200, height: 100 }, // Default size
+            size: { width: 200, height: 100 },
+            ...(isTextWidget && { text: 'Editable text' }),
           }
           setDroppedWidgets((prev) => [...prev, newWidget])
         } else {
@@ -131,13 +135,21 @@ const WidgetPage = () => {
         <WidgetShelf widgets={availableWidgets} />
         <div ref={dropAreaRef} className="flex-grow">
           <DropArea>
-            {droppedWidgets.map((widget) => (
-              <PositionedWidget
-                key={widget.id}
-                {...widget}
-                onResize={handleResize}
-              />
-            ))}
+            {droppedWidgets.map((widget) =>
+              widget.content === 'Text Widget' ? (
+                <TextWidget
+                  key={widget.id}
+                  {...widget}
+                  onResize={handleResize}
+                />
+              ) : (
+                <PositionedWidget
+                  key={widget.id}
+                  {...widget}
+                  onResize={handleResize}
+                />
+              ),
+            )}
           </DropArea>
         </div>
       </div>
@@ -153,3 +165,4 @@ const WidgetPage = () => {
 }
 
 export default WidgetPage
+
