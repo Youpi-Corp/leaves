@@ -1,29 +1,42 @@
 import { useState } from 'react';
 import Button from '../../../interaction/button/Button'
 
-const TextWidget = () => {
-  const [text, setText] = useState('');
+const EditableTextWidget = () => {
+  const [text, setText] = useState('Texte par défaut');
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleChange = (e) => {
     setText(e.target.value);
   }
 
-  const clearText = () => {
-    setText('');
+  const toggleEditing = () => {
+    setIsEditing(!isEditing);
   }
 
-  const validate = () => {
-    console.log('Texte validé:', text);
+  const saveText = () => {
+    setIsEditing(false);
   }
 
   return (
     <div>
-      <input type="text" value={text} onChange={handleChange} />
-      <Button onClick={clearText}>Effacer</Button>
-      <Button onClick={validate}>Valider</Button>
+      {isEditing ? (
+        <div>
+          <input 
+            type="text"
+            value={text}
+            onChange={handleChange}
+            style={{flex: 1, width:"60%", height:"50%"}}
+          />
+          <Button onClick={saveText}>Save</Button>
+        </div>
+      ) : (
+        <div>
+          <span>{text}</span>
+          <Button onClick={toggleEditing}>...</Button>
+        </div>
+      )}
     </div>
   )
 }
 
-export default TextWidget;
-
+export default EditableTextWidget;
