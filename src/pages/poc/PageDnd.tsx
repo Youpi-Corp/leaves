@@ -21,6 +21,7 @@ const WidgetPage = () => {
     { type: 'text', label: 'Text Widget' },
     { type: 'button', label: 'Button Widget' },
     { type: 'image', label: 'Image Widget' },
+    { type: 'audioPlayer', label: 'Audio Player Widget' },
     // Add more available widgets as needed
   ])
 

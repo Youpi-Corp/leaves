@@ -5,11 +5,13 @@ import WidgetData from '../../types/WidgetData'
 import TextWidget from './TextWidget'
 import ButtonWidget from './ButtonWidget'
 import ImageWidget from './ImageWidget'
+import AudioPlayerWidget from './AudioPlayerWidget'
 
 const widgetComponents: { [key: string]: React.ComponentType<any> } = {
   text: TextWidget,
   button: ButtonWidget,
   image: ImageWidget,
+  audioPlayer: AudioPlayerWidget,
   // Add more widget types as needed
 }
 
