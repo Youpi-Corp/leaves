@@ -5,14 +5,14 @@ const TextWidget: React.FC<{
   onContentChange: (newContent: string) => void
 }> = ({ content, onContentChange }) => {
   return (
-    <input
+    <textarea
       value={content}
       onChange={(e) => {
         e.stopPropagation()
         onContentChange(e.target.value)
       }}
       onClick={(e) => e.stopPropagation()}
-      className="w-full"
+      className="w-full h-full resize-none"
     />
   )
 }

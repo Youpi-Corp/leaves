@@ -29,10 +29,6 @@ const WidgetPage = () => {
   const [droppedWidgets, setDroppedWidgets] = useState<WidgetData[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const dropAreaRef = useRef<HTMLDivElement>(null)
-  const GRID_SIZE = 20 // You can adjust this value to change the grid size
-
-  const snapToGrid = (value: number) =>
-    Math.round(value / GRID_SIZE) * GRID_SIZE
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -54,26 +50,22 @@ const WidgetPage = () => {
         if (active.id.toString().startsWith('shelf-')) {
           // Adding a new widget from the shelf
           const position = {
-            x: snapToGrid(
-              Math.max(
-                0,
-                Math.min(
-                  event.delta.x +
-                    (event.activatorEvent as PointerEvent).clientX -
-                    dropRect.left,
-                  dropRect.width - 200,
-                ),
+            x: Math.max(
+              0,
+              Math.min(
+                event.delta.x +
+                  (event.activatorEvent as PointerEvent).clientX -
+                  dropRect.left,
+                dropRect.width - 200,
               ),
             ),
-            y: snapToGrid(
-              Math.max(
-                0,
-                Math.min(
-                  event.delta.y +
-                    (event.activatorEvent as PointerEvent).clientY -
-                    dropRect.top,
-                  dropRect.height - 100,
-                ),
+            y: Math.max(
+              0,
+              Math.min(
+                event.delta.y +
+                  (event.activatorEvent as PointerEvent).clientY -
+                  dropRect.top,
+                dropRect.height - 100,
               ),
             ),
           }
@@ -98,22 +90,18 @@ const WidgetPage = () => {
                 ? {
                     ...widget,
                     position: {
-                      x: snapToGrid(
-                        Math.max(
-                          0,
-                          Math.min(
-                            widget.position.x + event.delta.x,
-                            dropRect.width - widget.size.width,
-                          ),
+                      x: Math.max(
+                        0,
+                        Math.min(
+                          widget.position.x + event.delta.x,
+                          dropRect.width - widget.size.width,
                         ),
                       ),
-                      y: snapToGrid(
-                        Math.max(
-                          0,
-                          Math.min(
-                            widget.position.y + event.delta.y,
-                            dropRect.height - widget.size.height,
-                          ),
+                      y: Math.max(
+                        0,
+                        Math.min(
+                          widget.position.y + event.delta.y,
+                          dropRect.height - widget.size.height,
                         ),
                       ),
                     },
@@ -127,14 +115,39 @@ const WidgetPage = () => {
     setActiveId(null)
   }
 
+  const handleDeleteWidget = (id: string) => {
+    setDroppedWidgets((prev) => prev.filter((widget) => widget.id !== id))
+  }
+
   const handleResize = (
     id: string,
     newSize: { width: number; height: number },
   ) => {
+    const dropAreaRect = dropAreaRef.current?.getBoundingClientRect()
+
     setDroppedWidgets((prev) =>
-      prev.map((widget) =>
-        widget.id === id ? { ...widget, size: newSize } : widget,
-      ),
+      prev.map((widget) => {
+        if (widget.id === id) {
+          const maxWidth = dropAreaRect
+            ? dropAreaRect.width - widget.position.x
+            : newSize.width
+          const maxHeight = dropAreaRect
+            ? dropAreaRect.height - widget.position.y
+            : newSize.height
+
+          const limitedWidth = Math.min(newSize.width, maxWidth)
+          const limitedHeight = Math.min(newSize.height, maxHeight)
+
+          return {
+            ...widget,
+            size: {
+              width: Math.max(limitedWidth, 50), // Minimum width of 50px
+              height: Math.max(limitedHeight, 50), // Minimum height of 50px
+            },
+          }
+        }
+        return widget
+      }),
     )
   }
 
@@ -160,17 +173,9 @@ const WidgetPage = () => {
           <div className="p-4 w-full">
             <div
               className="max-w-[920px] bg-white shadow-md h-full m-auto rounded-xl
-              flex flex-col flex-grow items-center justify-start flex-1 overflow-y-auto"
+            flex flex-col flex-grow items-center justify-start flex-1 overflow-hidden"
             >
-              <div
-                ref={dropAreaRef}
-                className="w-full h-full"
-                style={{
-                  backgroundImage: `repeating-linear-gradient(0deg, #eee, #eee 1px, transparent 1px, transparent ${GRID_SIZE}px),
-                      repeating-linear-gradient(90deg, #eee, #eee 1px, transparent 1px, transparent ${GRID_SIZE}px)`,
-                  backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
-                }}
-              >
+              <div ref={dropAreaRef} className="w-full h-full">
                 <DropArea>
                   {droppedWidgets.map((widget) => (
                     <GenericWidget
@@ -178,6 +183,7 @@ const WidgetPage = () => {
                       {...widget}
                       onContentChange={handleContentChange}
                       onResize={handleResize}
+                      onDelete={handleDeleteWidget}
                     />
                   ))}
                 </DropArea>

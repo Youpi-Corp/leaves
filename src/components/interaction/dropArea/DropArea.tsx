@@ -7,10 +7,7 @@ const DropArea = ({ children }: { children: React.ReactNode }) => {
   })
 
   return (
-    <div
-      ref={setNodeRef}
-      className="relative w-full h-full min-h-[600px] border-2 border-dashed"
-    >
+    <div ref={setNodeRef} className="relative w-full h-full">
       {children}
     </div>
   )

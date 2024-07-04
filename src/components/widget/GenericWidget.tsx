@@ -16,6 +16,7 @@ const widgetComponents: { [key: string]: React.ComponentType<any> } = {
 }
 
 interface GenericWidgetProps extends WidgetData {
+  onDelete: (id: string) => void
   onResize: (id: string, newSize: { width: number; height: number }) => void
   onContentChange: (id: string, newContent: any) => void
 }
@@ -84,7 +85,14 @@ const GenericWidget: React.FC<GenericWidgetProps> = (props) => {
         <div ref={headerRef} className="p-2 bg-gray-200 cursor-move">
           Drag here
         </div>
-        <div className="p-4">
+        <button
+          onClick={() => props.onDelete(id)}
+          className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+          style={{ transform: 'translate(50%, -50%)' }}
+        >
+          ×
+        </button>
+        <div className="p-4 flex flex-col h-full">
           <SpecificWidget
             {...props}
             content={content}
