@@ -6,12 +6,14 @@ import TextWidget from './TextWidget'
 import ButtonWidget from './ButtonWidget'
 import ImageWidget from './ImageWidget'
 import AudioPlayerWidget from './AudioPlayerWidget'
+import MarkdownWidget from './MarkdownWidget'
 
 const widgetComponents: { [key: string]: React.ComponentType<any> } = {
   text: TextWidget,
   button: ButtonWidget,
   image: ImageWidget,
   audioPlayer: AudioPlayerWidget,
+  markdown: MarkdownWidget,
   // Add more widget types as needed
 }
 

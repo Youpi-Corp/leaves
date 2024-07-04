@@ -14,9 +14,13 @@
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@tailwindcss/typography": "^0.5.13",
     "@types/react-resizable": "^3.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-markdown": "^9.0.1",
+    "react-markdown-textarea": "^1.0.1",
     "react-masonry-css": "^1.0.16",
     "react-resizable": "^3.0.5",
     "react-router-dom": "^6.23.1"

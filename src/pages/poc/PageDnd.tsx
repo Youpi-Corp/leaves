@@ -23,6 +23,7 @@ const WidgetPage = () => {
     { type: 'button', label: 'Button Widget' },
     { type: 'image', label: 'Image Widget' },
     { type: 'audioPlayer', label: 'Audio Player Widget' },
+    { type: 'markdown', label: 'Markdown Widget' },
     // Add more available widgets as needed
   ])
 
