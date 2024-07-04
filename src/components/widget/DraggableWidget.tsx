@@ -1,21 +1,15 @@
 import { useDraggable } from '@dnd-kit/core'
 
 const DraggableWidget = ({ id, content }: { id: string; content: string }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id })
-
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined
+  const { attributes, listeners, setNodeRef } = useDraggable({ id })
 
   return (
     <div
       ref={setNodeRef}
-      style={style}
       {...attributes}
       {...listeners}
-      className="p-4 bg-white shadow-md rounded-lg mb-2"
+      className="flex items-center justify-center w-24 h-24 bg-white border border-gray-300
+      hover:bg-gray-100 transition-colors shadow-md rounded-md cursor-grab text-xs"
     >
       {content}
     </div>

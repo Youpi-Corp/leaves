@@ -12,20 +12,19 @@ import {
 import 'react-resizable/css/styles.css'
 import DropArea from '../../components/interaction/dropArea/DropArea'
 import WidgetData from '../../types/WidgetData'
-import BaseWidget from '../../components/widget/BaseWidget'
 import WidgetShelf from '../../components/layout/shelf/WidgetShelf'
 import GenericWidget from '../../components/widget/GenericWidget'
 import Sidebar from '../../components/layout/sidebar/Sidebar'
+import DraggableWidget from '../../components/widget/DraggableWidget'
 
 const WidgetPage = () => {
-  const [availableWidgets] = useState([
+  const availableWidgets = [
     { type: 'text', label: 'Text Widget' },
     { type: 'button', label: 'Button Widget' },
     { type: 'image', label: 'Image Widget' },
     { type: 'audioPlayer', label: 'Audio Player Widget' },
-    { type: 'markdown', label: 'Markdown Widget' },
     // Add more available widgets as needed
-  ])
+  ]
 
   const [droppedWidgets, setDroppedWidgets] = useState<WidgetData[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -75,10 +74,7 @@ const WidgetPage = () => {
           const newWidget: WidgetData = {
             id: `widget-${droppedWidgets.length}`,
             type: widgetType,
-            content:
-              widgetType === 'text'
-                ? 'Editable text'
-                : { label: 'Click me', clicks: 0 },
+            content: '',
             position,
             size: { width: 200, height: 100 },
           }
@@ -200,7 +196,8 @@ const WidgetPage = () => {
       </div>
       <DragOverlay>
         {activeId && activeId.startsWith('shelf-') ? (
-          <BaseWidget
+          <DraggableWidget
+            id={activeId}
             content={availableWidgets[parseInt(activeId.split('-')[1])].label}
           />
         ) : null}
