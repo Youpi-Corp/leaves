@@ -15,6 +15,7 @@ import WidgetData from '../../types/WidgetData'
 import BaseWidget from '../../components/widget/BaseWidget'
 import WidgetShelf from '../../components/layout/shelf/WidgetShelf'
 import GenericWidget from '../../components/widget/GenericWidget'
+import Sidebar from '../../components/layout/sidebar/Sidebar'
 
 const WidgetPage = () => {
   const [availableWidgets] = useState([
@@ -28,6 +29,10 @@ const WidgetPage = () => {
   const [droppedWidgets, setDroppedWidgets] = useState<WidgetData[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const dropAreaRef = useRef<HTMLDivElement>(null)
+  const GRID_SIZE = 20 // You can adjust this value to change the grid size
+
+  const snapToGrid = (value: number) =>
+    Math.round(value / GRID_SIZE) * GRID_SIZE
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -49,22 +54,26 @@ const WidgetPage = () => {
         if (active.id.toString().startsWith('shelf-')) {
           // Adding a new widget from the shelf
           const position = {
-            x: Math.max(
-              0,
-              Math.min(
-                event.delta.x +
-                  (event.activatorEvent as PointerEvent).clientX -
-                  dropRect.left,
-                dropRect.width - 200,
+            x: snapToGrid(
+              Math.max(
+                0,
+                Math.min(
+                  event.delta.x +
+                    (event.activatorEvent as PointerEvent).clientX -
+                    dropRect.left,
+                  dropRect.width - 200,
+                ),
               ),
             ),
-            y: Math.max(
-              0,
-              Math.min(
-                event.delta.y +
-                  (event.activatorEvent as PointerEvent).clientY -
-                  dropRect.top,
-                dropRect.height - 100,
+            y: snapToGrid(
+              Math.max(
+                0,
+                Math.min(
+                  event.delta.y +
+                    (event.activatorEvent as PointerEvent).clientY -
+                    dropRect.top,
+                  dropRect.height - 100,
+                ),
               ),
             ),
           }
@@ -89,18 +98,22 @@ const WidgetPage = () => {
                 ? {
                     ...widget,
                     position: {
-                      x: Math.max(
-                        0,
-                        Math.min(
-                          widget.position.x + event.delta.x,
-                          dropRect.width - widget.size.width,
+                      x: snapToGrid(
+                        Math.max(
+                          0,
+                          Math.min(
+                            widget.position.x + event.delta.x,
+                            dropRect.width - widget.size.width,
+                          ),
                         ),
                       ),
-                      y: Math.max(
-                        0,
-                        Math.min(
-                          widget.position.y + event.delta.y,
-                          dropRect.height - widget.size.height,
+                      y: snapToGrid(
+                        Math.max(
+                          0,
+                          Math.min(
+                            widget.position.y + event.delta.y,
+                            dropRect.height - widget.size.height,
+                          ),
                         ),
                       ),
                     },
@@ -140,20 +153,43 @@ const WidgetPage = () => {
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
     >
-      <div className="flex h-screen">
-        <WidgetShelf widgets={availableWidgets.map((widget) => widget.label)} />
-        <div ref={dropAreaRef} className="flex-grow">
-          <DropArea>
-            {droppedWidgets.map((widget) => (
-              <GenericWidget
-                key={widget.id}
-                {...widget}
-                onContentChange={handleContentChange}
-                onResize={handleResize}
-              />
-            ))}
-          </DropArea>
+      <div
+        className={`flex w-full h-screen items-center justify-center bg-[url(./assets/graph-paper.svg)]`}
+      >
+        <div className="flex w-full h-full">
+          <div className="p-4 w-full">
+            <div
+              className="max-w-[920px] bg-white shadow-md h-full m-auto rounded-xl
+              flex flex-col flex-grow items-center justify-start flex-1 overflow-y-auto"
+            >
+              <div
+                ref={dropAreaRef}
+                className="w-full h-full"
+                style={{
+                  backgroundImage: `repeating-linear-gradient(0deg, #eee, #eee 1px, transparent 1px, transparent ${GRID_SIZE}px),
+                      repeating-linear-gradient(90deg, #eee, #eee 1px, transparent 1px, transparent ${GRID_SIZE}px)`,
+                  backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
+                }}
+              >
+                <DropArea>
+                  {droppedWidgets.map((widget) => (
+                    <GenericWidget
+                      key={widget.id}
+                      {...widget}
+                      onContentChange={handleContentChange}
+                      onResize={handleResize}
+                    />
+                  ))}
+                </DropArea>
+              </div>
+            </div>
+          </div>
         </div>
+        <Sidebar position="right" title="Widgets">
+          <WidgetShelf
+            widgets={availableWidgets.map((widget) => widget.label)}
+          />
+        </Sidebar>
       </div>
       <DragOverlay>
         {activeId && activeId.startsWith('shelf-') ? (

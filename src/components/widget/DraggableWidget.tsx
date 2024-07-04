@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDraggable } from '@dnd-kit/core'
 
 const DraggableWidget = ({ id, content }: { id: string; content: string }) => {

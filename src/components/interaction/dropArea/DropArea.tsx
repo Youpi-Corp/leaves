@@ -9,10 +9,8 @@ const DropArea = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       ref={setNodeRef}
-      className="flex-grow bg-gray-200 p-4 relative"
-      style={{ height: '100%', minHeight: '600px' }}
+      className="relative w-full h-full min-h-[600px] border-2 border-dashed"
     >
-      <h2 className="text-xl font-bold mb-4">Drop Area</h2>
       {children}
     </div>
   )
