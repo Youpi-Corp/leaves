@@ -84,7 +84,7 @@ const GenericWidget: React.FC<GenericWidgetProps> = (props) => {
         {...attributes}
         onPointerDown={handlePointerDown}
       >
-        <div ref={headerRef} className="p-2 bg-gray-200 cursor-move">
+        <div ref={headerRef} className="bg-gray-200 cursor-move text-sm">
           Drag here
         </div>
         <button
