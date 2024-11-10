@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import PrimaryButton from '../../../interaction/button/PrimaryButton'
 
 const EditableTextWidget = () => {
   const [text, setText] = useState('Texte par défaut')
   const [isEditing, setIsEditing] = useState(false)
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value)
   }
 
