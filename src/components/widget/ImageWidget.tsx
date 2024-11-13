@@ -56,17 +56,23 @@ const ImageWidget: React.FC<{
 
   return (
     <div
-      className={`flex flex-col ${isDragging ? 'border-2 border-dashed border-blue-500' : ''}`}
+      className={`flex flex-col w-full h-full ${isDragging ? 'border-2 border-dashed border-blue-500' : ''}`}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
       {content.src ? (
-        <img src={content.src} alt={content.alt} className="w-full" />
+        <div className="w-full h-full">
+          <img 
+            src={content.src} 
+            alt={content.alt} 
+            className="w-full h-full object-contain"
+          />
+        </div>
       ) : (
         <div
-          className="w-full h-32 flex items-center justify-center bg-gray-200 text-gray-500 cursor-pointer"
+          className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 cursor-pointer"
           onDoubleClick={handleDoubleClick}
         >
           Drag and drop an image here, or double-click to select a file
