@@ -7,10 +7,19 @@ interface TextStyle {
   textAlign: 'left' | 'center' | 'right'
 }
 
-const TextWidget: React.FC<{
+interface TextWidgetProps {
   content: string
   onContentChange: (newContent: string) => void
-}> = ({ content, onContentChange }) => {
+  isActive?: boolean
+  setActive: () => void
+}
+
+const TextWidget: React.FC<TextWidgetProps> = ({ 
+  content, 
+  onContentChange,
+  isActive,
+  setActive 
+}) => {
   const [textStyle, setTextStyle] = useState<TextStyle>({
     fontSize: 16,
     fontWeight: 'normal',
@@ -33,44 +42,20 @@ const TextWidget: React.FC<{
   }
 
   return (
-    <div className="flex flex-col w-full h-full">
-      <div className="flex gap-1 mb-2 bg-gray-100 rounded p-0.5">
-        <button
-          onClick={() => adjustFontSize(-1)}
-          className="px-1 py-0.5 bg-white rounded hover:bg-gray-50 text-xs"
-        >
-          A-
-        </button>
-        <button
-          onClick={() => adjustFontSize(1)}
-          className="px-1 py-0.5 bg-white rounded hover:bg-gray-50 text-xs"
-        >
-          A+
-        </button>
-        <button
-          onClick={() => toggleStyle('fontWeight', 'bold')}
-          className={`px-1 py-0.5 bg-white rounded hover:bg-gray-50 text-xs ${
-            textStyle.fontWeight === 'bold' ? 'bg-gray-200' : ''
-          }`}
-        >
-          B
-        </button>
-        <button
-          onClick={() => toggleStyle('fontStyle', 'italic')}
-          className={`px-1 py-0.5 bg-white rounded hover:bg-gray-50 text-xs ${
-            textStyle.fontStyle === 'italic' ? 'bg-gray-200' : ''
-          }`}
-        >
-          I
-        </button>
-      </div>
+    <div
+      className="flex flex-col w-full h-full"
+      onClick={setActive}
+      >
       <textarea
         value={content}
         onChange={(e) => {
           e.stopPropagation()
           onContentChange(e.target.value)
         }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation()
+          setActive()
+        }}
         className="w-full h-full resize-none"
         style={{
           fontSize: `${textStyle.fontSize}px`,
@@ -79,6 +64,44 @@ const TextWidget: React.FC<{
           textAlign: textStyle.textAlign,
         }}
       />
+      {isActive && (
+        <div
+          className="style-bar flex gap-1 mb-2 bg-gray-100 rounded p-0.5"
+          onClick={(e) => {
+            e.stopPropagation()
+            setActive()
+          }}
+          >
+          <button
+            onClick={() => adjustFontSize(-1)}
+            className="px-1 py-0.5 bg-white rounded hover:bg-gray-50 text-xs"
+          >
+            A-
+          </button>
+          <button
+            onClick={() => adjustFontSize(1)}
+            className="px-1 py-0.5 bg-white rounded hover:bg-gray-50 text-xs"
+          >
+            A+
+          </button>
+          <button
+            onClick={() => toggleStyle('fontWeight', 'bold')}
+            className={`px-1 py-0.5 bg-white rounded hover:bg-gray-50 text-xs ${
+              textStyle.fontWeight === 'bold' ? 'bg-gray-200' : ''
+            }`}
+          >
+            B
+          </button>
+          <button
+            onClick={() => toggleStyle('fontStyle', 'italic')}
+            className={`px-1 py-0.5 bg-white rounded hover:bg-gray-50 text-xs ${
+              textStyle.fontStyle === 'italic' ? 'bg-gray-200' : ''
+            }`}
+          >
+            I
+          </button>
+        </div>
+      )}
     </div>
   )
 }

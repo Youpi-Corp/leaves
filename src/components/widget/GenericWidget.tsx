@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Resizable, ResizeCallbackData } from 'react-resizable'
 import { useDraggable } from '@dnd-kit/core'
 import WidgetData from '../../types/WidgetData'
@@ -27,6 +27,8 @@ const GenericWidget: React.FC<GenericWidgetProps> = (props) => {
   const { id, type, content, position, size, onResize, onContentChange } = props
   const [isResizing, setIsResizing] = useState(false)
   const headerRef = useRef<HTMLDivElement>(null)
+  const nodeRef = useRef<HTMLDivElement>(null)
+  const [isActive, setIsActive] = useState(false)
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id })
@@ -67,6 +69,36 @@ const GenericWidget: React.FC<GenericWidgetProps> = (props) => {
     }
   }
 
+  const handleWidgetClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsActive(true)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // Check if click is on resize handle, delete button, or drag header
+      if (
+        target.classList.contains('react-resizable-handle') ||
+        target.classList.contains('delete-button') ||
+        target.classList.contains('style-bar') ||
+        target.closest('.style-bar') ||
+        (headerRef.current && headerRef.current.contains(target))
+      ) {
+        return;
+      }
+
+      // Check if click is outside widget
+      if (!nodeRef.current?.contains(target)) {
+        setIsActive(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   return (
     <Resizable
       width={size.width}
@@ -75,7 +107,7 @@ const GenericWidget: React.FC<GenericWidgetProps> = (props) => {
       onResizeStart={handleResizeStart}
       onResizeStop={handleResizeStop}
       draggableOpts={{ grid: [10, 10] }}
-      resizeHandles={['se', 'e', 's']}
+      resizeHandles={ isActive ? ['se', 'e', 's']: []}
     >
       <div
         ref={setNodeRef}
@@ -83,17 +115,22 @@ const GenericWidget: React.FC<GenericWidgetProps> = (props) => {
         className="bg-white shadow-md rounded-lg overflow-hidden"
         {...attributes}
         onPointerDown={handlePointerDown}
+        onClick={handleWidgetClick}
       >
-        <div ref={headerRef} className="bg-gray-200 cursor-move text-sm">
-          Drag here
-        </div>
-        <button
-          onClick={() => props.onDelete(id)}
-          className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-          style={{ transform: 'translate(50%, -50%)' }}
-        >
-          ×
-        </button>
+        {isActive && (
+          <div ref={headerRef} className="bg-gray-200 cursor-move text-sm">
+            Drag here
+          </div>
+        )}
+        {isActive && (
+          <button
+            onClick={() => props.onDelete(id)}
+            className="delete-button absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+            style={{ transform: 'translate(50%, -50%)' }}
+          >
+            ×
+          </button>
+        )}
         <div className="p-4 flex flex-col h-full">
           <SpecificWidget
             {...props}
@@ -101,6 +138,8 @@ const GenericWidget: React.FC<GenericWidgetProps> = (props) => {
             onContentChange={(newContent: any) =>
               onContentChange(id, newContent)
             }
+            isActive={isActive}
+            setActive={() => setIsActive(true)}
           />
         </div>
       </div>
