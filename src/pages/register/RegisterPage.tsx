@@ -1,5 +1,4 @@
 import React from "react";
-import InputBox from "../../components/interaction/input/InputBox";
 
 const RegisterPage: React.FC = () => {
   return (
