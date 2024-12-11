@@ -1,14 +1,21 @@
 import DraggableWidget from '../../widget/DraggableWidget'
 
-const WidgetShelf = ({ widgets }: { widgets: string[] }) => {
+interface WidgetShelfProps {
+  widgets: string[];
+  onWidgetSelect: (widgetType: string) => void;
+}
+
+const WidgetShelf: React.FC<WidgetShelfProps> = ({ widgets, onWidgetSelect }) => {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-4 p-4">
       {widgets.map((widget, index) => (
-        <DraggableWidget
+        <button
           key={`shelf-${index}`}
-          id={`shelf-${index}`}
-          content={widget}
-        />
+          className="p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200 text-center"
+          onClick={() => onWidgetSelect(widget)}
+        >
+          {widget}
+        </button>
       ))}
     </div>
   )
