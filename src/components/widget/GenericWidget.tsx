@@ -1,6 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { Resizable, ResizeCallbackData } from 'react-resizable'
-import WidgetData from '../../types/WidgetData'
 import TextWidget from './TextWidget'
 import ButtonWidget from './ButtonWidget'
 import ImageWidget from './ImageWidget'

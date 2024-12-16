@@ -1,4 +1,3 @@
-import DraggableWidget from '../../widget/DraggableWidget'
 
 interface WidgetShelfProps {
   widgets: string[];
