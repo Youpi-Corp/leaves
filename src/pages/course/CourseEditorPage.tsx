@@ -1,6 +1,7 @@
-import Sidebar from '../../components/layout/sidebar/Sidebar'
+import React from 'react'
+import Sidebar from '../../layout/sidebar/Sidebar'
 
-const CourseEditorPage = () => {
+const CourseEditorPage: React.FC = () => {
   return (
     <div
       className={`flex w-full h-screen items-center justify-center bg-[url(./assets/graph-paper.svg)]`}

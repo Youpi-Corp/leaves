@@ -1,24 +1,20 @@
 import React from 'react'
-import InputBox from '../../components/interaction/input/InputBox'
+import LoginBox from '../../components/auth/LoginBox'
+import Header from '../../layout/header/Header'
 
 const LoginPage: React.FC = () => {
   return (
-    <div className="login-page">
-      <div className="login">
-        <h1>Login Page</h1>
-        <form>
-          <div>
-            <label>Email</label>
-            <input type="email" />
-          </div>
-          <div>
-            <label>Password</label>
-            <InputBox type="email" />
-          </div>
-          <button type="submit">Login</button>
-        </form>
+    <>
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-bfgreen-white to-white">
+        <Header />
+        <div className="flex-grow flex-col flex items-center justify-center">
+          <h1 className="text-6xl text-bfgreen-darker font-bold mb-10">
+            Let&apos;s learn
+          </h1>
+          <LoginBox />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

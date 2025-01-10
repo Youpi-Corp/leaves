@@ -1,17 +1,17 @@
 // src/widgets/WidgetFactory.tsx
-import React from 'react';
-import TextWidget from './widgets/WidgetText';
-import ImageWidget from './widgets/WidgetImage';
+import React from 'react'
+import TextWidget from './widgets/WidgetText'
+import ImageWidget from './widgets/WidgetImage'
 
 const WidgetFactory = (type: string, info: any) => {
   switch (type) {
     case 'TextWidget':
-      return <TextWidget info={info} />;
+      return <TextWidget info={info} />
     case 'ImageWidget':
-      return <ImageWidget info={info} />;
+      return <ImageWidget info={info} />
     default:
-      return null;
+      return null
   }
-};
+}
 
-export default WidgetFactory;
+export default WidgetFactory

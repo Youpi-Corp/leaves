@@ -1,15 +1,25 @@
-import { ChangeEvent, FC } from 'react'
-import './InputBox.css'
+import React from 'react'
 
-interface InputBoxProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  className?: string
   value?: string
-  type?: 'text' | 'password' | 'email'
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const InputBox: FC<InputBoxProps> = ({ value, type, onChange }) => {
+const InputBox: React.FC<InputProps> = ({
+  className,
+  value,
+  onChange,
+  ...props
+}) => {
   return (
-    <input className="input" type={type} value={value} onChange={onChange} />
+    <input
+      className={`rounded-full outline-none bg-transparent px-4 py-2 text-bfbase-darkgrey
+      ring-1 ring-bfbase-grey placeholder:text-bfbase-grey focus:ring-4 focus:ring-bfgreen-base transition-all ${className}`}
+      value={value}
+      onChange={onChange}
+      {...props}
+    />
   )
 }
 

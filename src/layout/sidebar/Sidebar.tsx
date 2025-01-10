@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC } from 'react'
 
 interface SidebarProps {
-  title: string;
-  position: 'left' | 'right';
-  children: React.ReactNode;
+  title: string
+  position: 'left' | 'right'
+  children?: React.ReactNode
 }
 
 const Sidebar: FC<SidebarProps> = ({ title, position, children }) => {
@@ -17,7 +17,7 @@ const Sidebar: FC<SidebarProps> = ({ title, position, children }) => {
       <div className="border-t border-gray-200 my-2"></div>
       {children}
     </div>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar
