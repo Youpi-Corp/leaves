@@ -20,13 +20,14 @@ const Button: React.FC<ButtonProps> = ({
     secondary:
       'bg-bfbrown-base text-white hover:bg-bfbrown-dark focus:ring-4 ring-bfbrown-light',
     tertiary:
-      'bg-transparent text-bfgreen-base hover:bg-bfgreen-light hover:text-bfgreen-dark',
+      'bg-transparent text-bfbase-darkgrey border-2 border-bfbase-grey hover:bg-bfbase-darkgrey ' +
+      'hover:text-white hover:border-bfbase-darkgrey focus:ring-4 ring-bfbase-lightgrey',
     none: '',
   }
 
   return (
     <button
-      className={`flex items-center justify-center rounded-full outline-none font-semibold transition-all ${accentClasses[accent]} ${className}`}
+      className={`flex items-center justify-center outline-none rounded-full font-semibold transition-all ${accentClasses[accent]} ${className}`}
       {...props}
     >
       <div className="mr-2">{icon}</div>

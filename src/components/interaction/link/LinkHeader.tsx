@@ -1,7 +1,7 @@
 import React from 'react'
 import { LinkProps } from './Link'
 
-const LinkNavigation: React.FC<LinkProps> = ({ to, children }) => {
+const LinkHeader: React.FC<LinkProps> = ({ to, children }) => {
   return (
     <a
       href={to}
@@ -12,4 +12,4 @@ const LinkNavigation: React.FC<LinkProps> = ({ to, children }) => {
   )
 }
 
-export default LinkNavigation
+export default LinkHeader

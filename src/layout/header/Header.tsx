@@ -1,5 +1,5 @@
 import React from 'react'
-import LinkNavigation from '../../components/interaction/link/LinkNavigation'
+import LinkHeader from '../../components/interaction/link/LinkHeader'
 import SearchBar from '../../components/interaction/input/SearchBar'
 import Button from '../../components/interaction/button/Button'
 import { FaUser } from 'react-icons/fa'
@@ -14,13 +14,13 @@ const Header: React.FC = () => {
         </h1>
         <ul className="ml-8 flex">
           <li>
-            <LinkNavigation>Courses</LinkNavigation>
+            <LinkHeader>Courses</LinkHeader>
           </li>
           <li>
-            <LinkNavigation>Explore</LinkNavigation>
+            <LinkHeader>Explore</LinkHeader>
           </li>
           <li>
-            <LinkNavigation>Contribute</LinkNavigation>
+            <LinkHeader>Contribute</LinkHeader>
           </li>
         </ul>
       </div>
