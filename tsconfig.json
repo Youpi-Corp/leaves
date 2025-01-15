@@ -9,7 +9,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM"]
   },
   "include": ["src", "vite.config.ts"]
 }
