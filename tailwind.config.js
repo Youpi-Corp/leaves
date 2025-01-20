@@ -26,6 +26,16 @@ export default {
           dark: '#4F382F',
           light: '#D7CCC8',
         },
+        bfblue: {
+          base: '#344CB7',
+          dark: '#1A237E',
+          light: '#E8ECFA',
+        },
+        bfred: {
+          base: '#D84040',
+          dark: '#A62727',
+          light: '#FFDEDE',
+        },
       },
     },
   },

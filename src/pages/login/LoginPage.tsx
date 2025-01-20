@@ -7,7 +7,7 @@ import LoginBox from '../../components/auth/LoginBox'
 const LoginPage: React.FC = () => {
   return (
     <>
-      <div className="min-h-screen flex flex-col bg-gradient-to-b from-bfgreen-white to-white">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-bfgreen-white to-transparent">
         <Header />
         <div className="flex-grow flex-col flex items-center justify-center">
           <h1 className="text-6xl text-bfgreen-darker font-bold mb-10">

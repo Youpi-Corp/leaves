@@ -6,30 +6,32 @@ import Link from '../../components/interaction/link/Link'
 import Separator from '../../components/layout/Separator'
 import { LoginCredentials } from '../../api/types/auth.types'
 import { useMutation } from '@tanstack/react-query'
-import { loginQuery } from '../../api/auth/auth.queries'
 import Spinner from '../feedback/Spinner'
-import { setCookie } from '../../utils/cookies'
+import AlertBox from '../layout/AlertBox'
+import { loginQuery } from '../../api/auth/auth.queries'
 
 const LoginBox: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const loginCredentials: LoginCredentials = { email, password }
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isError, isPending } = useMutation({
     mutationKey: ['login'],
     mutationFn: () => loginQuery(loginCredentials),
-    onSuccess: (token: string) => {
-      setCookie('sessionToken', token, 7)
-    },
+    onSuccess: () => {},
   })
 
-  const handleLogin = () => {
-    mutate()
-  }
+  const handleLogin = () => mutate()
 
   return (
     <div className="py-10 px-20 bg-white shadow-2xl rounded-3xl flex flex-col items-center space-y-4">
       <h1 className="mb-6 text-bfbase-darkgrey text-2xl font-bold">Login</h1>
+
+      {isError && (
+        <AlertBox type="error" title="Login failed" className="w-full">
+          Invalid credentials. Please try again.
+        </AlertBox>
+      )}
 
       <InputBox
         onChange={(e) => setEmail(e.target.value)}

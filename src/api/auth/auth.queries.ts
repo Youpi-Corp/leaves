@@ -7,8 +7,9 @@ export const loginQuery = async (credentials: LoginCredentials) => {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(credentials),
   })
   if (!response.ok) throw new Error(response.status.toString())
-  return await response.json()
+  return await response.text()
 }

@@ -7,3 +7,7 @@ export const setCookie = (name: string, value: string, days?: number) => {
     path: '/',
   })
 }
+
+export const getCookie = (name: string) => {
+  return Cookies.get(name)
+}
