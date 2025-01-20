@@ -1,16 +1,16 @@
-import Button from './components/interaction/button/Button'
-import Header from './components/layout/header/Header'
-import WidgetCounter from './components/widget/WidgetCounter/front/widgetCounter'
+import React from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { AppRoutes } from './routes'
 
-function App() {
+const queryClient = new QueryClient()
+
+const App: React.FC = () => {
   return (
-    <>
-      <Header />
-      <Button style="primary">Primary</Button>
-      <Button style="secondary">Secondary</Button>
-      <Button style="tertiary">Tertiary</Button>
-      <WidgetCounter />
-    </>
+    <QueryClientProvider client={queryClient}>
+      <AppRoutes />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
 
