@@ -1,8 +1,7 @@
 import React from 'react'
 import LinkHeader from '../../components/interaction/link/LinkHeader'
 import SearchBar from '../../components/interaction/input/SearchBar'
-import Button from '../../components/interaction/button/Button'
-import { FaUser } from 'react-icons/fa'
+import ButtonUser from '../../components/interaction/button/ButtonUser'
 
 const Header: React.FC = () => {
   return (
@@ -26,9 +25,7 @@ const Header: React.FC = () => {
       </div>
       <div className="flex ml-auto">
         <SearchBar />
-        <Button icon={<FaUser />} className="px-6 ml-4 text-sm">
-          Sign in
-        </Button>
+        <ButtonUser className="px-6 ml-4" />
       </div>
     </header>
   )

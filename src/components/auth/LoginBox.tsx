@@ -9,16 +9,20 @@ import { useMutation } from '@tanstack/react-query'
 import Spinner from '../feedback/Spinner'
 import AlertBox from '../layout/AlertBox'
 import { loginQuery } from '../../api/auth/auth.queries'
+import { useNavigate } from 'react-router-dom'
 
 const LoginBox: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const loginCredentials: LoginCredentials = { email, password }
+  const navigate = useNavigate()
 
   const { mutate, isError, isPending } = useMutation({
     mutationKey: ['login'],
     mutationFn: () => loginQuery(loginCredentials),
-    onSuccess: () => {},
+    onSuccess: () => {
+      navigate('/')
+    },
   })
 
   const handleLogin = () => mutate()
@@ -70,7 +74,7 @@ const LoginBox: React.FC = () => {
         </div>
       </div>
 
-      <Separator>or</Separator>
+      <Separator className="w-full">or</Separator>
 
       <div className="flex flex-row justify-between w-full">
         <Button accent="tertiary" icon={<FaGoogle />} className="px-14 py-2">

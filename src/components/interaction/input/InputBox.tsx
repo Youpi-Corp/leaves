@@ -14,7 +14,7 @@ const InputBox: React.FC<InputProps> = ({
 }) => {
   return (
     <input
-      className={`rounded-full outline-none bg-transparent px-4 py-2 text-bfbase-darkgrey
+      className={`rounded-xl outline-none bg-transparent px-4 py-2 text-bfbase-darkgrey
       ring-1 ring-bfbase-grey placeholder:text-bfbase-grey focus:ring-4 focus:ring-bfgreen-base transition-all ${className}`}
       value={value}
       onChange={onChange}

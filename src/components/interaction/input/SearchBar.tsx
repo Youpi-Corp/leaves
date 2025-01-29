@@ -7,7 +7,7 @@ const SearchBar: React.FC = () => {
       <input
         type="text"
         placeholder="Research anything..."
-        className="p-3 w-full rounded-full bg-bfgreen-lighter text-bfgreen-darker
+        className="p-3 w-full rounded-xl bg-bfgreen-lighter text-bfgreen-darker
         placeholder:text-bfgreen-darker outline-none focus:ring-4 ring-bfgreen-light
         transition-all text-sm font-semibold pr-10"
       />

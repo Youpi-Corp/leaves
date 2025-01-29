@@ -20,6 +20,7 @@ export default {
           grey: '#ACACAC',
           darkgrey: '#515151',
           lightgrey: '#F2F2F2',
+          lightergrey: '#FAFAFA',
         },
         bfbrown: {
           base: '#795548',
@@ -35,6 +36,7 @@ export default {
           base: '#D84040',
           dark: '#A62727',
           light: '#FFDEDE',
+          lighter: '#FFEBEE',
         },
       },
     },
