@@ -3,12 +3,13 @@ import Header from '../../layout/header/Header'
 import BubbleLg from '../../assets/bubble-1.svg'
 import BubbleSm from '../../assets/bubble-2.svg'
 import LoginBox from '../../components/auth/LoginBox'
+import Footer from '../../layout/footer/Footer'
 
 const LoginPage: React.FC = () => {
   return (
     <>
+      <Header />
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-bfgreen-white to-transparent">
-        <Header />
         <div className="flex-grow flex-col flex items-center justify-center">
           <h1 className="text-6xl text-bfgreen-darker font-bold mb-10">
             Let&apos;s learn
@@ -28,6 +29,7 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   )
 }

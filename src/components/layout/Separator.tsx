@@ -13,7 +13,7 @@ const Separator: React.FC<SeparatorProps> = ({ className, children }) => {
   }
 
   return (
-    <div className={`flex flex-row items-center space-x-4 ${className}`}>
+    <div className={`flex flex-row items-center space-x-4 w-full ${className}`}>
       <div className="h-[2px] bg-bfbase-grey w-full rounded-full" />
       <div className="text-bfbase-grey">{children}</div>
       <div className="h-[2px] bg-bfbase-grey w-full rounded-full" />

@@ -25,8 +25,6 @@ const LoginBox: React.FC = () => {
     },
   })
 
-  const handleLogin = () => mutate()
-
   return (
     <div className="py-10 px-20 bg-white shadow-2xl rounded-3xl flex flex-col items-center space-y-4">
       <h1 className="mb-6 text-bfbase-darkgrey text-2xl font-bold">Login</h1>
@@ -58,7 +56,7 @@ const LoginBox: React.FC = () => {
           </Button>
         ) : (
           <Button
-            onClick={handleLogin}
+            onClick={() => mutate()}
             className="h-10 w-44"
             icon={<FaCheck />}
           >
@@ -74,7 +72,7 @@ const LoginBox: React.FC = () => {
         </div>
       </div>
 
-      <Separator className="w-full">or</Separator>
+      <Separator>or</Separator>
 
       <div className="flex flex-row justify-between w-full">
         <Button accent="tertiary" icon={<FaGoogle />} className="px-14 py-2">

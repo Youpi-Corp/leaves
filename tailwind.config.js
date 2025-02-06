@@ -26,6 +26,7 @@ export default {
           base: '#795548',
           dark: '#4F382F',
           light: '#D7CCC8',
+          lighter: '#F4F0EE',
         },
         bfblue: {
           base: '#344CB7',
