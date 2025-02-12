@@ -3,24 +3,26 @@ import Button from '../../components/interaction/button/Button'
 import { FaArrowRight, FaYoutube } from 'react-icons/fa'
 import Separator from '../../components/layout/Separator'
 import { FaMeta, FaXTwitter } from 'react-icons/fa6'
-import Link from '../../components/interaction/link/Link'
+import LinkInternal from '../../components/interaction/link/LinkInternal'
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-bfbrown-lighter px-16 py-8 mt-[100hv]">
+    <footer className="w-full bg-gradient-to-b from-transparent to-bfbrown-lighter px-16 py-8">
       <div className="flex items-center space-x-10">
         <ul className="space-y-1 text-sm font-medium">
           <li className="text-bfbrown-dark text-sm font-semibold mb-3">
             Getting started
           </li>
           <li>
-            <Link accent="secondary">Why BrainForest</Link>
+            <LinkInternal accent="secondary">Why BrainForest</LinkInternal>
           </li>
           <li>
-            <Link accent="secondary">Write a course</Link>
+            <LinkInternal accent="secondary">Write a course</LinkInternal>
           </li>
           <li>
-            <Link accent="secondary">How BrainForest works</Link>
+            <LinkInternal accent="secondary">
+              How BrainForest works
+            </LinkInternal>
           </li>
         </ul>
 
@@ -29,13 +31,13 @@ const Footer: React.FC = () => {
             Developers
           </li>
           <li>
-            <Link accent="secondary">Documentation</Link>
+            <LinkInternal accent="secondary">Documentation</LinkInternal>
           </li>
           <li>
-            <Link accent="secondary">Changelogs</Link>
+            <LinkInternal accent="secondary">Changelogs</LinkInternal>
           </li>
           <li>
-            <Link accent="secondary">Contribute</Link>
+            <LinkInternal accent="secondary">Contribute</LinkInternal>
           </li>
         </ul>
 
@@ -64,13 +66,13 @@ const Footer: React.FC = () => {
             © 2025 BrainForest
           </li>
           <li>
-            <Link accent="secondary">Privacy Policy</Link>
+            <LinkInternal accent="secondary">Privacy Policy</LinkInternal>
           </li>
           <li>
-            <Link accent="secondary">Terms of Service</Link>
+            <LinkInternal accent="secondary">Terms of Service</LinkInternal>
           </li>
           <li>
-            <Link accent="secondary">Cookie Preferences</Link>
+            <LinkInternal accent="secondary">Cookie Preferences</LinkInternal>
           </li>
         </ul>
 

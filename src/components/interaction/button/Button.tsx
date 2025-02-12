@@ -6,6 +6,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   disabled?: boolean
   children?: React.ReactNode
   className?: string
+  type?: 'button' | 'submit' | 'reset' | undefined
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -14,6 +15,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   children,
   className,
+  type = 'button',
   ...props
 }) => {
   const accentClasses = {
@@ -30,6 +32,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       disabled={disabled}
+      type={type}
       className={`flex items-center justify-center outline-none rounded-xl font-semibold transition-all disabled:cursor-not-allowed ${accentClasses[accent]} ${className}`}
       {...props}
     >

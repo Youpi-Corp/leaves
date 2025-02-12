@@ -1,15 +1,15 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-export interface LinkProps
-  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface LinkProps {
   to?: string
   children?: React.ReactNode
   accent?: 'primary' | 'secondary' | 'none'
   className?: string
 }
 
-const Link: React.FC<LinkProps> = ({
-  to,
+const LinkInternal: React.FC<LinkProps> = ({
+  to = '',
   children,
   accent = 'primary',
   className,
@@ -21,13 +21,13 @@ const Link: React.FC<LinkProps> = ({
   }
 
   return (
-    <a
-      className={`${accentStyles[accent]} cursor-pointer transition-colors ${className}`}
-      href={to}
+    <Link
+      className={`${accentStyles[accent]} font-medium cursor-pointer transition-colors ${className}`}
+      to={to}
     >
       {children}
-    </a>
+    </Link>
   )
 }
 
-export default Link
+export default LinkInternal

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 interface DropdownProps {
   className?: string
@@ -25,19 +26,19 @@ const Dropdown: React.FC<DropdownProps> = ({ className, children }) => {
 const DropdownItem: React.FC<DropdownItemProps> = ({
   className,
   icon,
-  to = '#',
+  to = '',
   children,
 }) => {
   return (
-    <a
-      href={to}
+    <Link
+      to={to}
       className={`flex items-center p-3 rounded-xl w-full hover:bg-bfbase-lightgrey text-bfbase-darkgrey transition-colors ${className}`}
     >
       {icon && (
         <div className="w-6 mr-2 flex items-center justify-center">{icon}</div>
       )}
       {children}
-    </a>
+    </Link>
   )
 }
 

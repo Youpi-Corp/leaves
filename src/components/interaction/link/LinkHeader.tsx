@@ -1,5 +1,5 @@
 import React from 'react'
-import { LinkProps } from './Link'
+import { LinkProps } from './LinkInternal'
 
 const LinkHeader: React.FC<LinkProps> = ({ to, children }) => {
   return (
