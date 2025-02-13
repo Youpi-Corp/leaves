@@ -38,7 +38,7 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   return (
     <div
       className={`flex flex-row items-center px-6 py-4
-      rounded-2xl ${style.bgColor} ${className}`}
+      rounded-xl ${style.bgColor} ${className}`}
     >
       <Icon className={`text-4xl ${style.textColor}`} />
       <div className="ml-6 flex flex-col">

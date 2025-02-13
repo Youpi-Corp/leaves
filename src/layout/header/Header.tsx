@@ -1,17 +1,24 @@
 import React from 'react'
 import LinkHeader from '../../components/interaction/link/LinkHeader'
 import SearchBar from '../../components/interaction/input/SearchBar'
+import ButtonUser from '../../components/interaction/button/ButtonUser'
 import Button from '../../components/interaction/button/Button'
-import { FaUser } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
 const Header: React.FC = () => {
+  const navigate = useNavigate()
+
   return (
-    <header className="bg-bfgreen-white p-4 flex items-center">
+    <header className="bg-bfgreen-white/70 backdrop-blur-lg p-4 flex items-center sticky top-0 z-50">
       <div className="flex items-center justify-start">
-        <img className="h-8 w-8" src="./brainforest.svg" />
-        <h1 className="text-xl font-bold ml-4 text-bfgreen-base">
+        <Button
+          onClick={() => navigate('/')}
+          accent="none"
+          className="text-xl text-bfgreen-base font-bold hover:text-bfgreen-dark"
+          icon={<img src="./brainforest.svg" className="w-8 h-8" />}
+        >
           BrainForest
-        </h1>
+        </Button>
         <ul className="ml-8 flex">
           <li>
             <LinkHeader>Courses</LinkHeader>
@@ -26,9 +33,7 @@ const Header: React.FC = () => {
       </div>
       <div className="flex ml-auto">
         <SearchBar />
-        <Button icon={<FaUser />} className="px-6 ml-4 text-sm">
-          Sign in
-        </Button>
+        <ButtonUser className="px-6 ml-4" />
       </div>
     </header>
   )

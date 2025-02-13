@@ -6,6 +6,7 @@ export const API_CONFIG = {
       REGISTER: '/auth/register',
     },
     USER: {
+      ME: '/user/me',
       CREATE: '/user/create',
       GET: '/user/get',
       LIST: '/user/list',

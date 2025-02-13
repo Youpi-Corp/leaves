@@ -1,11 +1,12 @@
 import React from 'react'
 
-interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   icon?: React.ReactNode
   accent?: 'primary' | 'secondary' | 'tertiary' | 'none'
   disabled?: boolean
   children?: React.ReactNode
   className?: string
+  type?: 'button' | 'submit' | 'reset' | undefined
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -14,6 +15,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   children,
   className,
+  type = 'button',
   ...props
 }) => {
   const accentClasses = {
@@ -30,10 +32,11 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       disabled={disabled}
-      className={`flex items-center justify-center outline-none rounded-full font-semibold transition-all disabled:cursor-not-allowed ${accentClasses[accent]} ${className}`}
+      type={type}
+      className={`flex items-center justify-center outline-none rounded-xl font-semibold transition-all disabled:cursor-not-allowed ${accentClasses[accent]} ${className}`}
       {...props}
     >
-      <div className="mr-2">{icon}</div>
+      {icon && <div className="mr-2">{icon}</div>}
       {children}
     </button>
   )
