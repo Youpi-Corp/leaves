@@ -27,6 +27,11 @@ const LoginBox: React.FC = () => {
     },
   })
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    mutate()
+  }
+
   return (
     <div className="py-10 px-20 bg-white shadow-2xl rounded-3xl flex flex-col items-center space-y-4">
       <h1 className="mb-4 text-bfbase-darkgrey text-2xl font-bold">Login</h1>
@@ -37,43 +42,44 @@ const LoginBox: React.FC = () => {
         </AlertBox>
       )}
 
-      <InputBox
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-[40rem]"
-        placeholder="Username or e-mail"
-        type="email"
-      />
+      <form
+        className="flex flex-col items-center space-y-4"
+        onSubmit={handleSubmit}
+      >
+        <InputBox
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-[40rem]"
+          placeholder="Username or e-mail"
+          type="email"
+        />
 
-      <InputBox
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-[40rem]"
-        placeholder="Password"
-        type="password"
-      />
+        <InputBox
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-[40rem]"
+          placeholder="Password"
+          type="password"
+        />
 
-      <div className="flex flex-row w-full self-start items-center">
-        {isPending ? (
-          <Button disabled={true} className="h-10 w-44">
-            <Spinner size="md" className="border-t-white" />
-          </Button>
-        ) : (
-          <Button
-            onClick={() => mutate()}
-            className="h-10 w-44"
-            icon={<FaCheck />}
-          >
-            Validate
-          </Button>
-        )}
+        <div className="flex flex-row w-full self-start items-center">
+          {isPending ? (
+            <Button disabled={true} className="h-10 w-44">
+              <Spinner size="md" className="border-t-white" />
+            </Button>
+          ) : (
+            <Button type="submit" className="h-10 w-44" icon={<FaCheck />}>
+              Validate
+            </Button>
+          )}
 
-        <div className="flex flex-col space-y-2 ml-auto items-end text-sm">
-          <LinkInternal>Forgot password?</LinkInternal>
-          <span>
-            Don&apos;t have an account yet?{' '}
-            <LinkInternal to="/register">Sign up here</LinkInternal>
-          </span>
+          <div className="flex flex-col space-y-2 ml-auto items-end text-sm">
+            <LinkInternal>Forgot password?</LinkInternal>
+            <span>
+              Don&apos;t have an account yet?{' '}
+              <LinkInternal to="/register">Sign up here</LinkInternal>
+            </span>
+          </div>
         </div>
-      </div>
+      </form>
 
       <Separator>or</Separator>
 

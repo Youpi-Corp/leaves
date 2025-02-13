@@ -9,7 +9,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate()
 
   return (
-    <header className="bg-bfgreen-white p-4 flex items-center">
+    <header className="bg-bfgreen-white/70 backdrop-blur-lg p-4 flex items-center sticky top-0 z-50">
       <div className="flex items-center justify-start">
         <Button
           onClick={() => navigate('/')}
