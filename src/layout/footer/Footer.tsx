@@ -7,7 +7,7 @@ import LinkInternal from '../../components/interaction/link/LinkInternal'
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-gradient-to-b from-transparent to-bfbrown-lighter px-16 py-8">
+    <footer className="w-full bg-linear-to-b from-transparent to-bfbrown-lighter px-16 py-8">
       <div className="flex items-center space-x-10">
         <ul className="space-y-1 text-sm font-medium">
           <li className="text-bfbrown-dark text-sm font-semibold mb-3">
@@ -62,7 +62,7 @@ const Footer: React.FC = () => {
 
       <div className="flex items-center">
         <ul className="flex flex-row space-x-6 text-sm font-medium">
-          <li className="text-bfbrown-dark font-semibold mr-2">
+          <li className="text-bfbrown-dark font-semibold">
             © 2025 BrainForest
           </li>
           <li>

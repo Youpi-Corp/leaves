@@ -1,5 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap')
+layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: Montserrat, sans-serif;
+
+  --color-bfgreen-base: #5fbb63;
+  --color-bfgreen-dark: #388e3c;
+  --color-bfgreen-darker: #285c2b;
+  --color-bfgreen-light: #c8e6c9;
+  --color-bfgreen-lighter: #e0f5e1;
+  --color-bfgreen-white: #f2fff3;
+
+  --color-bfbase-black: #222222;
+  --color-bfbase-grey: #acacac;
+  --color-bfbase-darkgrey: #515151;
+  --color-bfbase-lightgrey: #f2f2f2;
+  --color-bfbase-lightergrey: #fafafa;
+
+  --color-bfbrown-base: #795548;
+  --color-bfbrown-dark: #4f382f;
+  --color-bfbrown-light: #d7ccc8;
+  --color-bfbrown-lighter: #f4f0ee;
+
+  --color-bfblue-base: #344cb7;
+  --color-bfblue-dark: #1a237e;
+  --color-bfblue-light: #e8ecfa;
+
+  --color-bfred-base: #d84040;
+  --color-bfred-dark: #a62727;
+  --color-bfred-light: #ffdede;
+  --color-bfred-lighter: #ffebee;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}

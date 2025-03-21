@@ -33,7 +33,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       disabled={disabled}
       type={type}
-      className={`flex items-center justify-center outline-none rounded-xl font-semibold transition-all disabled:cursor-not-allowed ${accentClasses[accent]} ${className}`}
+      className={`flex items-center justify-center outline-hidden rounded-xl font-semibold transition-all cursor-pointer disabled:cursor-not-allowed ${accentClasses[accent]} ${className}`}
       {...props}
     >
       {icon && <div className="mr-2">{icon}</div>}

@@ -8,7 +8,7 @@ const SearchBar: React.FC = () => {
         type="text"
         placeholder="Research anything..."
         className="p-3 w-full rounded-xl bg-bfgreen-lighter text-bfgreen-darker
-        placeholder:text-bfgreen-darker outline-none focus:ring-4 ring-bfgreen-light
+        placeholder:text-bfgreen-darker outline-hidden focus:ring-4 ring-bfgreen-light
         transition-all text-sm font-semibold pr-10"
       />
       <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-bfgreen-darker" />

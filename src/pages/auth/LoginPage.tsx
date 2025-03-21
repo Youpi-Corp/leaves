@@ -9,8 +9,8 @@ const LoginPage: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen flex flex-col bg-gradient-to-b from-bfgreen-white to-transparent">
-        <div className="flex-grow flex-col flex items-center justify-center">
+      <div className="min-h-screen flex flex-col bg-linear-to-b from-bfgreen-white to-transparent">
+        <div className="grow flex-col flex items-center justify-center">
           <h1 className="text-6xl text-bfgreen-darker font-bold mb-10">
             Let&apos;s learn
           </h1>
