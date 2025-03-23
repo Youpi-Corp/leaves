@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'https://brainforest-ozct.shuttle.app',
+  BASE_URL: 'https://sap-m1i0.onrender.com',
   ENDPOINTS: {
     AUTH: {
       LOGIN: '/auth/login',

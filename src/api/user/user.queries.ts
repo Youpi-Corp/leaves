@@ -10,5 +10,5 @@ export const userQuery = async (): Promise<User> => {
     credentials: 'include',
   })
   if (!response.ok) throw new Error(response.status.toString())
-  return await response.json()
+  return (await response.json()).data
 }

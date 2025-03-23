@@ -12,11 +12,11 @@ export const loginQuery = async (credentials: LoginCredentials) => {
     body: JSON.stringify(credentials),
   })
   if (!response.ok) throw new Error(response.status.toString())
-  return await response.text()
+  return (await response.json()).data
 }
 
 export const registerQuery = async (
-  user: RegisterCredentials,
+  user: RegisterCredentials
 ): Promise<User> => {
   const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.AUTH.REGISTER), {
     method: 'POST',
@@ -26,5 +26,5 @@ export const registerQuery = async (
     body: JSON.stringify(user),
   })
   if (!response.ok) throw new Error(response.status.toString())
-  return await response.json()
+  return (await response.json()).data
 }

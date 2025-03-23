@@ -6,6 +6,6 @@ export interface LoginCredentials {
 export interface RegisterCredentials {
   email: string
   pseudo: string
-  password_hash: string
+  password: string
   role: string
 }

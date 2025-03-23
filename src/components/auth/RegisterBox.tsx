@@ -18,7 +18,7 @@ const RegisterBox: React.FC = () => {
   const registerCredentials: RegisterCredentials = {
     email,
     pseudo: username,
-    password_hash: password,
+    password: password,
     role: '1000',
   }
 
