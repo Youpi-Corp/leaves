@@ -7,6 +7,7 @@ interface TextWidgetProps {
     label: string;
     text: string;
     color?: string;
+    id: string;
   };
 }
 
@@ -24,8 +25,9 @@ const TextWidget: React.FC<TextWidgetProps> = ({ info }) => {
 TextWidget.defaultProps = {
   info: {
     label: 'Text Widget',
-    text: 'Default text',
+    text: 'Default Text',
     color: '#000',
+    id: 'default-id',
   },
 };
 

@@ -7,6 +7,7 @@ interface ImageWidgetProps {
     label: string;
     imageUrl: string;
     color?: string;
+    id: string;
   };
 }
 
