@@ -1,4 +1,3 @@
-// src/widgets/WidgetFactory.tsx
 import React from 'react'
 import TextWidget from './widgets/WidgetText'
 import ImageWidget from './widgets/WidgetImage'

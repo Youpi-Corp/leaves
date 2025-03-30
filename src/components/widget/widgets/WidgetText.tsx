@@ -7,6 +7,7 @@ interface TextWidgetProps {
     label: string
     text: string
     color?: string
+    id: string
   }
 }
 
