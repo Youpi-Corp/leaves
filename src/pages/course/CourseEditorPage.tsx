@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState } from 'react'
-import Sidebar from '../../layout/sidebar/Sidebar'
 import { Layout } from 'react-grid-layout'
 import WidgetData from '../../types/WidgetData'
 import ReactGridLayout from 'react-grid-layout'
@@ -8,6 +7,7 @@ import WidgetFactory from '../../components/widget/WidgetFactory'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import { DndContext } from '@dnd-kit/core'
+import Sidebar from '../../layout/Sidebar'
 
 const CourseEditorPage = () => {
   const availableWidgets = [

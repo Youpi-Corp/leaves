@@ -1,9 +1,9 @@
 import React from 'react'
-import LinkHeader from '../../components/interaction/link/LinkHeader'
-import SearchBar from '../../components/interaction/input/SearchBar'
-import ButtonUser from '../../components/interaction/button/ButtonUser'
-import Button from '../../components/interaction/button/Button'
 import { useNavigate } from 'react-router-dom'
+import Button from '../components/interaction/button/Button'
+import LinkHeader from '../components/interaction/link/LinkHeader'
+import SearchBar from '../components/interaction/input/SearchBar'
+import ButtonUser from '../components/interaction/button/ButtonUser'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()

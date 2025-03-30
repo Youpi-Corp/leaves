@@ -1,9 +1,9 @@
 import React from 'react'
-import Header from '../../layout/header/Header'
 import BubbleLg from '../../assets/bubble-1.svg'
 import BubbleSm from '../../assets/bubble-2.svg'
 import LoginBox from '../../components/auth/LoginBox'
-import Footer from '../../layout/footer/Footer'
+import Header from '../../layout/Header'
+import Footer from '../../layout/Footer'
 
 const LoginPage: React.FC = () => {
   return (

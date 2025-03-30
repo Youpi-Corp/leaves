@@ -1,9 +1,9 @@
 import React from 'react'
-import Button from '../../components/interaction/button/Button'
 import { FaArrowRight, FaYoutube } from 'react-icons/fa'
-import Separator from '../../components/layout/Separator'
 import { FaMeta, FaXTwitter } from 'react-icons/fa6'
-import LinkInternal from '../../components/interaction/link/LinkInternal'
+import LinkInternal from '../components/interaction/link/LinkInternal'
+import Button from '../components/interaction/button/Button'
+import Separator from '../components/layout/Separator'
 
 const Footer: React.FC = () => {
   return (

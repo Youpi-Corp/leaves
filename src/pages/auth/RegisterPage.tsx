@@ -1,9 +1,9 @@
 import React from 'react'
-import Header from '../../layout/header/Header'
-import Footer from '../../layout/footer/Footer'
 import BubbleLg from '../../assets/bubble-1.svg'
 import BubbleSm from '../../assets/bubble-2.svg'
 import RegisterBox from '../../components/auth/RegisterBox'
+import Header from '../../layout/Header'
+import Footer from '../../layout/Footer'
 
 const RegisterPage: React.FC = () => {
   return (

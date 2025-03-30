@@ -1,6 +1,6 @@
 import React from 'react'
-import Header from '../layout/header/Header'
-import Footer from '../layout/footer/Footer'
+import Header from '../layout/Header'
+import Footer from '../layout/Footer'
 
 const HomePage: React.FC = () => {
   return (
