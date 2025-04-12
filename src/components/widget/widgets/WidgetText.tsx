@@ -1,26 +1,14 @@
 // src/widgets/widgets/TextWidget.tsx
 import React from 'react'
 import WidgetBase from '../WidgetBase'
+import { TextWidgetProps } from '../../../types/WidgetTypes'
+import { registerWidget } from '../WidgetRegistry'
 
-interface TextWidgetProps {
-  info: {
-    label: string
-    text: string
-    color?: string
-    id: string
-  }
-}
-
-const TextWidget: React.FC<TextWidgetProps> = ({ info }) => {
+const TextWidget: React.FC<{ info: TextWidgetProps }> = ({ info }) => {
   return <WidgetBase info={info} content={<p>{info.text}</p>} />
 }
 
-// TextWidget.defaultProps = {
-//   info: {
-//     label: 'Text Widget',
-//     text: 'Default text',
-//     color: '#000',
-//   },
-// };
+// Enregistrement automatique du widget
+registerWidget('TextWidget', TextWidget)
 
 export default TextWidget
