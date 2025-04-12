@@ -1,12 +1,8 @@
 name: Deploy to Production VM
 
 on:
-  workflow_run:
-    workflows: ['Node.js CI Build and Test']
-    branches: ['main']
-    types:
-      - completed
-
+  push:
+    branches: ['main'] # Se déclenche lors d'un push sur main
   workflow_dispatch: # Permet également un déclenchement manuel
 
 jobs:
@@ -105,7 +101,7 @@ jobs:
 
             # Tenter d'obtenir automatiquement un certificat Let's Encrypt
             sudo certbot --nginx --non-interactive --agree-tos \
-            --email basile.trebus-hamann@epitech.eu \  # Remplacez par votre email réel
+            --email basile.trebus-hamann@epitech.eu \
             -d brain-forest.works -d www.brain-forest.works || \
             echo "⚠️ Let's Encrypt n'a pas pu être configuré automatiquement."
 
