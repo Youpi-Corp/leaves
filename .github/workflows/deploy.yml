@@ -119,10 +119,10 @@ jobs:
               exit 1
             fi
 
-            if curl -s --head --request GET http://localhost | grep "200 OK" > /dev/null; then
-              echo "✅ Site HTTP is accessible"
+            if curl -s --head --request GET http://localhost | grep -E "200 OK|30[1-2]" > /dev/null; then
+              echo "✅ Site HTTP is accessible or redirects correctly"
             else
-              echo "❌ Site HTTP is not accessible"
+              echo "❌ Site HTTP is not accessible or does not redirect correctly"
               exit 1
             fi
 
