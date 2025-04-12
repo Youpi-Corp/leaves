@@ -102,9 +102,9 @@ jobs:
 
             # Tenter d'obtenir automatiquement un certificat Let's Encrypt
             sudo certbot --nginx --non-interactive --agree-tos \
-            --email votre-email@exemple.com \
+            --email basile.trebus-hamann@epitech.eu \  # Remplacez par votre email réel
             -d brain-forest.works -d www.brain-forest.works || \
-            echo "⚠️ Let's Encrypt n'a pas pu être configuré automatiquement. Exécutez manuellement: sudo certbot --nginx -d brain-forest.works -d www.brain-forest.works"
+            echo "⚠️ Let's Encrypt n'a pas pu être configuré automatiquement."
 
       - name: Verify deployment
         uses: appleboy/ssh-action@master
