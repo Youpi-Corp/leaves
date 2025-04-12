@@ -67,7 +67,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     # Ne déployer que sur push ou déclenchement manuel sur la branche main
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    # if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     environment:
       name: Production
       url: https://brain-forest.works
@@ -87,6 +87,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: 'dist/'
           target: '/home/ubuntu/brainforest'
+          debug: true # Add this line
 
       - name: Configure application on VM
         uses: appleboy/ssh-action@master
