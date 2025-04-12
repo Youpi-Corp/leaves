@@ -3,8 +3,6 @@ name: Deploy to Production VM
 on:
   push:
     branches: ['main']
-  pull_request:
-    branches: ['main'] # Exécute aussi le workflow sur les PR vers main
   workflow_dispatch:
 
 # Définition des environnements pour un déploiement contrôlé
