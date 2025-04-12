@@ -41,9 +41,58 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Installation de Nginx si nécessaire
+            if ! command -v nginx &> /dev/null; then
+              sudo apt-get update
+              sudo apt-get install -y nginx
+            fi
+
             # Déploiement des fichiers vers le répertoire web
             sudo mkdir -p /var/www/brainforest
             sudo cp -r /home/ubuntu/brainforest/dist/* /var/www/brainforest/
+            sudo chown -R www-data:www-data /var/www/brainforest
 
-            # Redémarrage des services si nécessaire
-            # sudo systemctl restart nginx
+            # Configuration de Nginx
+            cat << 'EOF' | sudo tee /etc/nginx/sites-available/brainforest
+            server {
+                listen 80;
+                server_name _;
+
+                root /var/www/brainforest;
+                index index.html;
+
+                location / {
+                    try_files $uri $uri/ /index.html;
+                }
+            }
+            EOF
+
+            # Activer le site et redémarrer Nginx
+            sudo ln -sf /etc/nginx/sites-available/brainforest /etc/nginx/sites-enabled/
+            sudo rm -f /etc/nginx/sites-enabled/default
+            sudo systemctl restart nginx
+
+      - name: Verify deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: 79.137.11.184
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Vérifier que Nginx est en cours d'exécution
+            if systemctl is-active --quiet nginx; then
+              echo "✅ Nginx is running"
+            else
+              echo "❌ Nginx is not running"
+              exit 1
+            fi
+
+            # Vérifier que le site est accessible
+            if curl -s --head --request GET http://localhost | grep "200 OK" > /dev/null; then
+              echo "✅ Site is accessible"
+            else
+              echo "❌ Site is not accessible"
+              exit 1
+            fi
+
+            echo "🚀 Déploiement terminé avec succès!"
