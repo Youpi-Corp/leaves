@@ -1,28 +1,24 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { useDraggable } from '@dnd-kit/core'
+import { BaseWidgetProps } from '../../types/WidgetTypes'
 
-export interface WidgetBaseProps {
-  info: {
-    label: string
-    text?: string
-    color?: string
-    id: string
-  }
+export interface WidgetBaseProps<T extends BaseWidgetProps = BaseWidgetProps> {
+  info: T
   content: React.ReactNode
   onDelete?: (id: string) => void
 }
 
-const WidgetBase: React.FC<WidgetBaseProps> = ({
-  info: WidgetInfo,
-  content: WidgetContent,
+const WidgetBase = <T extends BaseWidgetProps>({
+  info,
+  content,
   onDelete,
-}) => {
+}: WidgetBaseProps<T>) => {
   const [isActive, setIsActive] = useState(false)
   const nodeRef = useRef<HTMLDivElement>(null)
   const headerRef = { current: null } as { current: HTMLDivElement | null }
 
   const { attributes, listeners, setNodeRef } = useDraggable({
-    id: WidgetInfo.id,
+    id: info.id,
   })
 
   useEffect(() => {
@@ -71,18 +67,18 @@ const WidgetBase: React.FC<WidgetBaseProps> = ({
           Drag here
         </div>
       )}
-      {/* {isActive && onDelete && (
+      {isActive && onDelete && (
         <button
-          onClick={() => onDelete(WidgetInfo.id)}
+          onClick={() => onDelete(info.id)}
           className="delete-button absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
           style={{ transform: 'translate(50%, -50%)' }}
         >
           ×
         </button>
-      )} */}
+      )}
       <div className="p-4">
-        <h4>{WidgetInfo.label}</h4>
-        <div style={{ color: WidgetInfo.color || '#000' }}>{WidgetContent}</div>
+        <h4>{info.label}</h4>
+        <div style={{ color: info.color || '#000' }}>{content}</div>
       </div>
     </div>
   )

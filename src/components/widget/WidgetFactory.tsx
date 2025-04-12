@@ -1,16 +1,23 @@
 import React from 'react'
-import TextWidget from './widgets/WidgetText'
-import ImageWidget from './widgets/WidgetImage'
+import { BaseWidgetProps } from '../../types/WidgetTypes'
+import { getWidgetByType } from './WidgetRegistry'
 
-const WidgetFactory = (type: string, info: any) => {
-  switch (type) {
-    case 'TextWidget':
-      return <TextWidget info={info} />
-    case 'ImageWidget':
-      return <ImageWidget info={info} />
-    default:
-      return null
+// Import des widgets pour s'assurer qu'ils sont enregistrés
+import './widgets/WidgetText'
+import './widgets/WidgetImage'
+
+const WidgetFactory = <T extends BaseWidgetProps>(
+  type: string,
+  info: T
+): React.ReactNode => {
+  const WidgetComponent = getWidgetByType<T>(type)
+
+  if (!WidgetComponent) {
+    console.warn(`Widget de type '${type}' n'est pas enregistré.`)
+    return null
   }
+
+  return <WidgetComponent info={{ ...info, type }} />
 }
 
 export default WidgetFactory

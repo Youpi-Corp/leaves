@@ -1,16 +1,9 @@
 import React from 'react'
 import WidgetBase from '../WidgetBase'
+import { ImageWidgetProps } from '../../../types/WidgetTypes'
+import { registerWidget } from '../WidgetRegistry'
 
-interface ImageWidgetProps {
-  info: {
-    label: string
-    imageUrl: string
-    color?: string
-    id: string
-  }
-}
-
-const ImageWidget: React.FC<ImageWidgetProps> = ({ info }) => {
+const ImageWidget: React.FC<{ info: ImageWidgetProps }> = ({ info }) => {
   return (
     <WidgetBase
       info={info}
@@ -24,5 +17,8 @@ const ImageWidget: React.FC<ImageWidgetProps> = ({ info }) => {
     />
   )
 }
+
+// Enregistrement automatique du widget
+registerWidget('ImageWidget', ImageWidget)
 
 export default ImageWidget
