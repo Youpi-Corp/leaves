@@ -87,6 +87,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: 'dist/'
           target: '/home/ubuntu/brainforest'
+          debug: true # Add this line
 
       - name: Configure application on VM
         uses: appleboy/ssh-action@master
