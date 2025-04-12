@@ -2,7 +2,7 @@ name: Deploy to Production VM
 
 on:
   push:
-    branches: ['main']
+    branches: ['deployment-workflow']
   pull_request:
     branches: ['main'] # Exécute aussi le workflow sur les PR vers main
   workflow_dispatch:
@@ -67,7 +67,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     # Ne déployer que sur push ou déclenchement manuel sur la branche main
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    # if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     environment:
       name: Production
       url: https://brain-forest.works
