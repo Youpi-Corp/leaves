@@ -1,23 +1,43 @@
 import React from 'react'
 import { BaseWidgetProps } from '../../types/WidgetTypes'
-import { getWidgetByType } from './WidgetRegistry'
+import WidgetContainer from './WidgetContainer'
 
-// Import des widgets pour s'assurer qu'ils sont enregistrés
-import './widgets/WidgetText'
-import './widgets/WidgetImage'
+// Import default widgets to ensure they are registered
+// In a real application, we might have a more dynamic/lazy loading strategy
+import './widgets' // This will be a barrel file importing all widgets
 
-const WidgetFactory = <T extends BaseWidgetProps>(
-  type: string,
-  info: T
-): React.ReactNode => {
-  const WidgetComponent = getWidgetByType<T>(type)
+interface WidgetFactoryProps<T extends BaseWidgetProps> {
+  data: T
+  onUpdate?: (id: string, newData: T) => void
+  onDelete?: (id: string) => void
+  isEditable?: boolean
+  isDraggable?: boolean
+  className?: string
+}
 
-  if (!WidgetComponent) {
-    console.warn(`Widget de type '${type}' n'est pas enregistré.`)
-    return null
-  }
-
-  return <WidgetComponent info={{ ...info, type }} />
+/**
+ * WidgetFactory - Creates widget instances based on their type
+ * Serves as the main entry point for using widgets in the application
+ */
+function WidgetFactory<T extends BaseWidgetProps>({
+  data,
+  onUpdate,
+  onDelete,
+  isEditable = true,
+  isDraggable = true,
+  className,
+}: WidgetFactoryProps<T>) {
+  // The WidgetContainer handles everything, including registry lookup
+  return (
+    <WidgetContainer
+      data={data}
+      onUpdate={onUpdate}
+      onDelete={onDelete}
+      isEditable={isEditable}
+      isDraggable={isDraggable}
+      className={className}
+    />
+  )
 }
 
 export default WidgetFactory
