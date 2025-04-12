@@ -1,12 +1,18 @@
 name: Deploy to Production VM
 
 on:
-  push:
-    branches: ['main'] # Se déclenche lors d'un push sur main
+  workflow_run:
+    workflows: ['Node.js CI Build and Test']
+    branches: ['main']
+    types:
+      - completed
+
   workflow_dispatch: # Permet également un déclenchement manuel
 
 jobs:
   deploy:
+    # N'exécuter que si le workflow précédent a réussi
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -47,19 +53,35 @@ jobs:
               sudo apt-get install -y nginx
             fi
 
+            # Installation de Certbot pour les certificats SSL
+            if ! command -v certbot &> /dev/null; then
+              sudo apt-get update
+              sudo apt-get install -y certbot python3-certbot-nginx
+            fi
+
             # Déploiement des fichiers vers le répertoire web
             sudo mkdir -p /var/www/brainforest
             sudo cp -r /home/ubuntu/brainforest/dist/* /var/www/brainforest/
             sudo chown -R www-data:www-data /var/www/brainforest
 
-            # Configuration de Nginx
             cat << 'EOF' | sudo tee /etc/nginx/sites-available/brainforest
             server {
                 listen 80;
-                server_name _;
+                listen 443 ssl;
+                server_name brain-forest.works www.brain-forest.works;
 
                 root /var/www/brainforest;
                 index index.html;
+
+                # Configuration SSL (sera mise à jour par certbot)
+                ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+                ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+
+                # Paramètres SSL recommandés
+                ssl_protocols TLSv1.2 TLSv1.3;
+                ssl_prefer_server_ciphers on;
+                ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+                ssl_session_cache shared:SSL:10m;
 
                 location / {
                     try_files $uri $uri/ /index.html;
@@ -67,10 +89,22 @@ jobs:
             }
             EOF
 
+            # Générer un certificat SSL auto-signé (en attendant Let's Encrypt)
+            sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+            -keyout /etc/ssl/private/nginx-selfsigned.key \
+            -out /etc/ssl/certs/nginx-selfsigned.crt \
+            -subj "/CN=localhost"
+
             # Activer le site et redémarrer Nginx
             sudo ln -sf /etc/nginx/sites-available/brainforest /etc/nginx/sites-enabled/
             sudo rm -f /etc/nginx/sites-enabled/default
             sudo systemctl restart nginx
+
+            # Tenter d'obtenir automatiquement un certificat Let's Encrypt
+            sudo certbot --nginx --non-interactive --agree-tos \
+            --email votre-email@exemple.com \
+            -d brain-forest.works -d www.brain-forest.works || \
+            echo "⚠️ Let's Encrypt n'a pas pu être configuré automatiquement. Exécutez manuellement: sudo certbot --nginx -d brain-forest.works -d www.brain-forest.works"
 
       - name: Verify deployment
         uses: appleboy/ssh-action@master
@@ -79,7 +113,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Vérifier que Nginx est en cours d'exécution
             if systemctl is-active --quiet nginx; then
               echo "✅ Nginx is running"
             else
@@ -87,12 +120,18 @@ jobs:
               exit 1
             fi
 
-            # Vérifier que le site est accessible
             if curl -s --head --request GET http://localhost | grep "200 OK" > /dev/null; then
-              echo "✅ Site is accessible"
+              echo "✅ Site HTTP is accessible"
             else
-              echo "❌ Site is not accessible"
+              echo "❌ Site HTTP is not accessible"
               exit 1
             fi
 
-            echo "🚀 Déploiement terminé avec succès!"
+            if curl -sk --head --request GET https://localhost | grep "200 OK" > /dev/null; then
+              echo "✅ Site HTTPS is accessible"
+            else
+              echo "❌ Site HTTPS is not accessible"
+              exit 1
+            fi
+
+            echo "🚀 Deployment successful!"
