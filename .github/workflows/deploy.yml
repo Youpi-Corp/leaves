@@ -1,0 +1,49 @@
+name: Deploy to Production VM
+
+on:
+  push:
+    branches: ['main'] # Se déclenche lors d'un push sur main
+  workflow_dispatch: # Permet également un déclenchement manuel
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Deploy to VM using SSH
+        uses: appleboy/scp-action@master
+        with:
+          host: 79.137.11.184
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: 'dist/' # Le répertoire de sortie de build Vite
+          target: '/home/ubuntu/brainforest' # Répertoire cible sur la VM
+
+      - name: Configure application on VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: 79.137.11.184
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Déploiement des fichiers vers le répertoire web
+            sudo mkdir -p /var/www/brainforest
+            sudo cp -r /home/ubuntu/brainforest/dist/* /var/www/brainforest/
+
+            # Redémarrage des services si nécessaire
+            # sudo systemctl restart nginx

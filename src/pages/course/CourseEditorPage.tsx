@@ -48,7 +48,7 @@ const CourseEditorPage = () => {
       >
         <div className="flex w-full h-full">
           <div className="p-4 w-full">
-            <div className="max-w-[920px] bg-white shadow-md h-full m-auto rounded-xl flex flex-col flex-grow items-center justify-start flex-1 overflow-y-auto">
+            <div className="max-w-[920px] bg-white shadow-md h-full m-auto rounded-xl flex flex-col flex-grow items-start justify-start flex-1 overflow-clip">
               <ReactGridLayout
                 className="layout"
                 layout={layout}
