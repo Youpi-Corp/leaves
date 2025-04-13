@@ -11,6 +11,8 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      // Disable native module usage to prevent cross-platform issues
+      context: 'globalThis',
       output: {
         manualChunks: (id) => {
           // Vendor dependencies (node_modules)
