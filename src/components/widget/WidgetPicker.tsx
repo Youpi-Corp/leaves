@@ -54,44 +54,55 @@ const WidgetPicker: React.FC<WidgetPickerProps> = ({
 
     if (!metadata) return
 
-    // Create default properties for the widget type
-    let widgetData: BaseWidgetProps = {
-      id,
-      type: widgetType,
-      label: metadata.displayName,
-    }
-
-    // Add type-specific default properties
+    // Create widget data based on type
     switch (widgetType) {
-      case 'TextWidget':
-        widgetData = {
-          ...widgetData,
+      case 'TextWidget': {
+        const widgetData: BaseWidgetProps = {
+          id,
+          type: widgetType,
+          label: metadata.displayName,
           text: 'Enter your text here',
           format: 'plain',
         }
+        onWidgetSelect(widgetData)
         break
+      }
 
-      case 'ImageWidget':
-        widgetData = {
-          ...widgetData,
+      case 'ImageWidget': {
+        const widgetData: BaseWidgetProps = {
+          id,
+          type: widgetType,
+          label: metadata.displayName,
           imageUrl: 'https://via.placeholder.com/300x200?text=Select+an+image',
           altText: 'Please add alternative text',
         }
+        onWidgetSelect(widgetData)
         break
+      }
 
-      case 'ListWidget':
-        widgetData = {
-          ...widgetData,
+      case 'ListWidget': {
+        const widgetData: BaseWidgetProps = {
+          id,
+          type: widgetType,
+          label: metadata.displayName,
           items: ['Item 1', 'Item 2', 'Item 3'],
           ordered: false,
         }
+        onWidgetSelect(widgetData)
         break
+      }
 
-      // Add cases for other widget types as needed
+      default: {
+        // Default case for widgets without specific props
+        const widgetData: BaseWidgetProps = {
+          id,
+          type: widgetType,
+          label: metadata.displayName,
+        }
+        onWidgetSelect(widgetData)
+        break
+      }
     }
-
-    // Notify parent component
-    onWidgetSelect(widgetData)
   }
 
   return (
