@@ -11,7 +11,22 @@ export interface BaseWidgetProps {
   type: string
   label: string
   color?: string
+  // This allows widgets to add their own properties
+  [key: string]: unknown
 }
+
+/**
+ * Type guard to check if a widget is of a specific type
+ */
+export function isWidgetType<T extends BaseWidgetProps>(
+  widget: BaseWidgetProps,
+  type: string
+): widget is T {
+  return widget.type === type
+}
+
+// Widget-specific props can be now defined in their respective files
+// And used with type assertions or the type guard function
 
 /**
  * Widget state - controls whether the widget is in edit mode or view mode
