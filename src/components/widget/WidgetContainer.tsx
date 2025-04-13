@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { BaseWidgetProps, WidgetState } from '../../types/WidgetTypes'
 import { getWidgetByType } from './WidgetRegistry'
@@ -7,6 +7,8 @@ interface WidgetContainerProps<T extends BaseWidgetProps> {
   data: T
   onDelete?: (id: string) => void
   onUpdate?: (id: string, newData: T) => void
+  onSelect?: () => void
+  isSelected?: boolean
   isEditable?: boolean
   isDraggable?: boolean
   className?: string
@@ -20,15 +22,25 @@ function WidgetContainer<T extends BaseWidgetProps>({
   data,
   onDelete,
   onUpdate,
+  onSelect,
+  isSelected = false,
   isEditable = true,
   isDraggable = true,
   className = '',
 }: WidgetContainerProps<T>) {
-  // Widget state management
+  // Widget state management - now using isSelected from props
   const [widgetState, setWidgetState] = useState<WidgetState>({
     isEditing: false,
-    isSelected: false,
+    isSelected: isSelected,
   })
+
+  // Update internal state when isSelected prop changes
+  useEffect(() => {
+    setWidgetState((prev) => ({
+      ...prev,
+      isSelected,
+    }))
+  }, [isSelected])
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -65,10 +77,10 @@ function WidgetContainer<T extends BaseWidgetProps>({
       return
     }
 
-    setWidgetState((prev) => ({
-      ...prev,
-      isSelected: !prev.isSelected,
-    }))
+    // Call the onSelect handler from props instead of managing selection internally
+    if (onSelect) {
+      onSelect()
+    }
   }
 
   const handleEdit = () => {

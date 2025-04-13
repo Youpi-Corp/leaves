@@ -9,13 +9,7 @@ import 'react-resizable/css/styles.css'
 import Sidebar from '../../layout/Sidebar'
 import { widgetRegistry } from '../../components/widget/WidgetRegistry'
 import WidgetFactory from '../../components/widget/WidgetFactory'
-import {
-  BaseWidgetProps,
-  TextWidgetProps,
-  ImageWidgetProps,
-  ListWidgetProps,
-  CodeWidgetProps,
-} from '../../types/WidgetTypes'
+import { BaseWidgetProps } from '../../types/WidgetTypes'
 
 // Ensure widgets are imported for registration
 import '../../components/widget/widgets'
@@ -34,6 +28,7 @@ const CourseEditorPage = () => {
 
   const [layout, setLayout] = useState<Layout[]>([])
   const [widgets, setWidgets] = useState<BaseWidgetProps[]>([])
+  const [selectedWidgetId, setSelectedWidgetId] = useState<string | null>(null)
 
   // Define default widget sizes based on type
   const getWidgetDefaultSize = (
@@ -53,42 +48,6 @@ const CourseEditorPage = () => {
     }
   }
 
-  // Create default props for new widgets based on type
-  const getDefaultWidgetProps = (
-    widgetType: string
-  ): Partial<BaseWidgetProps> => {
-    switch (widgetType) {
-      case 'TextWidget':
-        return {
-          text: 'New text content',
-          format: 'plain',
-          fontSize: 'base',
-          textAlign: 'left',
-        } as Partial<TextWidgetProps>
-      case 'ImageWidget':
-        return {
-          imageUrl: 'https://via.placeholder.com/350x150',
-          altText: 'Placeholder image',
-          aspectRatio: 'original',
-        } as Partial<ImageWidgetProps>
-      case 'ListWidget':
-        return {
-          items: ['First item', 'Second item', 'Third item'],
-          ordered: false,
-          bulletStyle: 'disc',
-        } as Partial<ListWidgetProps>
-      case 'CodeWidget':
-        return {
-          code: '// Your code here\nconsole.log("Hello world!");',
-          language: 'javascript',
-          showLineNumbers: true,
-          theme: 'light',
-        } as Partial<CodeWidgetProps>
-      default:
-        return {}
-    }
-  }
-
   // Add a new widget to the page
   const handleAddWidget = (widgetType: string) => {
     const widgetId = uuidv4()
@@ -105,7 +64,6 @@ const CourseEditorPage = () => {
       id: widgetId,
       type: widgetType,
       label: metadata.displayName,
-      ...getDefaultWidgetProps(widgetType),
     }
 
     // Get appropriate default size for this widget type
@@ -134,14 +92,38 @@ const CourseEditorPage = () => {
 
   // Handle widget deletion
   const handleDeleteWidget = (id: string) => {
+    if (selectedWidgetId === id) {
+      setSelectedWidgetId(null)
+    }
     setWidgets(widgets.filter((widget) => widget.id !== id))
     setLayout(layout.filter((item) => item.i !== id))
+  }
+
+  // Handle widget selection
+  const handleWidgetSelect = (id: string) => {
+    setSelectedWidgetId(selectedWidgetId === id ? null : id)
+  }
+
+  // Add CSS classes to hide resize handles when widget is not selected
+  const getWidgetClassNames = (widgetId: string) => {
+    return `widget-container h-full ${
+      selectedWidgetId === widgetId ? 'widget-selected' : 'widget-not-selected'
+    }`
   }
 
   return (
     <DndContext>
       <div className="flex w-full h-screen items-center justify-center bg-[url(./assets/graph-paper.svg)]">
         <div className="flex w-full h-full">
+          {/* Add custom CSS for hiding resize handles when widget is not selected */}
+          <style>
+            {`
+            /* Hide resize handles for widgets that are not selected */
+            .widget-not-selected .react-resizable-handle {
+              display: none !important;
+            }
+            `}
+          </style>
           <div className="p-4 w-full">
             <div className="max-w-[920px] bg-white shadow-md h-full m-auto rounded-xl flex flex-col">
               <div className="w-full px-4 flex-1 relative">
@@ -163,11 +145,16 @@ const CourseEditorPage = () => {
                   resizeHandles={['se', 'sw', 'ne', 'nw', 'e', 'w', 's', 'n']} // Allow resizing from all sides
                 >
                   {widgets.map((widget) => (
-                    <div key={widget.id} className="widget-container h-full">
+                    <div
+                      key={widget.id}
+                      className={getWidgetClassNames(widget.id)}
+                    >
                       <WidgetFactory
                         data={widget}
                         onUpdate={handleUpdateWidget}
                         onDelete={handleDeleteWidget}
+                        onSelect={() => handleWidgetSelect(widget.id)}
+                        isSelected={selectedWidgetId === widget.id}
                         className="h-full"
                       />
                     </div>
