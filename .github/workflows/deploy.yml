@@ -54,11 +54,24 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
+      - name: Clean install environment
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+
+      - name: Fix Rollup issue (install platform-specific module)
+        run: |
+          npm install @rollup/rollup-linux-x64-gnu
+          # Add export to bypass native module loading
+          echo "export ROLLUP_SKIP_NATIVES=1" >> $GITHUB_ENV
 
       - name: Build application
         run: npm run build
+        env:
+          ROLLUP_SKIP_NATIVES: 1
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

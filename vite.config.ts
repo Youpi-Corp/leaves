@@ -10,9 +10,18 @@ export default defineConfig({
     globals: true,
   },
   build: {
+    // Force pure JavaScript implementation for better cross-platform compatibility
+    target: 'esnext',
+    minify: 'esbuild',
     rollupOptions: {
       // Disable native module usage to prevent cross-platform issues
       context: 'globalThis',
+      // Explicitly tell Rollup not to try to load native modules
+      treeshake: {
+        moduleSideEffects: 'no-external',
+        propertyReadSideEffects: false,
+        tryCatchDeoptimization: false,
+      },
       output: {
         manualChunks: (id) => {
           // Vendor dependencies (node_modules)
