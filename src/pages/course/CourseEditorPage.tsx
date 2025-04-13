@@ -144,15 +144,6 @@ const CourseEditorPage = () => {
         <div className="flex w-full h-full">
           <div className="p-4 w-full">
             <div className="max-w-[920px] bg-white shadow-md h-full m-auto rounded-xl flex flex-col">
-              <div className="p-4 w-full">
-                <h1 className="text-2xl font-bold text-gray-800 mb-4">
-                  Course Editor
-                </h1>
-                <p className="text-gray-600 mb-4">
-                  Add and arrange widgets to build your course content.
-                </p>
-              </div>
-
               <div className="w-full px-4 flex-1 relative">
                 <ReactGridLayout
                   className="layout h-full"

@@ -38,7 +38,7 @@ function WidgetContainer<T extends BaseWidgetProps>({
   if (!widget) {
     return (
       <div className="bg-red-100 border border-red-400 text-red-700 p-4 rounded">
-        Widget type "{data.type}" not found
+        Widget type &quot;{data.type}&quot; not found
       </div>
     )
   }

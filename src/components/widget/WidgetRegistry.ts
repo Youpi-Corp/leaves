@@ -12,8 +12,10 @@ import {
  * Global widget registry to store all available widgets
  */
 class WidgetRegistryManager {
-  private registry: Map<string, WidgetRegistryEntry> = new Map()
-  private eventListeners: Map<string, Function[]> = new Map()
+  // Using unknown as the base type for heterogeneous widget type storage
+  private registry: Map<string, unknown> = new Map()
+  private eventListeners: Map<string, Array<(...args: unknown[]) => void>> =
+    new Map()
 
   /**
    * Register a new widget
@@ -31,7 +33,7 @@ class WidgetRegistryManager {
     this.registry.set(metadata.type, {
       metadata,
       component,
-    })
+    } as WidgetRegistryEntry<T>)
 
     // Trigger event listeners
     this.triggerEvent('register', metadata.type)
@@ -57,7 +59,9 @@ class WidgetRegistryManager {
    * Get all widgets metadata
    */
   getAllWidgetsMetadata(): WidgetMetadata[] {
-    return Array.from(this.registry.values()).map((entry) => entry.metadata)
+    return Array.from(this.registry.values()).map(
+      (entry) => (entry as WidgetRegistryEntry<BaseWidgetProps>).metadata
+    )
   }
 
   /**
@@ -94,7 +98,10 @@ class WidgetRegistryManager {
   /**
    * Add event listener
    */
-  addEventListener(event: string, callback: Function): void {
+  addEventListener(
+    event: string,
+    callback: (...args: unknown[]) => void
+  ): void {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, [])
     }
@@ -104,7 +111,10 @@ class WidgetRegistryManager {
   /**
    * Remove event listener
    */
-  removeEventListener(event: string, callback: Function): void {
+  removeEventListener(
+    event: string,
+    callback: (...args: unknown[]) => void
+  ): void {
     const listeners = this.eventListeners.get(event)
     if (listeners) {
       const index = listeners.indexOf(callback)
@@ -117,7 +127,7 @@ class WidgetRegistryManager {
   /**
    * Trigger event
    */
-  private triggerEvent(event: string, ...args: any[]): void {
+  private triggerEvent(event: string, ...args: unknown[]): void {
     const listeners = this.eventListeners.get(event)
     if (listeners) {
       listeners.forEach((callback) => callback(...args))

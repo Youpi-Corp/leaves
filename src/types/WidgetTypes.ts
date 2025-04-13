@@ -65,7 +65,9 @@ export interface WidgetMetadata {
 /**
  * Type for the widget registry
  */
-export interface WidgetRegistryEntry<T extends BaseWidgetProps = any> {
+export interface WidgetRegistryEntry<
+  T extends BaseWidgetProps = BaseWidgetProps
+> {
   metadata: WidgetMetadata
   component: WidgetComponentInterface<T>
 }
@@ -98,4 +100,14 @@ export interface ListWidgetProps extends BaseWidgetProps {
   ordered?: boolean
   startNumber?: number
   bulletStyle?: 'disc' | 'circle' | 'square' | 'none'
+}
+
+/**
+ * Props for the code widget
+ */
+export interface CodeWidgetProps extends BaseWidgetProps {
+  code: string
+  language?: string
+  theme?: 'light' | 'dark'
+  showLineNumbers?: boolean
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  BaseWidgetProps,
   TextWidgetProps,
   WidgetViewProps,
   WidgetEditProps,
@@ -75,10 +74,20 @@ const TextWidgetView: React.FC<WidgetViewProps<TextWidgetProps>> = ({
 const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
   widgetData,
   onChange,
-  onSave,
-  onCancel,
 }) => {
   const [previewEnabled, setPreviewEnabled] = useState(false)
+
+  // Apply font size classes
+  const fontSizeClass =
+    {
+      xs: 'text-xs',
+      sm: 'text-sm',
+      base: 'text-base',
+      lg: 'text-lg',
+      xl: 'text-xl',
+      '2xl': 'text-2xl',
+      '3xl': 'text-3xl',
+    }[widgetData.fontSize || 'base'] || 'text-base'
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange({
@@ -255,8 +264,6 @@ const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
           </div>
         </div>
       )}
-
-      {/* Removed duplicate save/cancel buttons */}
     </div>
   )
 }
