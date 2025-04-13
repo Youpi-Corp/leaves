@@ -10,6 +10,8 @@ interface WidgetFactoryProps<T extends BaseWidgetProps> {
   data: T
   onUpdate?: (id: string, newData: T) => void
   onDelete?: (id: string) => void
+  onSelect?: () => void
+  isSelected?: boolean
   isEditable?: boolean
   isDraggable?: boolean
   className?: string
@@ -23,6 +25,8 @@ function WidgetFactory<T extends BaseWidgetProps>({
   data,
   onUpdate,
   onDelete,
+  onSelect,
+  isSelected,
   isEditable = true,
   isDraggable = true,
   className,
@@ -33,6 +37,8 @@ function WidgetFactory<T extends BaseWidgetProps>({
       data={data}
       onUpdate={onUpdate}
       onDelete={onDelete}
+      onSelect={onSelect}
+      isSelected={isSelected}
       isEditable={isEditable}
       isDraggable={isDraggable}
       className={className}
