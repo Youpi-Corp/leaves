@@ -8,12 +8,23 @@ import {
 } from '../../../types/WidgetTypes'
 import { registerWidget } from '../WidgetRegistry'
 
-// Define the CodeWidget props
+/**
+ * Props for the code widget
+ */
 export interface CodeWidgetProps extends BaseWidgetProps {
   code: string
-  language: string
-  showLineNumbers: boolean
-  theme: 'light' | 'dark' | 'system'
+  language?: string
+  theme?: 'light' | 'dark' | 'system'
+  showLineNumbers?: boolean
+}
+
+/**
+ * Register CodeWidget props with the registry
+ */
+declare module '../../../types/WidgetPropsRegistry' {
+  interface WidgetPropsRegistry {
+    CodeWidget: CodeWidgetProps
+  }
 }
 
 // Code Widget metadata

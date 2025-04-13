@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  TextWidgetProps,
+  BaseWidgetProps,
   WidgetViewProps,
   WidgetEditProps,
   WidgetComponentInterface,
@@ -8,6 +8,25 @@ import {
 } from '../../../types/WidgetTypes'
 import { registerWidget } from '../WidgetRegistry'
 import ReactMarkdown from 'react-markdown'
+
+/**
+ * Props for the text widget
+ */
+export interface TextWidgetProps extends BaseWidgetProps {
+  text: string
+  format?: 'plain' | 'markdown' | 'html'
+  fontSize?: string
+  textAlign?: 'left' | 'center' | 'right' | 'justify'
+}
+
+/**
+ * Register TextWidget props with the registry
+ */
+declare module '../../../types/WidgetPropsRegistry' {
+  interface WidgetPropsRegistry {
+    TextWidget: TextWidgetProps
+  }
+}
 
 // Text Widget metadata
 const textWidgetMetadata: WidgetMetadata = {

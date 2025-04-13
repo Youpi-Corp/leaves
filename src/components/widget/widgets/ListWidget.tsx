@@ -1,12 +1,31 @@
 import React, { useState } from 'react'
 import {
-  ListWidgetProps,
+  BaseWidgetProps,
   WidgetViewProps,
   WidgetEditProps,
   WidgetComponentInterface,
   WidgetMetadata,
 } from '../../../types/WidgetTypes'
 import { registerWidget } from '../WidgetRegistry'
+
+/**
+ * Props for the list widget
+ */
+export interface ListWidgetProps extends BaseWidgetProps {
+  items: string[]
+  ordered?: boolean
+  startNumber?: number
+  bulletStyle?: 'disc' | 'circle' | 'square' | 'none'
+}
+
+/**
+ * Register ListWidget props with the registry
+ */
+declare module '../../../types/WidgetPropsRegistry' {
+  interface WidgetPropsRegistry {
+    ListWidget: ListWidgetProps
+  }
+}
 
 // List Widget metadata
 const listWidgetMetadata: WidgetMetadata = {

@@ -1,12 +1,31 @@
 import React from 'react'
 import {
-  ImageWidgetProps,
+  BaseWidgetProps,
   WidgetViewProps,
   WidgetEditProps,
   WidgetComponentInterface,
   WidgetMetadata,
 } from '../../../types/WidgetTypes'
 import { registerWidget } from '../WidgetRegistry'
+
+/**
+ * Props for the image widget
+ */
+export interface ImageWidgetProps extends BaseWidgetProps {
+  imageUrl: string
+  altText?: string
+  aspectRatio?: 'original' | '1:1' | '4:3' | '16:9'
+  caption?: string
+}
+
+/**
+ * Register ImageWidget props with the registry
+ */
+declare module '../../../types/WidgetPropsRegistry' {
+  interface WidgetPropsRegistry {
+    ImageWidget: ImageWidgetProps
+  }
+}
 
 // Image Widget metadata
 const imageWidgetMetadata: WidgetMetadata = {
@@ -19,6 +38,38 @@ const imageWidgetMetadata: WidgetMetadata = {
   tags: ['image', 'media', 'photo'],
 }
 
+// Define aspect ratio options in a central location to make it easy to extend
+const ASPECT_RATIOS = {
+  original: {
+    label: 'Original',
+    class: '',
+  },
+  '1:1': {
+    label: 'Square (1:1)',
+    class: 'aspect-square',
+  },
+  '4:3': {
+    label: 'Standard (4:3)',
+    class: 'aspect-4/3',
+  },
+  '16:9': {
+    label: 'Widescreen (16:9)',
+    class: 'aspect-video',
+  },
+  // Add new aspect ratios here without modifying the component logic
+  // '3:2': {
+  //   label: 'Photo (3:2)',
+  //   class: 'aspect-3/2'
+  // },
+  // '21:9': {
+  //   label: 'Ultrawide (21:9)',
+  //   class: 'aspect-[21/9]'
+  // },
+}
+
+// Type for valid aspect ratio keys
+type AspectRatioType = keyof typeof ASPECT_RATIOS
+
 /**
  * Image Widget View Component
  * Displays an image with optional caption
@@ -28,22 +79,9 @@ const ImageWidgetView: React.FC<WidgetViewProps<ImageWidgetProps>> = ({
 }) => {
   const { imageUrl, altText, caption, aspectRatio = 'original' } = widgetData
 
-  // Determine aspect ratio class
-  let aspectRatioClass = ''
-  switch (aspectRatio) {
-    case '1:1':
-      aspectRatioClass = 'aspect-square'
-      break
-    case '4:3':
-      aspectRatioClass = 'aspect-4/3'
-      break
-    case '16:9':
-      aspectRatioClass = 'aspect-video'
-      break
-    default:
-      // Use original aspect ratio
-      aspectRatioClass = ''
-  }
+  // Get aspect ratio class dynamically from the configuration
+  const aspectRatioClass =
+    ASPECT_RATIOS[aspectRatio as AspectRatioType]?.class || ''
 
   return (
     <figure className="w-full">
@@ -102,7 +140,7 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
   const handleAspectRatioChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChange({
       ...widgetData,
-      aspectRatio: e.target.value as 'original' | '1:1' | '4:3' | '16:9',
+      aspectRatio: e.target.value as ImageWidgetProps['aspectRatio'],
     })
   }
 
@@ -163,10 +201,12 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
             onChange={handleAspectRatioChange}
             className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="original">Original</option>
-            <option value="1:1">Square (1:1)</option>
-            <option value="4:3">Standard (4:3)</option>
-            <option value="16:9">Widescreen (16:9)</option>
+            {/* Dynamically generate options from the ASPECT_RATIOS object */}
+            {Object.entries(ASPECT_RATIOS).map(([value, { label }]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
           </select>
         </div>
       </div>

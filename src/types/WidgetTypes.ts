@@ -72,42 +72,5 @@ export interface WidgetRegistryEntry<
   component: WidgetComponentInterface<T>
 }
 
-/**
- * Props for the text widget
- */
-export interface TextWidgetProps extends BaseWidgetProps {
-  text: string
-  format?: 'plain' | 'markdown' | 'html'
-  fontSize?: string
-  textAlign?: 'left' | 'center' | 'right' | 'justify'
-}
-
-/**
- * Props for the image widget
- */
-export interface ImageWidgetProps extends BaseWidgetProps {
-  imageUrl: string
-  altText?: string
-  aspectRatio?: 'original' | '1:1' | '4:3' | '16:9'
-  caption?: string
-}
-
-/**
- * Props for the list widget
- */
-export interface ListWidgetProps extends BaseWidgetProps {
-  items: string[]
-  ordered?: boolean
-  startNumber?: number
-  bulletStyle?: 'disc' | 'circle' | 'square' | 'none'
-}
-
-/**
- * Props for the code widget
- */
-export interface CodeWidgetProps extends BaseWidgetProps {
-  code: string
-  language?: string
-  theme?: 'light' | 'dark'
-  showLineNumbers?: boolean
-}
+// Legacy widget props definitions have been moved to their own files
+// Each widget now defines its own props in its own file and registers them with WidgetPropsRegistry
