@@ -3,6 +3,8 @@ name: Deploy to Production VM
 on:
   push:
     branches: ['main']
+  pull_request:
+    branches: ['main']
   workflow_dispatch:
 
 # Définition des environnements pour un déploiement contrôlé
