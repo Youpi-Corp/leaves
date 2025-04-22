@@ -3,26 +3,53 @@ import Header from '../layout/Header'
 import Footer from '../layout/Footer'
 import { userQuery } from '../api/user/user.queries'
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
 import { useLogout } from '../api/user/user.services'
+import { FaUser, FaListUl, FaPen } from 'react-icons/fa'
+import { useNavigate, useLocation } from 'react-router-dom'
+import UserSidebar from './UserSidebar'
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { logout } = useLogout()
-  
+
   const { data: user, isLoading, error } = useQuery({
-    queryKey: ['user'],
+    queryKey: ["user"],
     queryFn: () => userQuery(),
   })
 
   return (
     <>
       <Header />
+      <UserSidebar
+        title="User Menu"
+        position="left"
+        buttons={[
+          {
+            text: "My Profile",
+            icon: <FaUser />,
+            onClick: () => navigate("/profile"),
+            isActive: location.pathname === "/profile",
+          },
+          {
+            text: "Data and privacy",
+            icon: <FaListUl />,
+            onClick: () => navigate("/profile/data-privacy"),
+            isActive: location.pathname === "/profile/data-privacy",
+          },
+          {
+            text: "Appearance",
+            icon: <FaPen />,
+            onClick: () => navigate("/profile/appearance"),
+            isActive: location.pathname === "/profile/appearance",
+          },
+        ]}
+      />
       <div className="flex flex-col items-center h-screen bg-gray-100">
         <div className="h-8"></div>
         {/* User profile picture here */}
         <h1 className="text-4xl font-bold mb-4">
-          Welcome, <span className='text-bfgreen-base'>{user?.pseudo}</span>
+          Welcome, <span className="text-bfgreen-base">{user?.pseudo}</span>
         </h1>
         <p className="text-xl mb-12">From here you can manage your information and preferences for your BrainForest account</p>
         
