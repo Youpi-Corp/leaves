@@ -4,7 +4,7 @@ import Footer from '../layout/Footer'
 import { userQuery } from '../api/user/user.queries'
 import { useQuery } from '@tanstack/react-query'
 import { useLogout } from '../api/user/user.services'
-import { FaUser, FaListUl, FaPen } from 'react-icons/fa'
+import { FaUser, FaListUl, FaPen, FaPenNib, FaShieldAlt } from 'react-icons/fa'
 import { useNavigate, useLocation } from 'react-router-dom'
 import UserSidebar from './UserSidebar'
 
@@ -53,9 +53,7 @@ const ProfilePage: React.FC = () => {
         </h1>
         <p className="text-xl mb-12">From here you can manage your information and preferences for your BrainForest account</p>
         
-        {/* Container div with fixed width */}
         <div className="w-3/4 max-w-4xl">
-          {/* Your informations div */}
           <div className="flex flex-col items-start rounded-4xl border-3 p-8 text-xl font-bold w-full mb-4">
             <h2 className="text-2xl font-bold mb-6">Your Informations</h2>
             <div className="flex flex-col items-start justify-center w-full">
@@ -78,14 +76,19 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
           
-          {/* Customization and Confidentiality row div */}
           <div className="flex flex-row items-stretch justify-between w-full gap-4">
             <div className="flex flex-col items-start rounded-4xl border-3 p-8 text-xl w-1/2">
-              <h2 className="text-2xl font-bold mb-6">Customization</h2>
+              <div className="flex flex-row items-center justify-between w-full pr-4">
+                <h2 className="text-2xl font-bold mb-6">Customization</h2>
+                <FaPenNib className="text-4xl mb-4 text-bfgreen-dark" />
+              </div>
               <h3 className="text-base mb-4">Make the BrainForest interface a place you love, a place that suits you for your learning</h3>
             </div>
             <div className="flex flex-col items-start rounded-4xl border-3 p-8 text-xl w-1/2">
+            <div className="flex flex-row items-center justify-between w-full pr-4">
               <h2 className="text-2xl font-bold mb-6">Confidentiality</h2>
+              <FaShieldAlt className="text-4xl mb-4 text-bfgreen-dark" />
+            </div>
               <h3 className="text-base mb-4">Choose your privacy and security settings for your personal information</h3>
             </div>
           </div>
