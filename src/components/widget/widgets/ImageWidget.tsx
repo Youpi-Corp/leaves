@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   BaseWidgetProps,
   WidgetViewProps,
@@ -116,6 +116,8 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
   widgetData,
   onChange,
 }) => {
+  const [isDragging, setIsDragging] = useState(false)
+
   const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       ...widgetData,
@@ -151,8 +153,43 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
     })
   }
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = () => {
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+
+    const file = e.dataTransfer.files[0]
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        if (reader.result) {
+          onChange({
+            ...widgetData,
+            imageUrl: reader.result as string,
+          })
+        }
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   return (
-    <div className="space-y-4">
+    <div
+      className={`space-y-4 border-dashed border-2 ${
+        isDragging ? 'border-blue-500' : 'border-gray-300'
+      } p-4 rounded-md`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Title
