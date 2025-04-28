@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import styles from './ModuleCard.module.css';
 
 const fetchModuleInfos = (id: number) => {
   console.log(`Fetching info for module with ID: ${id}`);
@@ -8,11 +7,12 @@ const fetchModuleInfos = (id: number) => {
       description: `This is the description for module ${id}. Replace with actual data in the future.`
     };
 };
+
 interface ModuleCardProps {
   id: number;
 }
 
-const ModuleCard: React.FC<ModuleCardProps> = ({ id}) => {
+const ModuleCard: React.FC<ModuleCardProps> = ({ id }) => {
   let title = '';
   let description = '';
 
@@ -31,11 +31,11 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ id}) => {
 
   return (
     <div 
-      className={`${styles.card}`} 
+      className="bg-white rounded-lg shadow-md p-5 flex flex-col transition-all duration-200 cursor-pointer w-full max-w-[300px] hover:shadow-lg hover:-translate-y-1"
       onClick={handleClick}
     >
-      <h3 className={styles.title}>{title}</h3>
-      <p className={styles.description}>{description}</p>
+      <h3 className="text-lg font-semibold mb-2 text-bfbase-black">{title}</h3>
+      <p className="text-sm text-bfbase-darkgrey">{description}</p>
     </div>
   );
 };

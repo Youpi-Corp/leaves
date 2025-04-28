@@ -65,7 +65,6 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const [cards, setCards] = useState<{ id: number }[]>([])
 
-// Fetch carousel data on component mount
 useEffect(() => {
   const carouselData = fetchCarouselData(carouselId);  
   if (carouselData && carouselData.modules) {
@@ -73,7 +72,6 @@ useEffect(() => {
   }
 }, [carouselId]);
 
-// Get title from fetched data
 const [title, setTitle] = useState<string | undefined>();
 useEffect(() => {
   const carouselData = fetchCarouselData(carouselId);
@@ -89,7 +87,6 @@ useEffect(() => {
       
       const containerWidth = containerRef.current.offsetWidth
       
-      // Responsive breakpoints
       if (containerWidth < 640) {
         setVisibleItems(1)
       } else if (containerWidth < 1024) {
@@ -125,7 +122,7 @@ useEffect(() => {
       ref={containerRef}
     >
       {title && (
-        <h2>{title}</h2>
+        <h1>{title}</h1>
       )}
       
       <div className="relative">
