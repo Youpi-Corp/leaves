@@ -12,3 +12,15 @@ export const userQuery = async (): Promise<User> => {
   if (!response.ok) throw new Error(response.status.toString())
   return (await response.json()).data
 }
+
+export const logoutUser = async (): Promise<void> => {
+  const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.AUTH.LOGOUT), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  })
+  if (!response.ok) throw new Error(response.status.toString())
+  return
+}
