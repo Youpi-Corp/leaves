@@ -2,13 +2,20 @@ name: Deploy to Production VM
 
 on:
   push:
-    branches: ['main'] # Se déclenche lors d'un push sur main
-  workflow_dispatch: # Permet également un déclenchement manuel
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+  workflow_dispatch:
+
+# Définition des environnements pour un déploiement contrôlé
+env:
+  NODE_VERSION: '20'
 
 jobs:
-  deploy:
+  test:
+    name: Test and Validate
     runs-on: ubuntu-latest
-
+    # Toujours exécuter les tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,29 +23,95 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
+      - name: Clean install environment
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Lint code
+        run: npm run lint
+
+  build:
+    name: Build application
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Clean install environment
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fix Rollup issue (install platform-specific module)
+        run: |
+          npm install @rollup/rollup-linux-x64-gnu
+          # Add export to bypass native module loading
+          echo "export ROLLUP_SKIP_NATIVES=1" >> $GITHUB_ENV
 
       - name: Build application
         run: npm run build
+        env:
+          ROLLUP_SKIP_NATIVES: 1
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Production
+    needs: build
+    runs-on: ubuntu-latest
+    # Ne déployer que sur push ou déclenchement manuel sur la branche main
+    # if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    environment:
+      name: Production
+      url: https://brain-forest.works
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
 
       - name: Deploy to VM using SSH
         uses: appleboy/scp-action@master
         with:
-          host: 79.137.11.184
-          username: ubuntu
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: 'dist/' # Le répertoire de sortie de build Vite
-          target: '/home/ubuntu/brainforest' # Répertoire cible sur la VM
+          source: 'dist/'
+          target: '/home/ubuntu/brainforest'
+          debug: true # Add this line
 
       - name: Configure application on VM
         uses: appleboy/ssh-action@master
         with:
-          host: 79.137.11.184
-          username: ubuntu
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # Installation de Nginx si nécessaire
@@ -49,11 +122,11 @@ jobs:
 
             # Installation de Certbot pour les certificats SSL
             if ! command -v certbot &> /dev/null; then
-            sudo apt-get update
-            sudo apt-get install -y certbot python3-certbot-nginx
+              sudo apt-get update
+              sudo apt-get install -y certbot python3-certbot-nginx
             else
-            # S'assurer que le plugin Nginx est installé même si Certbot existe déjà
-            sudo apt-get install -y python3-certbot-nginx
+              # S'assurer que le plugin Nginx est installé même si Certbot existe déjà
+              sudo apt-get install -y python3-certbot-nginx
             fi
 
             # Déploiement des fichiers vers le répertoire web
@@ -64,6 +137,15 @@ jobs:
             cat << 'EOF' | sudo tee /etc/nginx/sites-available/brainforest
             server {
                 listen 80;
+                server_name brain-forest.works www.brain-forest.works;
+
+                # Redirection HTTP vers HTTPS
+                location / {
+                    return 301 https://$host$request_uri;
+                }
+            }
+
+            server {
                 listen 443 ssl;
                 server_name brain-forest.works www.brain-forest.works;
 
@@ -80,8 +162,20 @@ jobs:
                 ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
                 ssl_session_cache shared:SSL:10m;
 
+                # En-têtes de sécurité
+                add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+                add_header X-Content-Type-Options nosniff;
+                add_header X-Frame-Options SAMEORIGIN;
+                add_header X-XSS-Protection "1; mode=block";
+
                 location / {
                     try_files $uri $uri/ /index.html;
+                }
+
+                # Cache statique
+                location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+                    expires max;
+                    log_not_found off;
                 }
             }
             EOF
@@ -106,8 +200,8 @@ jobs:
       - name: Verify deployment
         uses: appleboy/ssh-action@master
         with:
-          host: 79.137.11.184
-          username: ubuntu
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             if systemctl is-active --quiet nginx; then
