@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
     <>
       <Header />
       <div className="min-h-screen">
-        <PinnedModuleCard id={-1}/>
+        <PinnedModuleCard id={1}/>
         <CardCarousel 
           carouselId='featured'
           itemsToShow={5} 
