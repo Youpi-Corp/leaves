@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'https://sap-m1i0.onrender.com',
+  BASE_URL: import.meta.env.API_BASE_URL || 'https://sap-m1i0.onrender.com',
   ENDPOINTS: {
     AUTH: {
       LOGIN: '/auth/login',
