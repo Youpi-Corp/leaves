@@ -6,9 +6,7 @@ interface CardProps {
   onClick: (id: number) => void;
 }
 
-// Function to fetch module data - extracted for easier future API implementation
 const fetchModuleData = async (moduleId: number) => {
-  // This is the mockup implementation
   const module = mockModules.find(module => module.id === moduleId);
   
   if (!module) {
@@ -106,7 +104,7 @@ const ModuleCard: React.FC<CardProps> = ({
           <p className="text-sm text-bfbase-grey mb-2">
             {truncateDescription(moduleData.description, 40)}
           </p>
-          <div className="mt-4 flex justify-between text-sm text-bfbase-grey">
+          <div className="mt-4 flex justify-between text-sm text-bfgreen-base">
             <span>
               {moduleData.lessonCount} {moduleData.lessonCount === 1 ? 'lesson' : 'lessons'}
             </span>

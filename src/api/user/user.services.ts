@@ -1,5 +1,6 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { userQuery } from './user.queries'
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
+import { userQuery, logoutUser } from './user.queries'
+import { useNavigate } from 'react-router-dom'
 
 export const useCurrentUser = () => {
   return useQuery({
@@ -10,4 +11,22 @@ export const useCurrentUser = () => {
     gcTime: 1000 * 60 * 60,
     placeholderData: keepPreviousData,
   })
+}
+
+export const useLogout = () => {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser()
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+      queryClient.removeQueries({ queryKey: ['user'] })
+      navigate('/login')
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }
+
+  return { logout: handleLogout }
 }

@@ -7,6 +7,7 @@ import RegisterPage from '../pages/auth/RegisterPage'
 import EditorDashboard from '../pages/course/EditorDashboard'
 import ModuleEditionPage from '../pages/course/ModuleEditionPage'
 import NotFoundPage from '../pages/NotFoundPage'
+import ProfilePage from '../pages/ProfilePage'
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -20,6 +21,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="/edition/dashboard/:moduleId" element={<ModuleEditionPage />} />
         
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/editor" element={<CourseEditorPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   )
