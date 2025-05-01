@@ -29,13 +29,11 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const [moduleIds, setModuleIds] = useState<number[]>([])
   const [title, setTitle] = useState<string | undefined>();
-  const [loading, setLoading] = useState(true);
-  const [cardWidth, setCardWidth] = useState(320); // Fixed card width in pixels
+  const cardWidth = 320; // Fixed card width in pixels, changed from state to constant
 
   useEffect(() => {
     const loadCarouselData = async () => {
       try {
-        setLoading(true);
         
         const carouselData = await fetchCarouselData(carouselId);
         
@@ -43,8 +41,6 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
         setTitle(carouselData.title);
       } catch (error) {
         console.error('Error loading carousel data:', error);
-      } finally {
-        setLoading(false);
       }
     };
     

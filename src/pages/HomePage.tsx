@@ -4,14 +4,6 @@ import Footer from '../layout/Footer'
 import CardCarousel from '../components/layout/CardCarousel'
 
 const HomePage: React.FC = () => {
-  const modules = [
-    { id: -1 },
-    { id: -1 },
-    { id: -1 },
-    { id: -1 },
-    { id: -1 },
-    { id: -1 },
-  ];
 
   return (
     <>

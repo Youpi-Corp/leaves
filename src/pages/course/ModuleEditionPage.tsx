@@ -45,7 +45,6 @@ const ModuleEditionPage: React.FC = () => {
 
       try {
         setLoading(true);
-        
         const module = await fetchModuleDetails(moduleId);
         
         if (module) {
@@ -172,7 +171,7 @@ const ModuleEditionPage: React.FC = () => {
             {moduleDetails.lessons.length === 0 ? (
               <div className="text-center py-16 bg-bfbase-lightgrey rounded-lg">
                 <h2 className="text-xl text-bfbase-darkgrey">
-                  This module doesn't have any lessons yet.
+                  This module doesn&apos;t have any lessons yet.
                 </h2>
                 <button 
                   className="mt-4 bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-4 rounded transition-colors"

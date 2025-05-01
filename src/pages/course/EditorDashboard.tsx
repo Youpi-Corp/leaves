@@ -84,7 +84,7 @@ const EditorDashboard: React.FC = () => {
         ) : moduleIds.length === 0 ? (
           <div className="text-center py-16 bg-bfbase-lightgrey rounded-lg">
             <h2 className="text-xl text-bfbase-darkgrey">
-              You haven't created any modules yet.
+              You haven&apos;t created any modules yet.
             </h2>
             <button 
               className="mt-4 bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-4 rounded transition-colors"
