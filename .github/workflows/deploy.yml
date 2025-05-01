@@ -73,7 +73,7 @@ jobs:
         run: npm run build
         env:
           ROLLUP_SKIP_NATIVES: 1
-          VITE_API_BASE_URL: ${{ secrets.API_BASE_URL }} # Use the secret here
+          VITE_API_BASE_URL: ${{ secrets.BASE_API_URL }} # Use the secret here
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
