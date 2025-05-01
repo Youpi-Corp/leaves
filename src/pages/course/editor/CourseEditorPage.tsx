@@ -6,16 +6,14 @@ import { DndContext } from '@dnd-kit/core'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
-import Sidebar from '../../layout/Sidebar'
-import { widgetRegistry } from '../../components/widget/WidgetRegistry'
-import WidgetFactory from '../../components/widget/WidgetFactory'
-import { BaseWidgetProps } from '../../types/WidgetTypes'
+import Sidebar from '../../../layout/Sidebar'
+import { widgetRegistry } from '../../../components/widget/WidgetRegistry'
+import WidgetFactory from '../../../components/widget/WidgetFactory'
+import { BaseWidgetProps } from '../../../types/WidgetTypes'
 
-// Ensure widgets are imported for registration
-import '../../components/widget/widgets'
+import '../../../components/widget/widgets'
 
 const CourseEditorPage = () => {
-  // Get all available widget types from the registry
   const availableWidgetTypes = widgetRegistry
     .getAllWidgetsMetadata()
     .map((metadata) => ({
