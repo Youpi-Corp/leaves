@@ -4,6 +4,7 @@ export const API_CONFIG = {
     AUTH: {
       LOGIN: '/auth/login',
       REGISTER: '/auth/register',
+      LOGOUT: '/auth/logout',
     },
     USER: {
       ME: '/user/me',

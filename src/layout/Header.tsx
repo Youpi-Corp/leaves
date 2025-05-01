@@ -15,19 +15,19 @@ const Header: React.FC = () => {
           onClick={() => navigate('/')}
           accent="none"
           className="text-xl text-bfgreen-base font-bold hover:text-bfgreen-dark"
-          icon={<img src="./brainforest.svg" className="w-8 h-8" />}
+          icon={<img src="/brainforest.svg" className="w-8 h-8" />}
         >
           BrainForest
         </Button>
         <ul className="ml-8 flex">
           <li>
-            <LinkHeader>Courses</LinkHeader>
+            <LinkHeader to="/">Courses</LinkHeader>
           </li>
           <li>
-            <LinkHeader>Explore</LinkHeader>
+            <LinkHeader to="/edition/dashboard/">Create</LinkHeader>
           </li>
           <li>
-            <LinkHeader>Contribute</LinkHeader>
+            <LinkHeader to="/">Contribute</LinkHeader>
           </li>
         </ul>
       </div>
