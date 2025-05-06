@@ -7,6 +7,7 @@ import { useLogout } from '../api/user/user.services'
 import { FaUser, FaListUl, FaPen, FaPenNib, FaShieldAlt } from 'react-icons/fa'
 import { useNavigate, useLocation } from 'react-router-dom'
 import UserSidebar from './UserSidebar'
+import CardCarousel from '../components/layout/CardCarousel'
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate()
@@ -45,13 +46,16 @@ const ProfilePage: React.FC = () => {
           },
         ]}
       />
-      <div className="flex flex-col items-center h-screen bg-gray-100">
+      <div className="flex flex-col items-center bg-gray-100 pb-16">
         <div className="h-8"></div>
         {/* User profile picture here */}
         <h1 className="text-4xl font-bold mb-4">
           Welcome, <span className="text-bfgreen-base">{user?.pseudo}</span>
         </h1>
         <p className="text-xl mb-12">From here you can manage your information and preferences for your BrainForest account</p>
+
+        {error && <div className="text-red-500">Error loading user data</div>}
+        {isLoading && <div>Loading...</div>}
         
         <div className="w-3/4 max-w-4xl">
           <div className="flex flex-col items-start rounded-4xl border-3 p-8 text-xl font-bold w-full mb-4">
@@ -92,19 +96,29 @@ const ProfilePage: React.FC = () => {
               <h3 className="text-base mb-4">Choose your privacy and security settings for your personal information</h3>
             </div>
           </div>
+
+          <div className="flex flex-col items-start rounded-4xl border-3 p-8 text-xl w-full mt-4">
+            <h2 className="text-2xl font-bold mb-6">Manage your modules and lessons</h2>
+            <CardCarousel
+              carouselId='personnal'
+              className='mb-6'
+            />
+            <CardCarousel
+              carouselId='unfinished'
+              className='mb-6'
+            />
+          </div>
           
           <div className="flex justify-center w-full mt-4">
             <button
               onClick={logout}
               className="bg-red-500 text-white px-4 py-2 rounded mt-4"
             >
-              Logout
+              Test temp Logout
             </button>
           </div>
+
         </div>
-        
-        {isLoading && <div className="mt-4">Loading...</div>}
-        {error && <div className="mt-4 text-red-500">Error loading user data</div>}
       </div>
       <Footer />
     </>
