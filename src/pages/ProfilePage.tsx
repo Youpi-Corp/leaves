@@ -8,7 +8,6 @@ import { FaUser, FaListUl, FaPen, FaPenNib, FaShieldAlt } from 'react-icons/fa'
 import { useNavigate, useLocation } from 'react-router-dom'
 import UserSidebar from './UserSidebar'
 import CardCarousel from '../components/layout/CardCarousel'
-import { mockUserData } from '../api/mockup/mockData'
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate()
