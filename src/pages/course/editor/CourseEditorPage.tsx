@@ -14,6 +14,27 @@ import { BaseWidgetProps } from '../../../types/WidgetTypes'
 import '../../../components/widget/widgets'
 
 const CourseEditorPage = () => {
+
+  const exportLesson = () => {
+    const exported = {
+      lesson: {
+        widgets: widgets.map((widget) => {
+          const layoutItem = layout.find((item) => item.i === widget.id)
+  
+          return {
+            id: widget.id,
+            type: widget.type,
+            label: widget.label,
+            size: { w: layoutItem?.w || 6, h: layoutItem?.h || 3 },
+            position: { x: layoutItem?.x || 0, y: layoutItem?.y || 0 },
+            content: { ...widget }
+          }
+        })
+      }
+    }
+    console.log(JSON.stringify(exported, null, 2))
+  }
+
   const availableWidgetTypes = widgetRegistry
     .getAllWidgetsMetadata()
     .map((metadata) => ({
@@ -110,6 +131,7 @@ const CourseEditorPage = () => {
   }
 
   return (
+    <div>
     <DndContext>
       <div className="flex w-full h-screen items-center justify-center bg-[url(./assets/graph-paper.svg)]">
         <div className="flex w-full h-full">
@@ -119,8 +141,8 @@ const CourseEditorPage = () => {
             /* Hide resize handles for widgets that are not selected */
             .widget-not-selected .react-resizable-handle {
               display: none !important;
-            }
-            `}
+              }
+              `}
           </style>
           <div className="p-4 w-full">
             <div className="max-w-[920px] bg-white shadow-md h-full m-auto rounded-xl flex flex-col">
@@ -141,11 +163,11 @@ const CourseEditorPage = () => {
                   draggableHandle=".widget-drag-handle"
                   draggableCancel=".widget-content"
                   resizeHandles={['se', 'sw', 'ne', 'nw', 'e', 'w', 's', 'n']} // Allow resizing from all sides
-                >
+                  >
                   {widgets.map((widget) => (
                     <div
-                      key={widget.id}
-                      className={getWidgetClassNames(widget.id)}
+                    key={widget.id}
+                    className={getWidgetClassNames(widget.id)}
                     >
                       <WidgetFactory
                         data={widget}
@@ -154,7 +176,7 @@ const CourseEditorPage = () => {
                         onSelect={() => handleWidgetSelect(widget.id)}
                         isSelected={selectedWidgetId === widget.id}
                         className="h-full"
-                      />
+                        />
                     </div>
                   ))}
                 </ReactGridLayout>
@@ -166,13 +188,13 @@ const CourseEditorPage = () => {
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
-                    >
+                      >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={1}
                         d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
+                        />
                     </svg>
                     <h2 className="text-xl font-medium mb-2">No widgets yet</h2>
                     <p className="max-w-sm mx-auto">
@@ -190,9 +212,18 @@ const CourseEditorPage = () => {
           title="Widgets"
           widgets={availableWidgetTypes}
           onWidgetSelect={handleAddWidget}
-        />
+          />
       </div>
     </DndContext>
+    <div>
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded-md m-4"
+        onClick={exportLesson}
+        >
+        Export Lesson
+      </button>
+    </div>
+  </div>
   )
 }
 
