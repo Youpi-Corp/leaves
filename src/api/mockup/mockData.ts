@@ -143,5 +143,31 @@ export const mockCarousels = {
   "continue": {
     title: 'Continue Learning',
     moduleIds: [1, 2, 3, 4]
-  }
+  },
+  "personnal": {
+    title: 'Your Modules',
+    moduleIds: [1, 2, 3, 4, 5]
+  },
+  "unfinished": {
+    title: 'Your Unfinished Modules',
+    moduleIds: [4, 5]
+  },
+};
+
+export const mockUserData = {
+  id: 1,
+  pseudo: 'JohnDoe',
+  email: 'john.doe@example.com',
+  role: 'editor',
+  profilePicture: 'https://example.com/profile.jpg',
+  bio: 'Passionate about web development and learning new technologies.',
+  SubscribedModules: [1, 2, 3],
+  LikedModules: [1, 2],
+  CompletedModules: [1, 2],
+  CompletedLessons: [
+    { moduleId: 1, lessonId: 1 },
+    { moduleId: 1, lessonId: 2 },
+    { moduleId: 1, lessonId: 3 },
+    { moduleId: 2, lessonId: 1 }
+  ]
 };
