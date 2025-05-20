@@ -24,3 +24,16 @@ export const logoutUser = async (): Promise<void> => {
   if (!response.ok) throw new Error(response.status.toString())
   return
 }
+
+export const updateUser = async (user: User): Promise<User> => {
+  const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.USER.UPDATE), {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(user),
+  })
+  if (!response.ok) throw new Error(response.status.toString())
+  return (await response.json()).data
+}

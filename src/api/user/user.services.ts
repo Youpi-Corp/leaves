@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
-import { userQuery, logoutUser } from './user.queries'
+import { userQuery, logoutUser, updateUser } from './user.queries'
 import { useNavigate } from 'react-router-dom'
 
 export const useCurrentUser = () => {
@@ -29,4 +29,21 @@ export const useLogout = () => {
   }
 
   return { logout: handleLogout }
+}
+
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient()
+
+  const handleUpdateUser = async (user: any) => {
+    try {
+      await updateUser(user)
+      console.log('User updated:', user)
+      // queryClient.invalidateQueries({ queryKey: ['user'] })
+      // queryClient.setQueryData(['user'], user)
+    } catch (error) {
+      console.error('Update failed:', error)
+    }
+  }
+
+  return { updateUser: handleUpdateUser }
 }

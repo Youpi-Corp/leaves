@@ -7,7 +7,8 @@ import RegisterPage from '../pages/auth/RegisterPage'
 import EditorDashboard from '../pages/course/EditorDashboard'
 import ModuleEditionPage from '../pages/course/ModuleEditionPage'
 import NotFoundPage from '../pages/NotFoundPage'
-import ProfilePage from '../pages/ProfilePage'
+import ProfilePage from '../pages/user/ProfilePage'
+import EditProfilePage from '../pages/user/EditProfilePage'
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/editor" element={<CourseEditorPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile/edit" element={<EditProfilePage />} />
       </Routes>
     </BrowserRouter>
   )

@@ -1,13 +1,14 @@
 import React from 'react'
-import Header from '../layout/Header'
-import Footer from '../layout/Footer'
-import { userQuery } from '../api/user/user.queries'
+import Header from '../../layout/Header'
+import Footer from '../../layout/Footer'
+import { userQuery } from '../../api/user/user.queries'
 import { useQuery } from '@tanstack/react-query'
-import { useLogout } from '../api/user/user.services'
-import { FaUser, FaListUl, FaPen, FaPenNib, FaShieldAlt } from 'react-icons/fa'
+import { useLogout } from '../../api/user/user.services'
+import { FaUser, FaListUl, FaPen, FaPenNib, FaShieldAlt, FaEdit } from 'react-icons/fa'
 import { useNavigate, useLocation } from 'react-router-dom'
 import UserSidebar from './UserSidebar'
-import CardCarousel from '../components/layout/CardCarousel'
+import CardCarousel from '../../components/layout/CardCarousel'
+import { mockUserData } from '../../api/mockup/mockData'
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ const ProfilePage: React.FC = () => {
   return (
     <>
       <Header />
-      <UserSidebar
+      {/* <UserSidebar
         title="User Menu"
         position="left"
         buttons={[
@@ -45,12 +46,21 @@ const ProfilePage: React.FC = () => {
             isActive: location.pathname === "/profile/appearance",
           },
         ]}
-      />
+      /> */}
       <div className="flex flex-col items-center bg-gray-100 pb-16">
         <div className="h-8"></div>
-        {/* User profile picture here */}
+        <div className="w-24 h-24 rounded-full bg-gray-300 mb-4">
+          <img
+            src={mockUserData.profilePicture}
+            alt="Profile"
+            className="w-full h-full rounded-full"
+          />
+        </div>
         <h1 className="text-4xl font-bold mb-4">
-          Welcome, <span className="text-bfgreen-base">{user?.pseudo}</span>
+          Welcome, <span className="text-bfgreen-base">
+            {user?.pseudo}
+            {/* {mockUserData.pseudo} */}
+          </span>
         </h1>
         <p className="text-xl mb-12">From here you can manage your information and preferences for your BrainForest account</p>
 
@@ -62,21 +72,38 @@ const ProfilePage: React.FC = () => {
             <h2 className="text-2xl font-bold mb-6">Your Informations</h2>
             <div className="flex flex-col items-start justify-center w-full">
               <div className="flex justify-between w-full rounded-full bg-gray-200 p-2 mb-2">
-                <span>User ID:</span>
-                <span>{user?.id}</span>
-              </div>
-              <div className="flex justify-between w-full rounded-full p-2 mb-2">
                 <span>Username:</span>
                 <span>{user?.pseudo}</span>
+                {/* <span>{mockUserData.pseudo}</span> */}
+              </div>
+              <div className="flex justify-between w-full rounded-full p-2 mb-2">
+                <span>Profile Picture</span>
+                <span>
+                  <img
+                    src={mockUserData.profilePicture}
+                    alt="Profile"
+                    className="w-12 h-12 rounded-full"
+                  />
+                </span>
               </div>
               <div className="flex justify-between w-full rounded-full bg-gray-200 p-2 mb-2">
                 <span>Role:</span>
                 <span>{user?.role}</span>
+                {/* <span>{mockUserData.role2}</span> */}
               </div>
               <div className="flex justify-between w-full rounded-full p-2 mb-2">
                 <span>Email address:</span>
                 <span>{user?.email}</span>
+                {/* <span>{mockUserData.email}</span> */}
               </div>
+            </div>
+            <div className='mt-2'>
+              <button
+                onClick={() => navigate("/profile/edit")}
+                className="text-bfgreen-base font-bold hover:text-bfgreen-dark text-base cursor-pointer border border-bfgreen-base rounded-full px-4 py-2 flex items-center">
+                  Edit your profile
+                <FaEdit className="inline-block ml-2 text-bfgreen-base" />
+              </button>
             </div>
           </div>
           
