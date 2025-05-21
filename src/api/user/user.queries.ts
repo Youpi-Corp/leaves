@@ -26,13 +26,26 @@ export const logoutUser = async (): Promise<void> => {
 }
 
 export const updateUser = async (user: User): Promise<User> => {
-  const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.USER.UPDATE), {
+  const baseUrl = getApiUrl(API_CONFIG.ENDPOINTS.USER.UPDATE);
+  const updateUrl = `${baseUrl}/${user.id}`;
+
+  const formattedUserData = {
+    pseudo: user.pseudo,
+    email: user.email,
+    password: user.password_hash,
+    role: user.role
+  };
+
+  console.log('Formatted User Data:', formattedUserData);
+  console.log('Update URL:', updateUrl);
+  
+  const response = await fetch(updateUrl, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify(user),
+    body: JSON.stringify(formattedUserData),
   })
   if (!response.ok) throw new Error(response.status.toString())
   return (await response.json()).data
