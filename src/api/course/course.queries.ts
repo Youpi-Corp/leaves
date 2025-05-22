@@ -9,7 +9,7 @@ export interface CourseCreateData {
 }
 
 export const createCourseQuery = async (courseData: CourseCreateData) => {
-  const response = await fetch(getApiUrl('/course/create'), {
+  const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.COURSE.CREATE), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export const createCourseQuery = async (courseData: CourseCreateData) => {
     credentials: 'include',
     body: JSON.stringify(courseData),
   })
-  
+
   if (!response.ok) throw new Error(response.status.toString())
   return (await response.json()).data
 }

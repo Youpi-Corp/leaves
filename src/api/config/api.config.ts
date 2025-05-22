@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'https://sap-m1i0.onrender.com',
+  BASE_URL: 'http://localhost:8080',
   ENDPOINTS: {
     AUTH: {
       LOGIN: '/auth/login',
@@ -12,6 +12,9 @@ export const API_CONFIG = {
       GET: '/user/get',
       LIST: '/user/list',
       UPDATE: '/user/update',
+    },
+    COURSE: {
+      CREATE: '/course/create',
     },
   },
 } as const
