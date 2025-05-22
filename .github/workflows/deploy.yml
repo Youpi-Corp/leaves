@@ -44,6 +44,7 @@ jobs:
     name: Build application
     needs: test
     runs-on: ubuntu-latest
+    environment: Production # Add environment here to access secrets
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -72,6 +73,7 @@ jobs:
         run: npm run build
         env:
           ROLLUP_SKIP_NATIVES: 1
+          VITE_API_BASE_URL: ${{ secrets.BASE_API_URL }} # Use the secret here
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -84,9 +86,7 @@ jobs:
     name: Deploy to Production
     needs: build
     runs-on: ubuntu-latest
-    # Ne déployer que sur push ou déclenchement manuel sur la branche main
-    # if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
-    environment:
+    environment: # Keep environment here for deployment secrets
       name: Production
       url: https://brain-forest.works
 
