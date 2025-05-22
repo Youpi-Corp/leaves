@@ -32,7 +32,8 @@ export * from './TextWidget'
 export * from './ImageWidget'
 export * from './ListWidget'
 export * from './CodeWidget'
-export * from './CalendarWidget' // Add the new calendar widget
+export * from './CalendarWidget'
+export * from '../quiz/MultipleChoiceWidget'
 
 // Create a consolidated export for easier access to all widgets
 export const widgetModulesMap = widgetModules
