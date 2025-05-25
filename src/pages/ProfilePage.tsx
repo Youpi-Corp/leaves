@@ -14,8 +14,12 @@ const ProfilePage: React.FC = () => {
   const location = useLocation()
   const { logout } = useLogout()
 
-  const { data: user, isLoading, error } = useQuery({
-    queryKey: ["user"],
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['user'],
     queryFn: () => userQuery(),
   })
 
@@ -27,22 +31,22 @@ const ProfilePage: React.FC = () => {
         position="left"
         buttons={[
           {
-            text: "My Profile",
+            text: 'My Profile',
             icon: <FaUser />,
-            onClick: () => navigate("/profile"),
-            isActive: location.pathname === "/profile",
+            onClick: () => navigate('/profile'),
+            isActive: location.pathname === '/profile',
           },
           {
-            text: "Data and privacy",
+            text: 'Data and privacy',
             icon: <FaListUl />,
-            onClick: () => navigate("/profile/data-privacy"),
-            isActive: location.pathname === "/profile/data-privacy",
+            onClick: () => navigate('/profile/data-privacy'),
+            isActive: location.pathname === '/profile/data-privacy',
           },
           {
-            text: "Appearance",
+            text: 'Appearance',
             icon: <FaPen />,
-            onClick: () => navigate("/profile/appearance"),
-            isActive: location.pathname === "/profile/appearance",
+            onClick: () => navigate('/profile/appearance'),
+            isActive: location.pathname === '/profile/appearance',
           },
         ]}
       />
@@ -52,11 +56,14 @@ const ProfilePage: React.FC = () => {
         <h1 className="text-4xl font-bold mb-4">
           Welcome, <span className="text-bfgreen-base">{user?.pseudo}</span>
         </h1>
-        <p className="text-xl mb-12">From here you can manage your information and preferences for your BrainForest account</p>
+        <p className="text-xl mb-12">
+          From here you can manage your information and preferences for your
+          BrainForest account
+        </p>
 
         {error && <div className="text-red-500">Error loading user data</div>}
         {isLoading && <div>Loading...</div>}
-        
+
         <div className="w-3/4 max-w-4xl">
           <div className="flex flex-col items-start rounded-4xl border-3 p-8 text-xl font-bold w-full mb-4">
             <h2 className="text-2xl font-bold mb-6">Your Informations</h2>
@@ -79,36 +86,38 @@ const ProfilePage: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="flex flex-row items-stretch justify-between w-full gap-4">
             <div className="flex flex-col items-start rounded-4xl border-3 p-8 text-xl w-1/2">
               <div className="flex flex-row items-center justify-between w-full pr-4">
                 <h2 className="text-2xl font-bold mb-6">Customization</h2>
                 <FaPenNib className="text-4xl mb-4 text-bfgreen-dark" />
               </div>
-              <h3 className="text-base mb-4">Make the BrainForest interface a place you love, a place that suits you for your learning</h3>
+              <h3 className="text-base mb-4">
+                Make the BrainForest interface a place you love, a place that
+                suits you for your learning
+              </h3>
             </div>
             <div className="flex flex-col items-start rounded-4xl border-3 p-8 text-xl w-1/2">
-            <div className="flex flex-row items-center justify-between w-full pr-4">
-              <h2 className="text-2xl font-bold mb-6">Confidentiality</h2>
-              <FaShieldAlt className="text-4xl mb-4 text-bfgreen-dark" />
-            </div>
-              <h3 className="text-base mb-4">Choose your privacy and security settings for your personal information</h3>
+              <div className="flex flex-row items-center justify-between w-full pr-4">
+                <h2 className="text-2xl font-bold mb-6">Confidentiality</h2>
+                <FaShieldAlt className="text-4xl mb-4 text-bfgreen-dark" />
+              </div>
+              <h3 className="text-base mb-4">
+                Choose your privacy and security settings for your personal
+                information
+              </h3>
             </div>
           </div>
 
           <div className="flex flex-col items-start rounded-4xl border-3 p-8 text-xl w-full mt-4">
-            <h2 className="text-2xl font-bold mb-6">Manage your modules and lessons</h2>
-            <CardCarousel
-              carouselId='personnal'
-              className='mb-6'
-            />
-            <CardCarousel
-              carouselId='unfinished'
-              className='mb-6'
-            />
+            <h2 className="text-2xl font-bold mb-6">
+              Manage your modules and lessons
+            </h2>{' '}
+            <CardCarousel carouselId="personal" className="mb-6" />
+            <CardCarousel carouselId="unfinished" className="mb-6" />
           </div>
-          
+
           <div className="flex justify-center w-full mt-4">
             <button
               onClick={logout}
@@ -117,7 +126,6 @@ const ProfilePage: React.FC = () => {
               Test temp Logout
             </button>
           </div>
-
         </div>
       </div>
       <Footer />
