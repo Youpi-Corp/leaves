@@ -168,11 +168,10 @@ const ModuleEditionPage: React.FC = () => {
       ? `${hours} hr ${remainingMinutes} min`
       : `${hours} hr`
   }
-
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="container mx-auto max-w-7xl py-8 px-4">
+      <div className="container mx-auto max-w-7xl py-8 px-4 flex-grow">
         {loading ? (
           <div className="flex justify-center py-16">
             <Spinner size="lg" className="border-l-bfgreen-base" />
@@ -345,7 +344,7 @@ const ModuleEditionPage: React.FC = () => {
         ) : null}
       </div>
       <Footer />
-    </>
+    </div>
   )
 }
 

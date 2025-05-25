@@ -21,6 +21,7 @@ export const API_CONFIG = {
       GET: '/module/get',
       OWNER: '/module/owner',
       COURSES: '/module/courses',
+      CREATE: '/module/create',
     }
   },
 } as const

@@ -24,6 +24,12 @@ export interface Course {
     owner_id: number | null
 }
 
+export interface ModuleCreateData {
+    title: string
+    description?: string
+    public?: boolean
+}
+
 export interface ApiResponse<T> {
     data: T
     message?: string
@@ -135,8 +141,27 @@ export const getModuleCoursesQuery = async (moduleId: number): Promise<Course[]>
             throw new Error('Not authorized to access this module')
         }
         throw new Error(`Failed to fetch module courses: ${response.status}`)
+    } const result: ApiResponse<Course[]> = await response.json()
+    return result.data
+}
+
+/**
+ * Create a new module
+ */
+export const createModuleQuery = async (moduleData: ModuleCreateData): Promise<Module> => {
+    const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.MODULE.CREATE), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(moduleData),
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to create module: ${response.status}`)
     }
 
-    const result: ApiResponse<Course[]> = await response.json()
+    const result: ApiResponse<Module> = await response.json()
     return result.data
 }

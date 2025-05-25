@@ -4,6 +4,7 @@ import Spinner from '../../components/feedback/Spinner'
 import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import ModuleCard from '../../components/layout/modulecard/ModuleCard'
+import CreateModuleModal from '../../components/layout/modulecard/CreateModuleModal'
 import { getModulesByOwnerQuery, Module } from '../../api/module/module.queries'
 import { useCurrentUser } from '../../api/user/user.services'
 
@@ -12,6 +13,7 @@ const EditorDashboard: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   // Get current user data
   const {
@@ -56,15 +58,32 @@ const EditorDashboard: React.FC = () => {
     navigate(`/edition/dashboard/${moduleId}`)
   }
 
+  const openCreateModal = () => {
+    setIsCreateModalOpen(true)
+  }
+
+  const closeCreateModal = () => {
+    setIsCreateModalOpen(false)
+  }
+
+  const handleModuleCreated = (newModule: Module) => {
+    // Add the new module to the list and close the modal
+    setModules([newModule, ...modules])
+    closeCreateModal()
+
+    // Navigate to the new module's dashboard
+    navigate(`/edition/dashboard/${newModule.id}`)
+  }
+
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="container mx-auto max-w-7xl py-8 px-4">
+      <div className="container mx-auto max-w-7xl py-8 px-4 flex-grow">
         <div className="mb-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-bfbase-black">My Modules</h1>
           <button
             className="bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-4 rounded transition-colors"
-            onClick={() => {}}
+            onClick={openCreateModal}
           >
             Create New Module
           </button>
@@ -96,7 +115,7 @@ const EditorDashboard: React.FC = () => {
             </p>
             <button
               className="mt-4 bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-4 rounded transition-colors"
-              onClick={() => navigate('/course/editor/new')}
+              onClick={openCreateModal}
             >
               Create Your First Module
             </button>
@@ -114,7 +133,14 @@ const EditorDashboard: React.FC = () => {
         )}
       </div>
       <Footer />
-    </>
+
+      {/* Create Module Modal */}
+      <CreateModuleModal
+        isOpen={isCreateModalOpen}
+        onClose={closeCreateModal}
+        onSuccess={handleModuleCreated}
+      />
+    </div>
   )
 }
 
