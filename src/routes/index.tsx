@@ -6,6 +6,8 @@ import HomePage from '../pages/HomePage'
 import RegisterPage from '../pages/auth/RegisterPage'
 import EditorDashboard from '../pages/course/EditorDashboard'
 import ModuleEditionPage from '../pages/course/ModuleEditionPage'
+import ModuleViewPage from '../pages/course/ModuleViewPage'
+import LessonViewPage from '../pages/course/LessonViewPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import ProfilePage from '../pages/ProfilePage'
 
@@ -17,9 +19,20 @@ export const AppRoutes: React.FC = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/edition/editor/" element={<CourseEditorPage />} />
+        <Route
+          path="/edition/editor/:lessonId"
+          element={<CourseEditorPage />}
+        />
         <Route path="/edition/dashboard/" element={<EditorDashboard />} />
-        <Route path="/edition/dashboard/:moduleId" element={<ModuleEditionPage />} />
-        
+        <Route
+          path="/edition/dashboard/:moduleId"
+          element={<ModuleEditionPage />}
+        />
+
+        {/* Public viewing routes */}
+        <Route path="/module/:moduleId" element={<ModuleViewPage />} />
+        <Route path="/lesson/:lessonId" element={<LessonViewPage />} />
+
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/editor" element={<CourseEditorPage />} />
         <Route path="/profile" element={<ProfilePage />} />

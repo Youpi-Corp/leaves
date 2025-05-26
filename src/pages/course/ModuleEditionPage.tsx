@@ -131,9 +131,16 @@ const ModuleEditionPage: React.FC = () => {
   const handleCreateLesson = () => {
     navigate(`/edition/editor/`)
   }
-
   const handleEditLesson = (lessonId: number) => {
     navigate(`/edition/editor/${lessonId}`)
+  }
+
+  const handleViewLesson = (lessonId: number) => {
+    navigate(`/lesson/${lessonId}`)
+  }
+
+  const handleViewModule = () => {
+    navigate(`/module/${moduleId}`)
   }
 
   const handleRenameLesson = (lessonId: number) => {
@@ -219,14 +226,22 @@ const ModuleEditionPage: React.FC = () => {
                 </p>
                 <p className="text-sm text-bfbase-grey">
                   Last edited: {formatDate(moduleDetails.lastEdited)}
-                </p>
+                </p>{' '}
               </div>
-              <button
-                className="bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-4 rounded transition-colors mt-4 md:mt-0"
-                onClick={handleCreateLesson}
-              >
-                Create New Lesson
-              </button>
+              <div className="flex space-x-3">
+                <button
+                  className="bg-bfbase-lightgrey hover:bg-bfbase-grey text-bfbase-black font-medium py-2 px-4 rounded transition-colors mt-4 md:mt-0"
+                  onClick={handleViewModule}
+                >
+                  View Module
+                </button>
+                <button
+                  className="bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-4 rounded transition-colors mt-4 md:mt-0"
+                  onClick={handleCreateLesson}
+                >
+                  Create New Lesson
+                </button>
+              </div>
             </div>
 
             <div className="border-b border-bfbase-lightgrey mb-6"></div>
@@ -249,7 +264,7 @@ const ModuleEditionPage: React.FC = () => {
                   <div
                     key={lesson.id}
                     className="border rounded-lg bg-white p-4 hover:shadow-md transition-shadow cursor-pointer relative"
-                    onClick={() => handleEditLesson(lesson.id)}
+                    onClick={() => handleViewLesson(lesson.id)}
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex-grow">
@@ -296,7 +311,19 @@ const ModuleEditionPage: React.FC = () => {
                               className="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg z-10 border border-bfbase-lightgrey"
                               onClick={(e) => e.stopPropagation()}
                             >
+                              {' '}
                               <ul className="py-1">
+                                <li>
+                                  <button
+                                    className="w-full text-left px-4 py-2 text-sm text-bfbase-black hover:bg-bfbase-lightgrey"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleViewLesson(lesson.id)
+                                    }}
+                                  >
+                                    View
+                                  </button>
+                                </li>
                                 <li>
                                   <button
                                     className="w-full text-left px-4 py-2 text-sm text-bfbase-black hover:bg-bfbase-lightgrey"

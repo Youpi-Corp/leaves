@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import ModuleCard from './modulecard/ModuleCard'
 import { CarouselService } from '../../api/services/carousel.service'
@@ -24,6 +25,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
   itemsToShow = 3,
   className = '',
 }) => {
+  const navigate = useNavigate()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [visibleItems, setVisibleItems] = useState(itemsToShow)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -88,9 +90,8 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
   }
 
   const showNavigation = modules.length > visibleItems
-
   const handleCardClick = (id: number) => {
-    console.log(`Card ${id} clicked`)
+    navigate(`/module/${id}`)
   }
 
   if (loading) {

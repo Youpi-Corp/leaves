@@ -15,6 +15,8 @@ export const API_CONFIG = {
       UPDATE: '/user/update',
     }, COURSE: {
       CREATE: '/course/create',
+      GET: '/course/get',
+      UPDATE: '/course/update',
     }, MODULE: {
       LIST: '/module/list',
       PUBLIC: '/module/public',
