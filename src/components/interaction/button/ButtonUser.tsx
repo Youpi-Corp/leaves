@@ -26,10 +26,8 @@ const ButtonUser: React.FC<UserButtonProps> = ({ className }) => {
             <Dropdown className="top-20 w-60 right-4">
               <DropdownItem icon={<FaFolder />}>My Courses</DropdownItem>
               <DropdownItem icon={<FaCog />}>Preferences</DropdownItem>
-              <DropdownItem
-                icon={<FaUser />}
-                to="/profile">
-                  Profile
+              <DropdownItem icon={<FaUser />} to="/profile">
+                Profile
               </DropdownItem>
               <Separator className="bg-bfbase-lightgrey m-2" />
               <DropdownItem
