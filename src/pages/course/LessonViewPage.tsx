@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import ReactGridLayout, { Layout } from 'react-grid-layout'
 import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import Spinner from '../../components/feedback/Spinner'
-import WidgetFactory from '../../components/widget/WidgetFactory'
 import { getCourseByIdQuery } from '../../api/course/course.queries'
 import { BaseWidgetProps } from '../../types/WidgetTypes'
-import '../../components/widget/widgets' // Import all widgets
-import 'react-grid-layout/css/styles.css'
-import 'react-resizable/css/styles.css'
 
 interface WidgetContent {
   id: string
@@ -130,6 +125,7 @@ const LessonViewPage: React.FC = () => {
 
     getLessonDetails()
   }, [lessonId])
+
   const formatDuration = (minutes: number) => {
     if (minutes < 60) {
       return `${minutes} min`
@@ -140,119 +136,118 @@ const LessonViewPage: React.FC = () => {
       ? `${hours} hr ${remainingMinutes} min`
       : `${hours} hr`
   }
-  const renderLessonContent = () => {
-    if (!lessonDetails?.content?.lesson?.widgets) {
-      return (
-        <div className="text-center py-16 bg-bfbase-lightgrey rounded-lg">
-          <h3 className="text-lg text-bfbase-darkgrey mb-2">
-            Content Coming Soon
-          </h3>
-          <p className="text-bfbase-grey">
-            This lesson is currently being prepared. Check back later for
-            interactive content.
-          </p>
-        </div>
-      )
-    }
 
-    const widgets = lessonDetails.content.lesson.widgets
-    const gridConfig = lessonDetails.content.lesson.gridConfig
-
-    // Debug log to check widget data structure
-    console.log('Widgets data:', widgets)
-    console.log('Grid config:', gridConfig)
-
-    // Use the saved layout data if available, otherwise fallback to position/size
-    const layout: Layout[] = widgets.map((widget) => {
-      if (widget.layout) {
-        // Use the exact layout information saved from the editor
-        return {
-          ...widget.layout,
-          static: true, // Make read-only in viewer
-        }
-      } else {
-        // Fallback to old format for backward compatibility
-        return {
-          i: widget.id,
-          x: typeof widget.position.x === 'number' ? widget.position.x : 0,
-          y: typeof widget.position.y === 'number' ? widget.position.y : 0,
-          w: typeof widget.size.w === 'number' ? widget.size.w : 6,
-          h: typeof widget.size.h === 'number' ? widget.size.h : 3,
-          static: true,
-        }
-      }
-    })
-
-    // Use saved grid configuration or defaults
-    const cols = gridConfig?.cols || 12
-    const rowHeight = gridConfig?.rowHeight || 40
-    const width = gridConfig?.width || 872
-    const margin = gridConfig?.margin || [12, 12]
-    const containerPadding = gridConfig?.containerPadding || [0, 0]
-    const compactType = gridConfig?.compactType || 'vertical'
+  const renderLessonOverview = () => {
+    const widgetCount = lessonDetails?.content?.lesson?.widgets?.length || 0
 
     return (
       <div className="space-y-6">
+        {' '}
         <h3 className="text-xl font-semibold text-bfbase-black mb-4">
-          Lesson Content
+          What You&apos;ll Learn
         </h3>
-        <div className="bg-white rounded-lg border p-4">
-          <div className="max-w-[920px] m-auto">
-            {' '}
-            <style>
-              {`
-                /* Hide resize handles in view mode */
-                .react-resizable-handle {
-                  display: none !important;
-                }
-                
-                /* Remove hover effects on widget containers in view mode */
-                .widget-container:hover {
-                  border-color: transparent !important;
-                  box-shadow: none !important;
-                }
-                
-                /* Ensure proper containment without breaking layout */
-                .widget-container {
-                  overflow: hidden;
-                }
-                
-                /* Ensure layout container matches editor */
-                .react-grid-layout {
-                  min-height: auto !important;
-                }
-              `}
-            </style>
-            <ReactGridLayout
-              className="layout"
-              layout={layout}
-              cols={cols}
-              rowHeight={rowHeight}
-              width={width}
-              autoSize={true}
-              compactType={compactType as 'vertical' | 'horizontal' | null}
-              margin={margin}
-              containerPadding={containerPadding}
-              isBounded={true}
-              preventCollision={false}
-              isDraggable={false}
-              isResizable={false}
-            >
-              {widgets.map((widget: WidgetContent) => (
-                <div key={widget.id} className="widget-container">
-                  {widget.content && (
-                    <WidgetFactory
-                      data={widget.content}
-                      isEditable={false}
-                      isDraggable={false}
-                      className="h-full"
+        <div className="bg-white rounded-lg border p-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-semibold text-bfbase-black mb-3">
+                Lesson Overview
+              </h4>
+              <ul className="space-y-2 text-bfbase-grey">
+                <li className="flex items-center">
+                  <svg
+                    className="w-4 h-4 mr-2 text-bfgreen-base"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
                     />
-                  )}
-                </div>
-              ))}
-            </ReactGridLayout>
+                  </svg>
+                  Interactive learning experience
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    className="w-4 h-4 mr-2 text-bfgreen-base"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {widgetCount} interactive components
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    className="w-4 h-4 mr-2 text-bfgreen-base"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Hands-on practice activities
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    className="w-4 h-4 mr-2 text-bfgreen-base"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Self-paced learning
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-bfbase-black mb-3">
+                Learning Objectives
+              </h4>
+              <ul className="space-y-2 text-bfbase-grey">
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-2 h-2 bg-bfblue-base rounded-full mt-2 mr-3"></span>
+                  Master key concepts for Level {lessonDetails?.level}
+                </li>
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-2 h-2 bg-bfblue-base rounded-full mt-2 mr-3"></span>
+                  Apply knowledge through practical exercises
+                </li>
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-2 h-2 bg-bfblue-base rounded-full mt-2 mr-3"></span>
+                  Build confidence in your understanding
+                </li>
+                <li className="flex items-start">
+                  <span className="flex-shrink-0 w-2 h-2 bg-bfblue-base rounded-full mt-2 mr-3"></span>
+                  Prepare for the next level of learning
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+        {widgetCount === 0 && (
+          <div className="bg-bfbase-lightgrey rounded-lg p-6 text-center">
+            <h4 className="text-lg text-bfbase-darkgrey mb-2">
+              Content Coming Soon
+            </h4>
+            <p className="text-bfbase-grey">
+              This lesson is currently being prepared. Check back later for
+              interactive content.
+            </p>
+          </div>
+        )}
       </div>
     )
   }
@@ -329,12 +324,9 @@ const LessonViewPage: React.FC = () => {
               <p className="text-lg text-bfbase-grey max-w-3xl">
                 {lessonDetails.description}
               </p>
-            </div>
-
+            </div>{' '}
             <div className="border-b border-bfbase-lightgrey mb-6"></div>
-
-            {renderLessonContent()}
-
+            {renderLessonOverview()}
             <div className="mt-8 flex justify-between items-center">
               <button
                 onClick={() => navigate(-1)}
@@ -344,7 +336,12 @@ const LessonViewPage: React.FC = () => {
               </button>
 
               <div className="space-x-4">
-                <button className="bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-6 rounded transition-colors">
+                <button
+                  onClick={() =>
+                    navigate(`/lesson/${lessonDetails.id}/content`)
+                  }
+                  className="bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-6 rounded transition-colors"
+                >
                   Start Lesson
                 </button>
               </div>
