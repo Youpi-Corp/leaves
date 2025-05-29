@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../layout/Header'
 import Footer from '../layout/Footer'
 import { userQuery } from '../api/user/user.queries'
@@ -7,9 +7,11 @@ import { useLogout } from '../api/user/user.services'
 import { FaPenNib, FaShieldAlt } from 'react-icons/fa'
 import UserLayout from '../components/layout/UserLayout'
 import CardCarousel from '../components/layout/CardCarousel'
+import EditProfileModal from '../components/profile/EditProfileModal'
 
 const ProfilePage: React.FC = () => {
   const { logout } = useLogout()
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   const {
     data: user,
@@ -73,37 +75,80 @@ const ProfilePage: React.FC = () => {
               From here you can manage your information and preferences for your
               BrainForest account
             </p>
-          </div>
-
+          </div>{' '}
           {/* User Information Card */}
           <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">
-              Your Information
-            </h2>
-            <div className="space-y-3">
-              <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg bg-gray-50">
-                <span className="font-medium text-gray-700">User ID:</span>
-                <span className="text-gray-600">{user?.id}</span>
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">
+                Your Information
+              </h2>
+              <button
+                className="px-4 py-2 bg-bfgreen-base text-white rounded hover:bg-bfgreen-dark"
+                onClick={() => setIsEditModalOpen(true)}
+              >
+                Edit Profile
+              </button>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-6 mb-6">
+              <div className="md:w-1/3 flex flex-col items-center">
+                {user?.profile_picture ? (
+                  <img
+                    src={user.profile_picture}
+                    alt={`${user.pseudo}'s profile`}
+                    className="w-48 h-48 rounded-full object-cover border-4 border-bfgreen-base"
+                  />
+                ) : (
+                  <div className="w-48 h-48 rounded-full bg-gray-200 flex items-center justify-center border-4 border-bfgreen-base">
+                    <span className="text-6xl text-gray-400">
+                      {user?.pseudo?.charAt(0)?.toUpperCase() || 'U'}
+                    </span>
+                  </div>
+                )}
+                <p className="mt-4 text-sm text-gray-500">Profile Picture</p>
               </div>
-              <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg">
-                <span className="font-medium text-gray-700">Username:</span>
-                <span className="text-gray-600">{user?.pseudo}</span>
-              </div>{' '}
-              <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg bg-gray-50">
-                <span className="font-medium text-gray-700">Roles:</span>
-                <span className="text-gray-600 capitalize">
-                  {user?.roles?.join(', ') || 'No roles'}
-                </span>
-              </div>
-              <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg">
-                <span className="font-medium text-gray-700">
-                  Email address:
-                </span>
-                <span className="text-gray-600">{user?.email}</span>
+
+              <div className="md:w-2/3">
+                <div className="mb-4">
+                  <h3 className="text-lg font-medium text-gray-700 mb-2">
+                    Biography
+                  </h3>
+                  <div className="bg-gray-50 rounded-lg p-4 min-h-[100px]">
+                    {user?.biography ? (
+                      <p className="text-gray-600">{user.biography}</p>
+                    ) : (
+                      <p className="text-gray-400 italic">
+                        No biography provided
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg bg-gray-50">
+                    <span className="font-medium text-gray-700">User ID:</span>
+                    <span className="text-gray-600">{user?.id}</span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg">
+                    <span className="font-medium text-gray-700">Username:</span>
+                    <span className="text-gray-600">{user?.pseudo}</span>
+                  </div>{' '}
+                  <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg bg-gray-50">
+                    <span className="font-medium text-gray-700">Roles:</span>
+                    <span className="text-gray-600 capitalize">
+                      {user?.roles?.join(', ') || 'No roles'}
+                    </span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg">
+                    <span className="font-medium text-gray-700">
+                      Email address:
+                    </span>
+                    <span className="text-gray-600">{user?.email}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
           {/* Settings Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -132,7 +177,6 @@ const ProfilePage: React.FC = () => {
               </p>
             </div>
           </div>
-
           {/* Modules Management */}
           <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
             <h2 className="text-2xl font-bold mb-6 text-gray-800">
@@ -143,7 +187,6 @@ const ProfilePage: React.FC = () => {
               <CardCarousel carouselId="unfinished" className="mb-6" />
             </div>
           </div>
-
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
@@ -153,6 +196,14 @@ const ProfilePage: React.FC = () => {
               Logout
             </button>{' '}
           </div>
+          {/* Edit Profile Modal */}
+          {user && isEditModalOpen && (
+            <EditProfileModal
+              isOpen={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              user={user}
+            />
+          )}
         </div>
       </UserLayout>
       <Footer />
