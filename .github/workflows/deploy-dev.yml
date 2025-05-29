@@ -1,0 +1,201 @@
+name: Deploy to Development Environment
+
+on:
+  push:
+    branches: ['dev']
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  test:
+    name: Test and Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Clean install environment
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Lint code
+        run: npm run lint
+
+  build:
+    name: Build development application
+    needs: test
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Clean install environment
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fix Rollup issue
+        run: |
+          npm install @rollup/rollup-linux-x64-gnu
+          echo "export ROLLUP_SKIP_NATIVES=1" >> $GITHUB_ENV
+
+      - name: Build application
+        run: npm run build
+        env:
+          ROLLUP_SKIP_NATIVES: 1
+          VITE_API_BASE_URL: ${{ secrets.DEV_API_BASE_URL }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-build-output
+          path: dist/
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Development
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: Development
+      url: https://dev.brain-forest.works
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dev-build-output
+          path: dist/
+
+      - name: Deploy to VM using SSH
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+          source: 'dist/'
+          target: '/home/ubuntu/brainforest-dev'
+          debug: true
+
+      - name: Configure development application on VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+          script: |
+            sudo mkdir -p /var/www/brainforest-dev
+            sudo cp -r /home/ubuntu/brainforest-dev/dist/* /var/www/brainforest-dev/
+            sudo chown -R www-data:www-data /var/www/brainforest-dev
+
+            cat << 'EOF' | sudo tee /etc/nginx/sites-available/brainforest-dev
+            server {
+                listen 80;
+                server_name dev.brain-forest.works;
+                location / {
+                    return 301 https://$host$request_uri;
+                }
+            }
+
+            server {
+                listen 443 ssl;
+                server_name dev.brain-forest.works;
+                root /var/www/brainforest-dev;
+                index index.html;
+
+                ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+                ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+                ssl_protocols TLSv1.2 TLSv1.3;
+                ssl_prefer_server_ciphers on;
+                ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+                ssl_session_cache shared:SSL:10m;
+
+                add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+                add_header X-Content-Type-Options nosniff;
+                add_header X-Frame-Options SAMEORIGIN;
+                add_header X-XSS-Protection "1; mode=block";
+                add_header X-Environment "development";
+                add_header X-Robots-Tag "noindex, nofollow";
+
+                location / {
+                    try_files $uri $uri/ /index.html;
+                }
+
+                location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+                    expires 1h;
+                    log_not_found off;
+                }
+            }
+            EOF
+
+            sudo ln -sf /etc/nginx/sites-available/brainforest-dev /etc/nginx/sites-enabled/
+
+            if sudo nginx -t; then
+                echo "✅ Nginx configuration is valid"
+                sudo systemctl reload nginx
+            else
+                echo "❌ Nginx configuration is invalid"
+                exit 1
+            fi
+
+            sudo certbot --nginx --non-interactive --agree-tos \
+            --email basile.trebus-hamann@epitech.eu \
+            -d dev.brain-forest.works || \
+            echo "⚠️ Let's Encrypt certificate could not be configured automatically."
+
+      - name: Verify development deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+          script: |
+            if systemctl is-active --quiet nginx; then
+              echo "✅ Nginx is running"
+            else
+              echo "❌ Nginx is not running"
+              exit 1
+            fi
+
+            if [ -d "/var/www/brainforest-dev" ] && [ "$(ls -A /var/www/brainforest-dev)" ]; then
+              echo "✅ Development files deployed successfully"
+              ls -la /var/www/brainforest-dev/
+            else
+              echo "❌ Development directory is empty or doesn't exist"
+              exit 1
+            fi
+
+            if curl -sk --head --request GET https://localhost | grep "HTTP" > /dev/null; then
+              echo "✅ HTTPS server is responding"
+            else
+              echo "❌ HTTPS server is not responding"
+              exit 1
+            fi
+
+            echo "🚀 Development deployment successful!"
+            echo "🌐 Development site should be available at: https://dev.brain-forest.works"
