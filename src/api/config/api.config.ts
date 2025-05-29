@@ -13,6 +13,8 @@ export const API_CONFIG = {
       GET: '/user/get',
       LIST: '/user/list',
       UPDATE: '/user/update',
+      // Update the current user's profile (simplified for frontend)
+      UPDATE_ME: '/user/update/me',
     }, COURSE: {
       CREATE: '/course/create',
       GET: '/course/get',

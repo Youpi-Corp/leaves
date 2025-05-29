@@ -4,4 +4,6 @@ export interface User {
   password_hash: string
   pseudo: string
   roles: string[]
+  biography?: string
+  profile_picture?: string
 }
