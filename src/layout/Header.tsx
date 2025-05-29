@@ -18,10 +18,13 @@ const Header: React.FC = () => {
           icon={<img src="/brainforest.svg" className="w-8 h-8" />}
         >
           BrainForest
-        </Button>
+        </Button>{' '}
         <ul className="ml-8 flex">
           <li>
             <LinkHeader to="/">Courses</LinkHeader>
+          </li>
+          <li>
+            <LinkHeader to="/subscriptions">Subscriptions</LinkHeader>
           </li>
           <li>
             <LinkHeader to="/edition/dashboard/">Create</LinkHeader>

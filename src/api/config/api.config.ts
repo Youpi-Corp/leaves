@@ -25,6 +25,10 @@ export const API_CONFIG = {
       COURSES: '/module/courses',
       CREATE: '/module/create',
       UPDATE: '/module/update',
+      SUBSCRIBE: '/module/subscribe',
+      UNSUBSCRIBE: '/module/unsubscribe',
+      SUBSCRIBED: '/module/subscribed',
+      IS_SUBSCRIBED: '/module/is-subscribed',
     }
   },
 } as const

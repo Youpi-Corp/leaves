@@ -192,3 +192,83 @@ export const updateModuleQuery = async (moduleId: number, moduleData: Partial<Mo
     const result: ApiResponse<Module> = await response.json()
     return result.data
 }
+
+/**
+ * Check if user is subscribed to a module
+ */
+export const checkModuleSubscriptionQuery = async (moduleId: number): Promise<boolean> => {
+    const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.MODULE.IS_SUBSCRIBED}/${moduleId}`), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to check subscription status: ${response.status}`)
+    }
+
+    const result: ApiResponse<{ isSubscribed: boolean }> = await response.json()
+    return result.data.isSubscribed
+}
+
+/**
+ * Subscribe to a module
+ */
+export const subscribeToModuleQuery = async (moduleId: number): Promise<boolean> => {
+    const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.MODULE.SUBSCRIBE}/${moduleId}`), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to subscribe to module: ${response.status}`)
+    }
+
+    const result: ApiResponse<{ subscribed: boolean }> = await response.json()
+    return result.data.subscribed
+}
+
+/**
+ * Unsubscribe from a module
+ */
+export const unsubscribeFromModuleQuery = async (moduleId: number): Promise<boolean> => {
+    const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.MODULE.UNSUBSCRIBE}/${moduleId}`), {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to unsubscribe from module: ${response.status}`)
+    }
+
+    const result: ApiResponse<{ unsubscribed: boolean }> = await response.json()
+    return result.data.unsubscribed
+}
+
+/**
+ * Get modules user is subscribed to
+ */
+export const getSubscribedModulesQuery = async (): Promise<Module[]> => {
+    const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.MODULE.SUBSCRIBED), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch subscribed modules: ${response.status}`)
+    }
+
+    const result: ApiResponse<Module[]> = await response.json()
+    return result.data
+}

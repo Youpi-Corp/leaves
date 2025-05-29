@@ -3,5 +3,5 @@ export interface User {
   id: number
   password_hash: string
   pseudo: string
-  role: string
+  roles: string[]
 }
