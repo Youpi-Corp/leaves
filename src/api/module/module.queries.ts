@@ -165,3 +165,30 @@ export const createModuleQuery = async (moduleData: ModuleCreateData): Promise<M
     const result: ApiResponse<Module> = await response.json()
     return result.data
 }
+
+/**
+ * Update an existing module
+ */
+export const updateModuleQuery = async (moduleId: number, moduleData: Partial<ModuleCreateData>): Promise<Module> => {
+    const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.MODULE.UPDATE}/${moduleId}`), {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(moduleData),
+    })
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error('Module not found')
+        }
+        if (response.status === 403) {
+            throw new Error('Not authorized to update this module')
+        }
+        throw new Error(`Failed to update module: ${response.status}`)
+    }
+
+    const result: ApiResponse<Module> = await response.json()
+    return result.data
+}
