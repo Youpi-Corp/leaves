@@ -3,10 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import Spinner from '../../components/feedback/Spinner'
+import Toast from '../../components/feedback/Toast'
+import EditModuleModal from '../../components/layout/modulecard/EditModuleModal'
 import {
   getModuleByIdQuery,
   getModuleCoursesQuery,
+  updateModuleQuery,
   Course,
+  Module,
 } from '../../api/module/module.queries'
 
 interface Lesson {
@@ -87,6 +91,10 @@ const ModuleEditionPage: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [currentModule, setCurrentModule] = useState<Module | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [showToast, setShowToast] = useState(false)
 
   useEffect(() => {
     const getModuleDetails = async () => {
@@ -116,7 +124,6 @@ const ModuleEditionPage: React.FC = () => {
 
     getModuleDetails()
   }, [moduleId])
-
   useEffect(() => {
     const handleClickOutside = () => {
       setActiveDropdown(null)
@@ -127,6 +134,17 @@ const ModuleEditionPage: React.FC = () => {
       document.removeEventListener('click', handleClickOutside)
     }
   }, [])
+  // Auto-show toast when success message is set
+  useEffect(() => {
+    if (successMessage) {
+      setShowToast(true)
+    }
+  }, [successMessage])
+
+  const handleToastClose = () => {
+    setShowToast(false)
+    setSuccessMessage(null)
+  }
 
   const handleCreateLesson = () => {
     navigate(`/edition/editor/`)
@@ -146,9 +164,57 @@ const ModuleEditionPage: React.FC = () => {
   const handleRenameLesson = (lessonId: number) => {
     console.log(`Rename lesson ${lessonId}`)
   }
-
   const handleDeleteLesson = (lessonId: number) => {
     console.log(`Delete lesson ${lessonId}`)
+  }
+  const handleEditModule = () => {
+    if (moduleDetails) {
+      const module: Module = {
+        id: moduleDetails.id,
+        title: moduleDetails.title,
+        description: moduleDetails.description,
+        owner_id: null,
+        courses_count: moduleDetails.lessons.length,
+        public: true, // Default value, this will be fetched in the modal
+        dtc: null,
+        dtm: moduleDetails.lastEdited,
+      }
+      setCurrentModule(module)
+      setIsEditModalOpen(true)
+    }
+  }
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false)
+    setCurrentModule(null)
+  }
+
+  const handleModuleUpdate = async (updatedModule: Module) => {
+    try {
+      await updateModuleQuery(updatedModule.id, {
+        title: updatedModule.title || undefined,
+        description: updatedModule.description || undefined,
+        public: updatedModule.public,
+      })
+
+      // Show success message and close modal immediately
+      setSuccessMessage('Module updated successfully!')
+      setIsEditModalOpen(false)
+      setCurrentModule(null)
+
+      // Refresh the module details in the background (non-blocking)
+      setTimeout(async () => {
+        if (moduleId) {
+          const refreshedModule = await fetchModuleDetails(moduleId)
+          if (refreshedModule) {
+            setModuleDetails(refreshedModule)
+          }
+        }
+      }, 0)
+    } catch (error) {
+      console.error('Error updating module:', error)
+      // Error handling is managed by the modal component
+    }
   }
 
   const toggleDropdown = (e: React.MouseEvent, lessonId: number) => {
@@ -227,21 +293,27 @@ const ModuleEditionPage: React.FC = () => {
                 <p className="text-sm text-bfbase-grey">
                   Last edited: {formatDate(moduleDetails.lastEdited)}
                 </p>{' '}
-              </div>
+              </div>{' '}
               <div className="flex space-x-3">
                 <button
                   className="bg-bfbase-lightgrey hover:bg-bfbase-grey text-bfbase-black font-medium py-2 px-4 rounded transition-colors mt-4 md:mt-0"
                   onClick={handleViewModule}
                 >
                   View Module
+                </button>{' '}
+                <button
+                  className="bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-4 rounded transition-colors mt-4 md:mt-0"
+                  onClick={handleEditModule}
+                >
+                  Edit Module
                 </button>
                 <button
                   className="bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-4 rounded transition-colors mt-4 md:mt-0"
                   onClick={handleCreateLesson}
                 >
                   Create New Lesson
-                </button>
-              </div>
+                </button>{' '}
+              </div>{' '}
             </div>
 
             <div className="border-b border-bfbase-lightgrey mb-6"></div>
@@ -370,7 +442,24 @@ const ModuleEditionPage: React.FC = () => {
           </>
         ) : null}
       </div>
-      <Footer />
+      <Footer />{' '}
+      {isEditModalOpen && currentModule && (
+        <EditModuleModal
+          module={currentModule}
+          isOpen={isEditModalOpen}
+          onClose={handleCloseEditModal}
+          onSuccess={handleModuleUpdate}
+        />
+      )}
+      {successMessage && (
+        <Toast
+          message={successMessage}
+          type="success"
+          isVisible={showToast}
+          onClose={handleToastClose}
+          duration={5000}
+        />
+      )}
     </div>
   )
 }

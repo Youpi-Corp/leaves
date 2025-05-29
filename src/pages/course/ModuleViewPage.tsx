@@ -8,6 +8,12 @@ import {
   getModuleCoursesQuery,
   Course,
 } from '../../api/module/module.queries'
+import {
+  useModuleSubscription,
+  useSubscribeToModule,
+  useUnsubscribeFromModule,
+} from '../../api/module/module.services'
+import { useCurrentUser } from '../../api/user/user.services'
 
 interface Lesson {
   id: number
@@ -84,6 +90,14 @@ const ModuleViewPage: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // User and subscription hooks
+  const { data: currentUser, isLoading: isUserLoading } = useCurrentUser()
+  const moduleIdNumber = moduleId ? parseInt(moduleId) : 0
+  const { data: isSubscribed, isLoading: isSubscriptionLoading } =
+    useModuleSubscription(moduleIdNumber)
+  const subscribeToModule = useSubscribeToModule()
+  const unsubscribeFromModule = useUnsubscribeFromModule()
+
   useEffect(() => {
     const getModuleDetails = async () => {
       if (!moduleId) {
@@ -112,9 +126,39 @@ const ModuleViewPage: React.FC = () => {
 
     getModuleDetails()
   }, [moduleId])
-
   const handleLessonClick = (lessonId: number) => {
+    // Check if user is authenticated and subscribed before allowing lesson access
+    if (!currentUser) {
+      navigate('/login')
+      return
+    }
+
+    if (!isSubscribed) {
+      // Show subscription required message or prompt
+      return
+    }
+
     navigate(`/lesson/${lessonId}`)
+  }
+
+  const handleSubscriptionToggle = async () => {
+    if (!currentUser) {
+      navigate('/login')
+      return
+    }
+
+    if (!moduleIdNumber) return
+
+    try {
+      if (isSubscribed) {
+        await unsubscribeFromModule.mutateAsync(moduleIdNumber)
+      } else {
+        await subscribeToModule.mutateAsync(moduleIdNumber)
+      }
+    } catch (err) {
+      console.error('Subscription action failed:', err)
+      setError('Failed to update subscription. Please try again.')
+    }
   }
 
   const formatDuration = (minutes: number) => {
@@ -156,6 +200,7 @@ const ModuleViewPage: React.FC = () => {
           </div>
         ) : moduleDetails ? (
           <>
+            {' '}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
               <div>
                 <div className="flex items-center mb-2">
@@ -220,10 +265,51 @@ const ModuleViewPage: React.FC = () => {
                   </span>
                 </div>
               </div>
+
+              {/* Subscription Button */}
+              <div className="mt-4 md:mt-0">
+                {currentUser && !isUserLoading && !isSubscriptionLoading && (
+                  <button
+                    onClick={handleSubscriptionToggle}
+                    disabled={
+                      subscribeToModule.isPending ||
+                      unsubscribeFromModule.isPending
+                    }
+                    className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+                      isSubscribed
+                        ? 'bg-bfred-light text-bfred-base hover:bg-bfred-base hover:text-white border border-bfred-base'
+                        : 'bg-bfgreen-base text-white hover:bg-bfgreen-dark'
+                    } ${
+                      subscribeToModule.isPending ||
+                      unsubscribeFromModule.isPending
+                        ? 'opacity-50 cursor-not-allowed'
+                        : ''
+                    }`}
+                  >
+                    {subscribeToModule.isPending ||
+                    unsubscribeFromModule.isPending ? (
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Loading...
+                      </div>
+                    ) : isSubscribed ? (
+                      'Unsubscribe'
+                    ) : (
+                      'Subscribe'
+                    )}
+                  </button>
+                )}
+                {!currentUser && !isUserLoading && (
+                  <button
+                    onClick={() => navigate('/login')}
+                    className="px-6 py-3 bg-bfgreen-base text-white rounded-lg font-medium hover:bg-bfgreen-dark transition-colors"
+                  >
+                    Login to Subscribe
+                  </button>
+                )}
+              </div>
             </div>
-
-            <div className="border-b border-bfbase-lightgrey mb-6"></div>
-
+            <div className="border-b border-bfbase-lightgrey mb-6"></div>{' '}
             {moduleDetails.lessons.length === 0 ? (
               <div className="text-center py-16 bg-bfbase-lightgrey rounded-lg">
                 <h2 className="text-xl text-bfbase-darkgrey">
@@ -238,11 +324,48 @@ const ModuleViewPage: React.FC = () => {
                 <h2 className="text-xl font-semibold text-bfbase-black mb-4">
                   Lessons
                 </h2>
+
+                {/* Subscription required notice */}
+                {currentUser && !isSubscribed && !isSubscriptionLoading && (
+                  <div className="bg-bfyellow-light border border-bfyellow-base rounded-lg p-4 mb-6">
+                    <div className="flex items-center">
+                      <svg
+                        className="w-5 h-5 text-bfyellow-base mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"
+                        />
+                      </svg>
+                      <p className="text-bfyellow-dark">
+                        <strong>Subscription Required:</strong> You need to
+                        subscribe to this module to access the lessons.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Lessons list */}
                 {moduleDetails.lessons.map((lesson, index) => (
                   <div
                     key={lesson.id}
-                    className="border rounded-lg bg-white p-6 hover:shadow-md transition-all cursor-pointer hover:border-bfgreen-base"
-                    onClick={() => handleLessonClick(lesson.id)}
+                    className={`border rounded-lg bg-white p-6 transition-all ${
+                      currentUser && isSubscribed
+                        ? 'hover:shadow-md cursor-pointer hover:border-bfgreen-base'
+                        : currentUser && !isSubscribed
+                        ? 'opacity-60 cursor-not-allowed'
+                        : 'hover:shadow-md cursor-pointer hover:border-bfgreen-base'
+                    }`}
+                    onClick={() => {
+                      if (!currentUser || isSubscribed) {
+                        handleLessonClick(lesson.id)
+                      }
+                    }}
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex-grow">
@@ -253,6 +376,21 @@ const ModuleViewPage: React.FC = () => {
                           <h3 className="text-lg font-semibold text-bfbase-black">
                             {lesson.title}
                           </h3>
+                          {currentUser && !isSubscribed && (
+                            <svg
+                              className="w-5 h-5 text-bfyellow-base ml-2"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 15v2m-6 0h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                              />
+                            </svg>
+                          )}
                         </div>
                         <p className="mt-2 text-bfbase-grey pl-11">
                           {lesson.description}
