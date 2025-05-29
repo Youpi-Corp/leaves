@@ -7,7 +7,7 @@ import Separator from '../components/layout/Separator'
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-linear-to-b from-transparent to-bfbrown-lighter px-16 py-8">
+    <footer className="relative z-20 w-full bg-linear-to-b from-transparent to-bfbrown-lighter px-16 py-8">
       <div className="flex items-center space-x-10">
         <ul className="space-y-1 text-sm font-medium">
           <li className="text-bfbrown-dark text-sm font-semibold mb-3">

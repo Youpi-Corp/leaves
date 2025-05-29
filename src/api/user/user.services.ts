@@ -18,7 +18,9 @@ export const useLogout = () => {
   const navigate = useNavigate()
 
   const handleLogout = async () => {
+    console.log('Logging out...')
     try {
+      console.log('Calling logoutUser...')
       await logoutUser()
       queryClient.invalidateQueries({ queryKey: ['user'] })
       queryClient.removeQueries({ queryKey: ['user'] })

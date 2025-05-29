@@ -11,6 +11,7 @@ interface DropdownItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
   to?: string
   icon?: React.ReactNode
   children?: React.ReactNode
+  onClick?: () => void
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ className, children }) => {
@@ -28,10 +29,12 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
   icon,
   to = '',
   children,
+  onClick,
 }) => {
   return (
     <Link
       to={to}
+      onClick={onClick}
       className={`flex items-center p-3 rounded-xl w-full hover:bg-bfbase-lightgrey text-bfbase-darkgrey transition-colors ${className}`}
     >
       {icon && (
