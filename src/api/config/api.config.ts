@@ -13,10 +13,18 @@ export const API_CONFIG = {
       GET: '/user/get',
       LIST: '/user/list',
       UPDATE: '/user/update',
-    },
-    COURSE: {
+    }, COURSE: {
       CREATE: '/course/create',
-    },
+      GET: '/course/get',
+      UPDATE: '/course/update',
+    }, MODULE: {
+      LIST: '/module/list',
+      PUBLIC: '/module/public',
+      GET: '/module/get',
+      OWNER: '/module/owner',
+      COURSES: '/module/courses',
+      CREATE: '/module/create',
+    }
   },
 } as const
 

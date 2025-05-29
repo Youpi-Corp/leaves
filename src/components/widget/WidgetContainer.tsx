@@ -115,18 +115,20 @@ function WidgetContainer<T extends BaseWidgetProps>({
       onUpdate(data.id, newData)
     }
   }
-
   // Compute CSS classes
   const containerClasses = [
-    'relative border rounded-lg transition-all duration-200 shadow-sm hover:shadow-md w-full h-full flex flex-col',
+    'relative border rounded-lg transition-all duration-200 w-full h-full flex flex-col',
+    // Only apply hover effects in edit mode (isEditable)
+    isEditable ? 'shadow-sm hover:shadow-md' : 'shadow-none',
     isDragging ? 'opacity-50 shadow-xl' : 'opacity-100',
     widgetState.isSelected
       ? 'border-blue-400 shadow-md'
-      : 'border-transparent hover:border-gray-200',
+      : isEditable
+      ? 'border-transparent hover:border-gray-200'
+      : 'border-transparent',
     widgetState.isEditing ? 'ring-2 ring-blue-400' : '',
     className,
   ].join(' ')
-
   // Compute content area classes - add scrolling in edit mode
   const contentClasses = [
     'widget-content p-4 flex-grow flex flex-col w-full h-full',
