@@ -180,11 +180,10 @@ const LessonViewPage: React.FC = () => {
       } : null)
       
       // Call the appropriate backend function
-      let result
       if (previousLikeState) {
-        result = await unlikeCourseQuery(lessonDetails.id)
+        await unlikeCourseQuery(lessonDetails.id)
       } else {
-        result = await likeCourseQuery(lessonDetails.id)
+        await likeCourseQuery(lessonDetails.id)
       }
       
       // Fetch the updated likes count to ensure consistency
