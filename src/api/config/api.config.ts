@@ -19,6 +19,10 @@ export const API_CONFIG = {
       CREATE: '/course/create',
       GET: '/course/get',
       UPDATE: '/course/update',
+      HAS_LIKED: '/course/has-liked',
+      LIKE: '/course/like',
+      UNLIKE: '/course/unlike',
+      NUMBER_OF_LIKES: '/course/likes-count',
     }, MODULE: {
       LIST: '/module/list',
       PUBLIC: '/module/public',
