@@ -516,7 +516,10 @@ const ModuleEditionPage: React.FC = () => {
       )}
         {/* Delete Confirmation Modal */}
       {isDeleteConfirmOpen && lessonToDelete && (
-        <div className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-md flex items-center justify-center z-50">
+        <div
+          className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          >
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
