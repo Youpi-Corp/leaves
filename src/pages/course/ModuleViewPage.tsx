@@ -308,6 +308,8 @@ const ModuleViewPage: React.FC = () => {
                   </button>
                 )}
               </div>
+
+              {/* Admin button to control */}
             </div>
             <div className="border-b border-bfbase-lightgrey mb-6"></div>{' '}
             {moduleDetails.lessons.length === 0 ? (

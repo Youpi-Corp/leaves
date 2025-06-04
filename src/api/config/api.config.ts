@@ -1,6 +1,7 @@
 export const API_CONFIG = {
   BASE_URL:
-    import.meta.env.VITE_API_BASE_URL || 'https://sap-m1i0.onrender.com',
+    // import.meta.env.VITE_API_BASE_URL || 'https://sap-m1i0.onrender.com',
+    'http://localhost:8080',
   ENDPOINTS: {
     AUTH: {
       LOGIN: '/auth/login',
@@ -35,6 +36,7 @@ export const API_CONFIG = {
       UNSUBSCRIBE: '/module/unsubscribe',
       SUBSCRIBED: '/module/subscribed',
       IS_SUBSCRIBED: '/module/is-subscribed',
+      DELETE: '/module/delete',
     }
   },
 } as const
