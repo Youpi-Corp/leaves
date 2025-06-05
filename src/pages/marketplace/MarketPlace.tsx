@@ -6,6 +6,7 @@ import SortDropdown from '../../components/marketplace/SortDropdown';
 import ModuleList from '../../components/marketplace/ModuleList';
 import CreateModuleModal from '../../components/layout/modulecard/CreateModuleModal';
 import { Module } from '../../api/module/module.queries';
+import { getAllModulesQuery } from '../../api/module/module.queries';
 
 const MarketPlace: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,29 +16,35 @@ const MarketPlace: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
 
   useEffect(() => {
-    let fetchedModules: Module[] = [
-      { id: 1, title: 'Module 1', description: 'Description of Module 1', courses_count: 5, owner_id: 123, public: true, dtc: '2025-06-01', dtm: '2025-06-05' },
-      { id: 2, title: 'Module 2', description: 'Description of Module 2', courses_count: 3, owner_id: 456, public: false, dtc: '2025-06-02', dtm: '2025-06-05' },
-      { id: 2, title: 'Module 2', description: 'Description of Module 2', courses_count: 3, owner_id: 456, public: false, dtc: '2025-06-02', dtm: '2025-06-05' },
-      { id: 2, title: 'Module 2', description: 'Description of Module 2', courses_count: 3, owner_id: 456, public: false, dtc: '2025-06-02', dtm: '2025-06-05' },
-      { id: 2, title: 'Module 2', description: 'Description of Module 2', courses_count: 3, owner_id: 456, public: false, dtc: '2025-06-02', dtm: '2025-06-05' },
-      { id: 2, title: 'Module 2', description: 'Description of Module 2', courses_count: 3, owner_id: 456, public: false, dtc: '2025-06-02', dtm: '2025-06-05' },
-      { id: 2, title: 'Module 2', description: 'Description of Module 2', courses_count: 3, owner_id: 456, public: false, dtc: '2025-06-02', dtm: '2025-06-05' },
+    const fetchModules = async () => {
+      try {
+        const fetchedModules = await getAllModulesQuery();
 
-    ];
+        // Apply search filter
+        let filteredModules = fetchedModules;
+        if (searchTerm) {
+          filteredModules = filteredModules.filter((module) =>
+            module.title?.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        }
 
-    if (searchTerm) {
-      fetchedModules = fetchedModules.filter((module) =>
-        module.title?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-  
+        // Apply additional filters (example: public/private)
+        if (filters.public !== undefined) {
+          filteredModules = filteredModules.filter((module) => module.public === filters.public);
+        }
 
-    if (sortOption === 'mostCourses') {
-      fetchedModules = fetchedModules.sort((a, b) => (b.courses_count || 0) - (a.courses_count || 0));
-    }
+        // Apply sorting (example: by courses_count)
+        if (sortOption === 'mostCourses') {
+          filteredModules = filteredModules.sort((a, b) => (b.courses_count || 0) - (a.courses_count || 0));
+        }
 
-    setModules(fetchedModules);
+        setModules(filteredModules);
+      } catch (error) {
+        console.error('Failed to fetch modules:', error);
+      }
+    };
+
+    fetchModules();
   }, [searchTerm, filters, sortOption]);
 
   const handleSearch = (term: string) => {
