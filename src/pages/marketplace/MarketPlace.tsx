@@ -10,7 +10,6 @@ import { getAllModulesQuery } from '../../api/module/module.queries';
 
 const MarketPlace: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState<Record<string, string | boolean>>({});
   const [sortOption, setSortOption] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modules, setModules] = useState<Module[]>([]);
@@ -20,7 +19,6 @@ const MarketPlace: React.FC = () => {
       try {
         const fetchedModules = await getAllModulesQuery();
 
-        // Apply search filter
         let filteredModules = fetchedModules;
         if (searchTerm) {
           filteredModules = filteredModules.filter((module) =>
@@ -28,12 +26,10 @@ const MarketPlace: React.FC = () => {
           );
         }
 
-        // Apply additional filters (example: public/private)
         if (filters.public !== undefined) {
           filteredModules = filteredModules.filter((module) => module.public === filters.public);
         }
 
-        // Apply sorting (example: by courses_count)
         if (sortOption === 'mostCourses') {
           filteredModules = filteredModules.sort((a, b) => (b.courses_count || 0) - (a.courses_count || 0));
         }
@@ -49,10 +45,6 @@ const MarketPlace: React.FC = () => {
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
-  };
-
-  const handleApplyFilters = (appliedFilters: Record<string, string | boolean>) => {
-    setFilters(appliedFilters);
   };
 
   const handleSortChange = (option: string) => {
