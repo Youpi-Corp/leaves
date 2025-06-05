@@ -29,6 +29,9 @@ const Header: React.FC = () => {
           <li>
             <LinkHeader to="/">Contribute</LinkHeader>
           </li>
+          <li>
+            <LinkHeader to="/marketplace">Marketplace</LinkHeader>
+          </li>
         </ul>
       </div>
       <div className="flex ml-auto">
