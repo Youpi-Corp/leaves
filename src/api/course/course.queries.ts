@@ -151,6 +151,6 @@ export const isCourseCompletedQuery = async (courseId: number): Promise<boolean>
     throw new Error(response.status.toString())
   }
 
-  const result: ApiResponse<{ completed: boolean }> = await response.json()
-  return result.data.completed
+  const result: ApiResponse<{ isCompleted: boolean }> = await response.json()
+  return result.data.isCompleted
 }
