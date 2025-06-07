@@ -5,7 +5,7 @@ import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import Spinner from '../../components/feedback/Spinner'
 import WidgetFactory from '../../components/widget/WidgetFactory'
-import { getCourseByIdQuery } from '../../api/course/course.queries'
+import { getCourseByIdQuery, completeCourseQuery } from '../../api/course/course.queries'
 import { BaseWidgetProps } from '../../types/WidgetTypes'
 import '../../components/widget/widgets' // Import all widgets
 import 'react-grid-layout/css/styles.css'
@@ -101,6 +101,9 @@ const LessonContentPage: React.FC = () => {
   const [lessonDetails, setLessonDetails] = useState<LessonDetails | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [quizAnswers, setQuizAnswers] = useState<Record<string, boolean>>({})
+  const [canComplete, setCanComplete] = useState(false)
+  const [isCompleting, setIsCompleting] = useState(false)
 
   useEffect(() => {
     const getLessonDetails = async () => {
@@ -130,6 +133,65 @@ const LessonContentPage: React.FC = () => {
 
     getLessonDetails()
   }, [lessonId])
+
+  // Check if all quiz widgets have been answered correctly
+  useEffect(() => {
+    if (!lessonDetails?.content?.lesson?.widgets) {
+      setCanComplete(false)
+      return
+    }
+
+    const widgets = lessonDetails.content.lesson.widgets
+    const quizWidgets = widgets.filter(widget => 
+      widget.type === 'MultipleChoiceWidget' ||
+      widget.content?.type === 'MultipleChoiceWidget' ||
+      // Support for future quiz widget types
+      widget.type.includes('Quiz') || 
+      widget.content?.type?.includes('Quiz')
+    )
+
+    // If there are no quiz widgets, lesson can be completed immediately
+    if (quizWidgets.length === 0) {
+      setCanComplete(true)
+      return
+    }
+
+    // Check if all quiz widgets have been answered correctly
+    const allCorrect = quizWidgets.every(widget => 
+      quizAnswers[widget.id] === true
+    )
+
+    setCanComplete(allCorrect)
+  }, [lessonDetails, quizAnswers])
+
+  // Handle quiz answer callback
+  const handleQuizAnswer = (widgetId: string, isCorrect: boolean) => {
+    setQuizAnswers(prev => ({
+      ...prev,
+      [widgetId]: isCorrect
+    }))
+  }
+
+  const handleQuizCompletion = async () => {
+    if (!lessonDetails || !canComplete) return
+
+    try {
+      setIsCompleting(true)    
+      // Call the API to mark the lesson as completed
+      const result = await completeCourseQuery(lessonDetails.id)
+      
+      if (result) {
+        // Navigate back to lesson overview
+        navigate(`/lesson/${lessonId}`)
+      }
+      
+    } catch (error) {
+      console.error('Error marking lesson as complete:', error)
+      alert('Failed to mark lesson as complete. Please try again.')
+    } finally {
+      setIsCompleting(false)
+    }
+  }
 
   const renderLessonContent = () => {
     if (!lessonDetails?.content?.lesson?.widgets) {
@@ -232,6 +294,7 @@ const LessonContentPage: React.FC = () => {
                     isEditable={false}
                     isDraggable={false}
                     className="h-full"
+                    onQuizAnswer={(isCorrect) => handleQuizAnswer(widget.id, isCorrect)}
                   />
                 )}
               </div>
@@ -298,6 +361,45 @@ const LessonContentPage: React.FC = () => {
 
             <div className="border-b border-bfbase-lightgrey mb-6"></div>
 
+            {/* Quiz Progress Indicator */}
+            {lessonDetails?.content?.lesson?.widgets && (() => {
+              const widgets = lessonDetails.content.lesson.widgets
+              const quizWidgets = widgets.filter(widget => 
+                widget.type === 'MultipleChoiceWidget' ||
+                widget.content?.type === 'MultipleChoiceWidget' ||
+                // Support for future quiz widget types
+                widget.type.includes('Quiz') || 
+                widget.content?.type?.includes('Quiz')
+              )
+              
+              if (quizWidgets.length === 0) return null
+              
+              const completedQuizzes = quizWidgets.filter(widget => quizAnswers[widget.id] === true).length
+              const progressPercentage = (completedQuizzes / quizWidgets.length) * 100
+              
+              return (
+                <div className="mb-6 p-4 bg-bfbase-lightgrey rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-medium text-bfbase-darkgrey">Quiz Progress</h3>
+                    <span className="text-sm text-bfbase-grey">
+                      {completedQuizzes} / {quizWidgets.length} completed
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-bfgreen-base h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${progressPercentage}%` }}
+                    ></div>
+                  </div>
+                  {completedQuizzes === quizWidgets.length && (
+                    <div className="mt-2 text-sm text-bfgreen-dark font-medium">
+                      🎉 All quizzes completed! You can now mark the lesson as complete.
+                    </div>
+                  )}
+                </div>
+              )
+            })()}
+
             {renderLessonContent()}
 
             <div className="mt-8 flex justify-between items-center">
@@ -307,10 +409,29 @@ const LessonContentPage: React.FC = () => {
               >
                 Back to Overview
               </button>
-
               <div className="space-x-4">
-                <button className="bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-6 rounded transition-colors">
-                  Mark as Complete
+                <button
+                  disabled={!canComplete || isCompleting}
+                  className={`font-medium py-2 px-6 rounded transition-colors ${
+                    canComplete && !isCompleting
+                      ? 'bg-bfgreen-base hover:bg-bfgreen-dark text-white'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                  onClick={handleQuizCompletion}
+                >
+                  {isCompleting ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Completing...
+                    </>
+                  ) : canComplete ? (
+                    'Mark as Complete'
+                  ) : (
+                    'Complete All Quizzes First'
+                  )}
                 </button>
               </div>
             </div>

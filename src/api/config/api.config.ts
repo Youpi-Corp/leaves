@@ -23,6 +23,8 @@ export const API_CONFIG = {
       LIKE: '/course/like',
       UNLIKE: '/course/unlike',
       NUMBER_OF_LIKES: '/course/likes-count',
+      COMPLETE: '/course/complete',
+      IS_COMPLETED: '/course/is-completed',
     }, MODULE: {
       LIST: '/module/list',
       PUBLIC: '/module/public',

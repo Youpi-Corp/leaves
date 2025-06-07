@@ -15,6 +15,7 @@ interface WidgetFactoryProps<T extends BaseWidgetProps> {
   isEditable?: boolean
   isDraggable?: boolean
   className?: string
+  onQuizAnswer?: (isCorrect: boolean, answer?: unknown) => void
 }
 
 /**
@@ -30,6 +31,7 @@ function WidgetFactory<T extends BaseWidgetProps>({
   isEditable = true,
   isDraggable = true,
   className,
+  onQuizAnswer,
 }: WidgetFactoryProps<T>) {
   // The WidgetContainer handles everything, including registry lookup
   return (
@@ -42,6 +44,7 @@ function WidgetFactory<T extends BaseWidgetProps>({
       isEditable={isEditable}
       isDraggable={isDraggable}
       className={className}
+      onQuizAnswer={onQuizAnswer}
     />
   )
 }

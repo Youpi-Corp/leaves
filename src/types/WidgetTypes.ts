@@ -52,6 +52,7 @@ export interface WidgetEditProps<T extends BaseWidgetProps> {
 export interface WidgetViewProps<T extends BaseWidgetProps> {
   widgetData: T
   onEdit?: () => void
+  onAnswer?: (isCorrect: boolean, answer?: unknown) => void
 }
 
 /**
