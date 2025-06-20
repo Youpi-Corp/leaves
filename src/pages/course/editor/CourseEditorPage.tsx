@@ -3,7 +3,7 @@ import { Layout } from 'react-grid-layout'
 import ReactGridLayout from 'react-grid-layout'
 import { v4 as uuidv4 } from 'uuid'
 import { DndContext } from '@dnd-kit/core'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
@@ -56,6 +56,7 @@ interface StoredWidgetData {
 
 const CourseEditorPage = () => {
   const { lessonId } = useParams<{ lessonId?: string }>()
+  const navigate = useNavigate()
   const isEditMode = Boolean(lessonId)
 
   const [layout, setLayout] = useState<Layout[]>([])
@@ -300,20 +301,25 @@ const CourseEditorPage = () => {
     setWidgets(widgets.filter((widget) => widget.id !== id))
     setLayout(layout.filter((item) => item.i !== id))
   }
-
   const handleWidgetSelect = (id: string) => {
     setSelectedWidgetId(selectedWidgetId === id ? null : id)
   }
+
   const getWidgetClassNames = (widgetId: string) => {
     return `widget-container h-full ${
       selectedWidgetId === widgetId ? 'widget-selected' : 'widget-not-selected'
     }`
   }
 
+  const handleBack = () => {
+    navigate(-1) // Navigate back to previous page
+  }
+
   return (
     <div className="h-screen overflow-hidden">
       <DndContext>
         <div className="flex w-full h-full bg-[url(./assets/graph-paper.svg)]">
+          {' '}
           <ExportSidebar
             lessonName={lessonName}
             setLessonName={setLessonName}
@@ -328,6 +334,7 @@ const CourseEditorPage = () => {
             exportError={exportError}
             exportSuccess={exportSuccess}
             isEditMode={isEditMode}
+            onBack={handleBack}
           />{' '}
           {isLoading ? (
             <div className="flex w-full h-full pl-72 pr-72 items-center justify-center">
