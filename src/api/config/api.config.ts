@@ -38,6 +38,7 @@ export const API_CONFIG = {
       UNSUBSCRIBE: '/module/unsubscribe',
       SUBSCRIBED: '/module/subscribed',
       IS_SUBSCRIBED: '/module/is-subscribed',
+      DELETE: '/module/delete',
     }
   },
 } as const
