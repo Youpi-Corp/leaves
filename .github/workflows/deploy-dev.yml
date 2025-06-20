@@ -77,27 +77,6 @@ jobs:
           path: dist/
           retention-days: 1
 
-  # Migrate the database using drizzle kit
-  migrate:
-    name: Migrate Database
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run database migrations
-        run: npx drizzle-kit generate && npx drizzle-kit migrate
-
   deploy:
     name: Deploy to Development
     needs: build
