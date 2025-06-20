@@ -5,6 +5,7 @@ import Footer from '../../layout/Footer'
 import Spinner from '../../components/feedback/Spinner'
 import Toast from '../../components/feedback/Toast'
 import EditModuleModal from '../../components/layout/modulecard/EditModuleModal'
+import DeleteModuleModal from '../../components/layout/modulecard/DeleteModuleModal'
 import {
   getModuleByIdQuery,
   getModuleCoursesQuery,
@@ -13,6 +14,7 @@ import {
   Module,
 } from '../../api/module/module.queries'
 import { deleteCourseQuery } from '../../api/course/course.queries'
+import { FaRegTrashAlt } from "react-icons/fa";
 
 interface Lesson {
   id: number
@@ -102,6 +104,7 @@ const ModuleEditionPage: React.FC = () => {
     title: string
   } | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   useEffect(() => {
     const getModuleDetails = async () => {
@@ -275,6 +278,36 @@ const ModuleEditionPage: React.FC = () => {
     }
   }
 
+  const handleDeleteModule = () => {
+    if (moduleDetails) {
+      const module: Module = {
+        id: moduleDetails.id,
+        title: moduleDetails.title,
+        description: moduleDetails.description,
+        owner_id: null,
+        courses_count: moduleDetails.lessons.length,
+        public: true, // Default value, this will be fetched in the modal
+        dtc: null,
+        dtm: moduleDetails.lastEdited,
+      }
+      setCurrentModule(module)
+      setIsDeleteModalOpen(true)
+    }
+  }
+
+  // Add a new handler for when the deletion is successful
+  const handleModuleDeleteSuccess = () => {
+    setIsDeleteModalOpen(false)
+    setCurrentModule(null)
+    navigate('/edition/dashboard')
+  }
+
+  // Add a handler for closing the delete modal
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+    setCurrentModule(null)
+  }
+
   const toggleDropdown = (e: React.MouseEvent, lessonId: number) => {
     e.stopPropagation()
     setActiveDropdown(activeDropdown === lessonId ? null : lessonId)
@@ -371,6 +404,12 @@ const ModuleEditionPage: React.FC = () => {
                 >
                   Create New Lesson
                 </button>{' '}
+                <button
+                  className=""
+                  onClick={handleDeleteModule}
+                >
+                  <FaRegTrashAlt className="w-6 h-6 text-bfred-base hover:text-bfred-dark transition-colors" />
+                </button>
               </div>{' '}
             </div>
 
@@ -513,6 +552,14 @@ const ModuleEditionPage: React.FC = () => {
       )}
 
       {/* Success/Error Toast */}
+      {isDeleteModalOpen && currentModule && (
+        <DeleteModuleModal
+          module={currentModule}
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onSuccess={handleModuleDeleteSuccess}
+        />
+      )}
       {successMessage && (
         <Toast
           message={successMessage}

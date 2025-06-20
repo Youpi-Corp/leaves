@@ -12,6 +12,7 @@ interface WidgetContainerProps<T extends BaseWidgetProps> {
   isEditable?: boolean
   isDraggable?: boolean
   className?: string
+  onQuizAnswer?: (isCorrect: boolean, answer?: unknown) => void
 }
 
 /**
@@ -27,6 +28,7 @@ function WidgetContainer<T extends BaseWidgetProps>({
   isEditable = true,
   isDraggable = true,
   className = '',
+  onQuizAnswer,
 }: WidgetContainerProps<T>) {
   // Widget state management - now using isSelected from props
   const [widgetState, setWidgetState] = useState<WidgetState>({
@@ -219,6 +221,7 @@ function WidgetContainer<T extends BaseWidgetProps>({
           <ViewComponent
             widgetData={data}
             onEdit={isEditable ? handleEdit : undefined}
+            onAnswer={onQuizAnswer}
           />
         ) : (
           <EditComponent
