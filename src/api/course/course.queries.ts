@@ -122,6 +122,20 @@ export const getNumberOfLikesQuery = async (courseId: number): Promise<number> =
   return result.data.likesCount
 }
 
+export const deleteCourseQuery = async (courseId: number) => {
+  const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.COURSE.DELETE}/${courseId}`), {
+    method: 'DELETE',
+    credentials: 'include',
+  })
+
+  if (!response.ok) {
+    console.error('deleteCourseQuery failed with status:', response.status)
+    throw new Error(response.status.toString())
+  }
+
+  return (await response.json()).data
+}
+
 export const completeCourseQuery = async (courseId: number) => {
   const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.COURSE.COMPLETE}/${courseId}`), {
     method: 'POST',
