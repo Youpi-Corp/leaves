@@ -84,11 +84,12 @@ export const likeCourseQuery = async (courseId: number) => {
   })
 
   if (!response.ok) {
-        throw new Error(`Failed to like a course: ${response.status}`)
-    }
+    console.error('likeCourseQuery failed with status:', response.status)
+    throw new Error(`Failed to like a course: ${response.status}`)
+  }
 
-    const result: ApiResponse<{ liked: boolean }> = await response.json()
-    return result.data.liked
+  const result: ApiResponse<{ liked: boolean }> = await response.json()
+  return result.data.liked
 }
 
 export const unlikeCourseQuery = async (courseId: number) => {
@@ -98,8 +99,9 @@ export const unlikeCourseQuery = async (courseId: number) => {
   })
 
   if (!response.ok) {
-        throw new Error(`Failed to unlike a course: ${response.status}`)
-    }
+    console.error('unlikeCourseQuery failed with status:', response.status)
+    throw new Error(`Failed to unlike a course: ${response.status}`)
+  }
 
     const result: ApiResponse<{ unliked: boolean }> = await response.json()
     return result.data.unliked
@@ -118,4 +120,37 @@ export const getNumberOfLikesQuery = async (courseId: number): Promise<number> =
   
   const result: ApiResponse<{ likesCount: number }> = await response.json()
   return result.data.likesCount
+}
+
+export const completeCourseQuery = async (courseId: number) => {
+  const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.COURSE.COMPLETE}/${courseId}`), {
+    method: 'POST',
+    credentials: 'include',
+  })
+
+  if (!response.ok) {
+    console.error('completeCourseQuery failed with status:', response.status)
+    throw new Error(response.status.toString())
+  }
+
+  const result: ApiResponse<{ completed: boolean }> = await response.json()
+  return result.data.completed
+}
+
+export const isCourseCompletedQuery = async (courseId: number): Promise<boolean> => {
+  const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.COURSE.IS_COMPLETED}/${courseId}`), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  })
+
+  if (!response.ok) {
+    console.error('isCourseCompletedQuery failed with status:', response.status)
+    throw new Error(response.status.toString())
+  }
+
+  const result: ApiResponse<{ isCompleted: boolean }> = await response.json()
+  return result.data.isCompleted
 }
