@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ReactGridLayout, { Layout } from 'react-grid-layout'
 import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import Spinner from '../../components/feedback/Spinner'
 import WidgetFactory from '../../components/widget/WidgetFactory'
-import { getCourseByIdQuery, completeCourseQuery } from '../../api/course/course.queries'
+import Breadcrumb from '../../components/navigation/Breadcrumb'
+import BackButton from '../../components/navigation/BackButton'
+import { useNavigation } from '../../contexts/NavigationContext'
+import {
+  getCourseByIdQuery,
+  completeCourseQuery,
+} from '../../api/course/course.queries'
 import { BaseWidgetProps } from '../../types/WidgetTypes'
 import '../../components/widget/widgets' // Import all widgets
 import 'react-grid-layout/css/styles.css'
@@ -55,6 +61,7 @@ interface LessonDetails {
   level: number
   content: LessonContent | null
   duration: number
+  module_id: number
 }
 
 const fetchLessonDetails = async (
@@ -86,6 +93,7 @@ const fetchLessonDetails = async (
       level: course.level || 1,
       content: parsedContent,
       duration,
+      module_id: course.module_id,
     }
 
     return lessonDetails
@@ -97,7 +105,7 @@ const fetchLessonDetails = async (
 
 const LessonContentPage: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>()
-  const navigate = useNavigate()
+  const { goToModule } = useNavigation()
   const [lessonDetails, setLessonDetails] = useState<LessonDetails | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -142,12 +150,13 @@ const LessonContentPage: React.FC = () => {
     }
 
     const widgets = lessonDetails.content.lesson.widgets
-    const quizWidgets = widgets.filter(widget => 
-      widget.type === 'MultipleChoiceWidget' ||
-      widget.content?.type === 'MultipleChoiceWidget' ||
-      // Support for future quiz widget types
-      widget.type.includes('Quiz') || 
-      widget.content?.type?.includes('Quiz')
+    const quizWidgets = widgets.filter(
+      (widget) =>
+        widget.type === 'MultipleChoiceWidget' ||
+        widget.content?.type === 'MultipleChoiceWidget' ||
+        // Support for future quiz widget types
+        widget.type.includes('Quiz') ||
+        widget.content?.type?.includes('Quiz')
     )
 
     // If there are no quiz widgets, lesson can be completed immediately
@@ -157,8 +166,8 @@ const LessonContentPage: React.FC = () => {
     }
 
     // Check if all quiz widgets have been answered correctly
-    const allCorrect = quizWidgets.every(widget => 
-      quizAnswers[widget.id] === true
+    const allCorrect = quizWidgets.every(
+      (widget) => quizAnswers[widget.id] === true
     )
 
     setCanComplete(allCorrect)
@@ -166,9 +175,9 @@ const LessonContentPage: React.FC = () => {
 
   // Handle quiz answer callback
   const handleQuizAnswer = (widgetId: string, isCorrect: boolean) => {
-    setQuizAnswers(prev => ({
+    setQuizAnswers((prev) => ({
       ...prev,
-      [widgetId]: isCorrect
+      [widgetId]: isCorrect,
     }))
   }
 
@@ -176,15 +185,14 @@ const LessonContentPage: React.FC = () => {
     if (!lessonDetails || !canComplete) return
 
     try {
-      setIsCompleting(true)    
+      setIsCompleting(true)
       // Call the API to mark the lesson as completed
       const result = await completeCourseQuery(lessonDetails.id)
-      
+
       if (result) {
-        // Navigate back to lesson overview
-        navigate(`/lesson/${lessonId}`)
+        // Navigate back to module page
+        goToModule(lessonDetails.module_id)
       }
-      
     } catch (error) {
       console.error('Error marking lesson as complete:', error)
       alert('Failed to mark lesson as complete. Please try again.')
@@ -294,7 +302,9 @@ const LessonContentPage: React.FC = () => {
                     isEditable={false}
                     isDraggable={false}
                     className="h-full"
-                    onQuizAnswer={(isCorrect) => handleQuizAnswer(widget.id, isCorrect)}
+                    onQuizAnswer={(isCorrect) =>
+                      handleQuizAnswer(widget.id, isCorrect)
+                    }
                   />
                 )}
               </div>
@@ -325,27 +335,10 @@ const LessonContentPage: React.FC = () => {
           </div>
         ) : lessonDetails ? (
           <>
+            {' '}
             <div className="mb-6">
+              <Breadcrumb className="mb-4" />
               <div className="flex items-center mb-4">
-                <button
-                  onClick={() => navigate(`/lesson/${lessonId}`)}
-                  className="mr-3 text-bfbase-grey hover:text-bfbase-black transition-colors"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                </button>
                 <div>
                   <h1 className="text-3xl font-bold text-bfbase-black">
                     {lessonDetails.title}
@@ -358,57 +351,59 @@ const LessonContentPage: React.FC = () => {
                 </div>
               </div>
             </div>
-
             <div className="border-b border-bfbase-lightgrey mb-6"></div>
-
             {/* Quiz Progress Indicator */}
-            {lessonDetails?.content?.lesson?.widgets && (() => {
-              const widgets = lessonDetails.content.lesson.widgets
-              const quizWidgets = widgets.filter(widget => 
-                widget.type === 'MultipleChoiceWidget' ||
-                widget.content?.type === 'MultipleChoiceWidget' ||
-                // Support for future quiz widget types
-                widget.type.includes('Quiz') || 
-                widget.content?.type?.includes('Quiz')
-              )
-              
-              if (quizWidgets.length === 0) return null
-              
-              const completedQuizzes = quizWidgets.filter(widget => quizAnswers[widget.id] === true).length
-              const progressPercentage = (completedQuizzes / quizWidgets.length) * 100
-              
-              return (
-                <div className="mb-6 p-4 bg-bfbase-lightgrey rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-medium text-bfbase-darkgrey">Quiz Progress</h3>
-                    <span className="text-sm text-bfbase-grey">
-                      {completedQuizzes} / {quizWidgets.length} completed
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-bfgreen-base h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${progressPercentage}%` }}
-                    ></div>
-                  </div>
-                  {completedQuizzes === quizWidgets.length && (
-                    <div className="mt-2 text-sm text-bfgreen-dark font-medium">
-                      🎉 All quizzes completed! You can now mark the lesson as complete.
+            {lessonDetails?.content?.lesson?.widgets &&
+              (() => {
+                const widgets = lessonDetails.content.lesson.widgets
+                const quizWidgets = widgets.filter(
+                  (widget) =>
+                    widget.type === 'MultipleChoiceWidget' ||
+                    widget.content?.type === 'MultipleChoiceWidget' ||
+                    // Support for future quiz widget types
+                    widget.type.includes('Quiz') ||
+                    widget.content?.type?.includes('Quiz')
+                )
+
+                if (quizWidgets.length === 0) return null
+
+                const completedQuizzes = quizWidgets.filter(
+                  (widget) => quizAnswers[widget.id] === true
+                ).length
+                const progressPercentage =
+                  (completedQuizzes / quizWidgets.length) * 100
+
+                return (
+                  <div className="mb-6 p-4 bg-bfbase-lightgrey rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-sm font-medium text-bfbase-darkgrey">
+                        Quiz Progress
+                      </h3>
+                      <span className="text-sm text-bfbase-grey">
+                        {completedQuizzes} / {quizWidgets.length} completed
+                      </span>
                     </div>
-                  )}
-                </div>
-              )
-            })()}
-
-            {renderLessonContent()}
-
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-bfgreen-base h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${progressPercentage}%` }}
+                      ></div>
+                    </div>
+                    {completedQuizzes === quizWidgets.length && (
+                      <div className="mt-2 text-sm text-bfgreen-dark font-medium">
+                        🎉 All quizzes completed! You can now mark the lesson as
+                        complete.
+                      </div>
+                    )}
+                  </div>
+                )
+              })()}
+            {renderLessonContent()}{' '}
             <div className="mt-8 flex justify-between items-center">
-              <button
-                onClick={() => navigate(`/lesson/${lessonId}`)}
-                className="bg-bfbase-lightgrey hover:bg-bfbase-grey text-bfbase-black font-medium py-2 px-6 rounded transition-colors"
-              >
-                Back to Overview
-              </button>
+              <BackButton
+                fallbackPath={`/lesson/${lessonId}`}
+                label="Back to Lesson Overview"
+              />
               <div className="space-x-4">
                 <button
                   disabled={!canComplete || isCompleting}
@@ -421,9 +416,24 @@ const LessonContentPage: React.FC = () => {
                 >
                   {isCompleting ? (
                     <>
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Completing...
                     </>

@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import Spinner from '../../components/feedback/Spinner'
-import { 
-  getCourseByIdQuery, 
-  hasLikedCourseQuery, 
-  likeCourseQuery, 
-  unlikeCourseQuery, 
-  getNumberOfLikesQuery 
+import Breadcrumb from '../../components/navigation/Breadcrumb'
+import BackButton from '../../components/navigation/BackButton'
+import { useNavigation } from '../../contexts/NavigationContext'
+import {
+  getCourseByIdQuery,
+  hasLikedCourseQuery,
+  likeCourseQuery,
+  unlikeCourseQuery,
+  getNumberOfLikesQuery,
 } from '../../api/course/course.queries'
 import { BaseWidgetProps } from '../../types/WidgetTypes'
 
@@ -100,7 +103,7 @@ const fetchLessonDetails = async (
 
 const LessonViewPage: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>()
-  const navigate = useNavigate()
+  const { goToLessonContent } = useNavigation()
   const [lessonDetails, setLessonDetails] = useState<LessonDetails | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -121,21 +124,24 @@ const LessonViewPage: React.FC = () => {
         if (lesson) {
           setLessonDetails(lesson)
           setError(null)
-          
+
           // Check if the user has already liked this course
           try {
             const hasLiked = await hasLikedCourseQuery(lesson.id)
-            
+
             setIsLiked(Boolean(hasLiked))
-            
+
             // Get the current number of likes
             const likesCount = await getNumberOfLikesQuery(lesson.id)
-            
-            setLessonDetails(prev => prev ? {
-              ...prev,
-              likes: likesCount
-            } : null)
-            
+
+            setLessonDetails((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    likes: likesCount,
+                  }
+                : null
+            )
           } catch (error) {
             console.error('Failed to fetch like status:', error)
             setIsLiked(false)
@@ -167,42 +173,55 @@ const LessonViewPage: React.FC = () => {
 
   const handleLike = async () => {
     if (!lessonDetails) return
-    
+
     const previousLikeState = isLiked
     const currentLikes = lessonDetails.likes || 0
-    
+
     try {
       setIsLiked(!previousLikeState)
-      const optimisticLikes = previousLikeState ? currentLikes - 1 : currentLikes + 1
-      setLessonDetails(prev => prev ? {
-        ...prev,
-        likes: optimisticLikes
-      } : null)
-      
+      const optimisticLikes = previousLikeState
+        ? currentLikes - 1
+        : currentLikes + 1
+      setLessonDetails((prev) =>
+        prev
+          ? {
+              ...prev,
+              likes: optimisticLikes,
+            }
+          : null
+      )
+
       // Call the appropriate backend function
       if (previousLikeState) {
         await unlikeCourseQuery(lessonDetails.id)
       } else {
         await likeCourseQuery(lessonDetails.id)
       }
-      
+
       // Fetch the updated likes count to ensure consistency
       const updatedLikesCount = await getNumberOfLikesQuery(lessonDetails.id)
-      
-      setLessonDetails(prev => prev ? {
-        ...prev,
-        likes: updatedLikesCount
-      } : null)
-      
+
+      setLessonDetails((prev) =>
+        prev
+          ? {
+              ...prev,
+              likes: updatedLikesCount,
+            }
+          : null
+      )
     } catch (error) {
       console.error('Failed to update like status:', error)
-      
+
       // Revert the optimistic updates on error
       setIsLiked(previousLikeState)
-      setLessonDetails(prev => prev ? {
-        ...prev,
-        likes: currentLikes
-      } : null)
+      setLessonDetails((prev) =>
+        prev
+          ? {
+              ...prev,
+              likes: currentLikes,
+            }
+          : null
+      )
     }
   }
 
@@ -340,27 +359,10 @@ const LessonViewPage: React.FC = () => {
           </div>
         ) : lessonDetails ? (
           <>
+            {' '}
             <div className="mb-6">
+              <Breadcrumb className="mb-4" />
               <div className="flex items-center mb-4">
-                <button
-                  onClick={() => navigate(-1)}
-                  className="mr-3 text-bfbase-grey hover:text-bfbase-black transition-colors"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                </button>
                 <div className="flex-grow">
                   <h1 className="text-3xl font-bold text-bfbase-black">
                     {lessonDetails.title}
@@ -387,7 +389,7 @@ const LessonViewPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                
+
                 {/* Like button and count */}
                 <div className="flex items-center space-x-2">
                   <button
@@ -413,13 +415,15 @@ const LessonViewPage: React.FC = () => {
                       />
                     </svg>
                   </button>
-                  
+
                   {/* Display likes count */}
-                  {lessonDetails.likes !== undefined && lessonDetails.likes > 0 && (
-                    <div className="text-sm text-gray-600">
-                      {lessonDetails.likes} {lessonDetails.likes === 1 ? 'like' : 'likes'}
-                    </div>
-                  )}
+                  {lessonDetails.likes !== undefined &&
+                    lessonDetails.likes > 0 && (
+                      <div className="text-sm text-gray-600">
+                        {lessonDetails.likes}{' '}
+                        {lessonDetails.likes === 1 ? 'like' : 'likes'}
+                      </div>
+                    )}
                 </div>
               </div>
 
@@ -427,23 +431,14 @@ const LessonViewPage: React.FC = () => {
                 {lessonDetails.description}
               </p>
             </div>
-            
             <div className="border-b border-bfbase-lightgrey mb-6"></div>
             {renderLessonOverview()}
-            
             <div className="mt-8 flex justify-between items-center">
-              <button
-                onClick={() => navigate(-1)}
-                className="bg-bfbase-lightgrey hover:bg-bfbase-grey text-bfbase-black font-medium py-2 px-6 rounded transition-colors"
-              >
-                Back to Module
-              </button>
+              <BackButton label="Back to Module" />
 
               <div className="space-x-4">
                 <button
-                  onClick={() =>
-                    navigate(`/lesson/${lessonDetails.id}/content`)
-                  }
+                  onClick={() => goToLessonContent(lessonDetails.id)}
                   className="bg-bfgreen-base hover:bg-bfgreen-dark text-white font-medium py-2 px-6 rounded transition-colors"
                 >
                   Start Lesson
