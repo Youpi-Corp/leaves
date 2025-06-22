@@ -31,6 +31,9 @@ const Header: React.FC = () => {
           </li>
           <li>
             <LinkHeader to="/">Contribute</LinkHeader>
+          </li>{' '}
+          <li>
+            <LinkHeader to="/library">Library</LinkHeader>
           </li>
         </ul>
       </div>

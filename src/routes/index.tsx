@@ -13,6 +13,7 @@ import LessonViewPage from '../pages/course/LessonViewPage'
 import LessonContentPage from '../pages/course/LessonContentPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import ProfilePage from '../pages/ProfilePage'
+import Library from '../pages/library/Library'
 import SubscriptionsPage from '../pages/SubscriptionsPage'
 
 export const AppRoutes: React.FC = () => {
@@ -28,19 +29,20 @@ export const AppRoutes: React.FC = () => {
             path="/edition/editor/:lessonId"
             element={<CourseEditorPage />}
           />
-          <Route path="/edition/dashboard/" element={<EditorDashboard />} />{' '}
+          <Route path="/edition/dashboard/" element={<EditorDashboard />} />
           <Route
             path="/edition/dashboard/:moduleId"
             element={<ModuleEditionPage />}
           />
           {/* Public viewing routes */}
           <Route path="/module/:moduleId" element={<ModuleViewPage />} />
-          <Route path="/lesson/:lessonId" element={<LessonViewPage />} />{' '}
+          <Route path="/lesson/:lessonId" element={<LessonViewPage />} />
           <Route
             path="/lesson/:lessonId/content"
             element={<LessonContentPage />}
           />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/library" element={<Library />} />
           <Route path="/subscriptions" element={<SubscriptionsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
