@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import Spinner from '../../components/feedback/Spinner'
+import Breadcrumb from '../../components/navigation/Breadcrumb'
+import BackButton from '../../components/navigation/BackButton'
+import { useNavigation } from '../../contexts/NavigationContext'
 import {
   getModuleByIdQuery,
   getModuleCoursesQuery,
@@ -14,6 +17,7 @@ import {
   useUnsubscribeFromModule,
 } from '../../api/module/module.services'
 import { useCurrentUser } from '../../api/user/user.services'
+import { isCourseCompletedQuery } from '../../api/course/course.queries'
 
 interface Lesson {
   id: number
@@ -21,6 +25,7 @@ interface Lesson {
   description: string
   level: number
   duration: number
+  isCompleted?: boolean
 }
 
 interface ModuleDetails {
@@ -31,7 +36,10 @@ interface ModuleDetails {
 }
 
 // Helper function to convert API Course to frontend Lesson format
-const courseToLesson = (course: Course): Lesson => {
+const courseToLesson = (
+  course: Course,
+  isCompleted: boolean = false
+): Lesson => {
   // Extract duration from content if available, otherwise default to 30 minutes
   let duration = 30
   try {
@@ -51,6 +59,7 @@ const courseToLesson = (course: Course): Lesson => {
     description: 'Level ' + (course.level || 1) + ' lesson',
     level: course.level || 1,
     duration,
+    isCompleted,
   }
 }
 
@@ -66,8 +75,22 @@ const fetchModuleDetails = async (
       getModuleCoursesQuery(moduleId_num),
     ])
 
-    // Convert courses to lessons
-    const lessons = courses.map(courseToLesson)
+    // Fetch completion status for each course
+    const lessonCompletionPromises = courses.map(async (course) => {
+      try {
+        const isCompleted = await isCourseCompletedQuery(course.id)
+        return courseToLesson(course, isCompleted)
+      } catch (error) {
+        console.error(
+          `Failed to fetch completion status for course ${course.id}:`,
+          error
+        )
+        // If we can't fetch completion status, default to false
+        return courseToLesson(course, false)
+      }
+    })
+
+    const lessons = await Promise.all(lessonCompletionPromises)
 
     const moduleDetails: ModuleDetails = {
       id: module.id,
@@ -85,7 +108,7 @@ const fetchModuleDetails = async (
 
 const ModuleViewPage: React.FC = () => {
   const { moduleId } = useParams<{ moduleId: string }>()
-  const navigate = useNavigate()
+  const { goToLesson, goToLogin } = useNavigation()
   const [moduleDetails, setModuleDetails] = useState<ModuleDetails | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -126,10 +149,11 @@ const ModuleViewPage: React.FC = () => {
 
     getModuleDetails()
   }, [moduleId])
+
   const handleLessonClick = (lessonId: number) => {
     // Check if user is authenticated and subscribed before allowing lesson access
     if (!currentUser) {
-      navigate('/login')
+      goToLogin()
       return
     }
 
@@ -138,12 +162,11 @@ const ModuleViewPage: React.FC = () => {
       return
     }
 
-    navigate(`/lesson/${lessonId}`)
+    goToLesson(lessonId)
   }
-
   const handleSubscriptionToggle = async () => {
     if (!currentUser) {
-      navigate('/login')
+      goToLogin()
       return
     }
 
@@ -180,6 +203,20 @@ const ModuleViewPage: React.FC = () => {
     )
   }
 
+  const getCompletionStats = () => {
+    if (!moduleDetails?.lessons)
+      return { completed: 0, total: 0, percentage: 0 }
+    const completed = moduleDetails.lessons.filter(
+      (lesson) => lesson.isCompleted
+    ).length
+    const total = moduleDetails.lessons.length
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0
+    return { completed, total, percentage }
+  }
+
+  // Add this after the module description and before the lessons count
+  const completionStats = getCompletionStats()
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -200,29 +237,11 @@ const ModuleViewPage: React.FC = () => {
           </div>
         ) : moduleDetails ? (
           <>
-            {' '}
+            <Breadcrumb className="mb-6" />
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
               <div>
                 <div className="flex items-center mb-2">
-                  <button
-                    onClick={() => navigate('/')}
-                    className="mr-2 text-bfbase-grey hover:text-bfbase-black transition-colors"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                      />
-                    </svg>
-                  </button>
+                  <BackButton className="mr-2" variant="link" />
                   <h1 className="text-3xl font-bold text-bfbase-black">
                     {moduleDetails.title}
                   </h1>
@@ -264,6 +283,27 @@ const ModuleViewPage: React.FC = () => {
                     {formatDuration(getTotalDuration())} total
                   </span>
                 </div>
+
+                {/* Progress Stats */}
+                {completionStats.total > 0 && (
+                  <div className="mt-4 mb-2">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-bfbase-grey">
+                        Progress: {completionStats.completed}/
+                        {completionStats.total} lessons completed
+                      </span>
+                      <span className="text-sm font-medium text-green-600">
+                        {completionStats.percentage}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${completionStats.percentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Subscription Button */}
@@ -301,13 +341,15 @@ const ModuleViewPage: React.FC = () => {
                 )}
                 {!currentUser && !isUserLoading && (
                   <button
-                    onClick={() => navigate('/login')}
+                    onClick={() => goToLogin()}
                     className="px-6 py-3 bg-bfgreen-base text-white rounded-lg font-medium hover:bg-bfgreen-dark transition-colors"
                   >
                     Login to Subscribe
                   </button>
                 )}
               </div>
+
+              {/* Admin button to control */}
             </div>
             <div className="border-b border-bfbase-lightgrey mb-6"></div>{' '}
             {moduleDetails.lessons.length === 0 ? (
@@ -355,6 +397,10 @@ const ModuleViewPage: React.FC = () => {
                   <div
                     key={lesson.id}
                     className={`border rounded-lg bg-white p-6 transition-all ${
+                      lesson.isCompleted
+                        ? 'border-green-300 bg-green-50' // Green styling for completed lessons
+                        : ''
+                    } ${
                       currentUser && isSubscribed
                         ? 'hover:shadow-md cursor-pointer hover:border-bfgreen-base'
                         : currentUser && !isSubscribed
@@ -370,12 +416,44 @@ const ModuleViewPage: React.FC = () => {
                     <div className="flex justify-between items-start">
                       <div className="flex-grow">
                         <div className="flex items-center mb-2">
-                          <span className="flex items-center justify-center rounded-full bg-bfgreen-light w-8 h-8 text-bfgreen-base font-semibold text-sm mr-3">
-                            {index + 1}
+                          <span
+                            className={`flex items-center justify-center rounded-full w-8 h-8 font-semibold text-sm mr-3 ${
+                              lesson.isCompleted
+                                ? 'bg-green-500 text-white' // Green circle for completed lessons
+                                : 'bg-bfgreen-light text-bfgreen-base'
+                            }`}
+                          >
+                            {lesson.isCompleted ? (
+                              // Checkmark icon for completed lessons
+                              <svg
+                                className="w-4 h-4"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            ) : (
+                              index + 1
+                            )}
                           </span>
-                          <h3 className="text-lg font-semibold text-bfbase-black">
+                          <h3
+                            className={`text-lg font-semibold ${
+                              lesson.isCompleted
+                                ? 'text-green-700'
+                                : 'text-bfbase-black'
+                            }`}
+                          >
                             {lesson.title}
                           </h3>
+                          {lesson.isCompleted && (
+                            <span className="ml-2 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                              Completed
+                            </span>
+                          )}
                           {currentUser && !isSubscribed && (
                             <svg
                               className="w-5 h-5 text-bfyellow-base ml-2"
@@ -392,22 +470,44 @@ const ModuleViewPage: React.FC = () => {
                             </svg>
                           )}
                         </div>
-                        <p className="mt-2 text-bfbase-grey pl-11">
+                        <p
+                          className={`mt-2 pl-11 ${
+                            lesson.isCompleted
+                              ? 'text-green-600'
+                              : 'text-bfbase-grey'
+                          }`}
+                        >
                           {lesson.description}
                         </p>
                       </div>
 
                       <div className="text-right flex items-center space-x-4">
                         <div className="flex flex-col items-end space-y-2">
-                          <span className="text-sm font-medium bg-bfblue-light text-bfblue-base px-3 py-1 rounded-full">
+                          <span
+                            className={`text-sm font-medium px-3 py-1 rounded-full ${
+                              lesson.isCompleted
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-bfblue-light text-bfblue-base'
+                            }`}
+                          >
                             Level {lesson.level}
                           </span>
-                          <span className="text-sm text-bfbase-grey">
+                          <span
+                            className={`text-sm ${
+                              lesson.isCompleted
+                                ? 'text-green-600'
+                                : 'text-bfbase-grey'
+                            }`}
+                          >
                             {formatDuration(lesson.duration)}
                           </span>
                         </div>
                         <svg
-                          className="w-5 h-5 text-bfbase-grey"
+                          className={`w-5 h-5 ${
+                            lesson.isCompleted
+                              ? 'text-green-500'
+                              : 'text-bfbase-grey'
+                          }`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"

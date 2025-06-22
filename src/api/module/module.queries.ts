@@ -272,3 +272,29 @@ export const getSubscribedModulesQuery = async (): Promise<Module[]> => {
     const result: ApiResponse<Module[]> = await response.json()
     return result.data
 }
+
+/**
+ * Delete a module
+ */
+export const deleteModuleQuery = async (moduleId: number): Promise<boolean> => {
+    const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.MODULE.DELETE}/${moduleId}`), {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error('Module not found')
+        }
+        if (response.status === 403) {
+            throw new Error('Not authorized to delete this module')
+        }
+        throw new Error(`Failed to delete module: ${response.status}`)
+    }
+
+    const result: ApiResponse<{ deleted: boolean }> = await response.json()
+    return result.data.deleted
+}

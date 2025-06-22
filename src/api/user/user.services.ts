@@ -1,6 +1,7 @@
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { userQuery, logoutUser } from './user.queries'
 import { useNavigate } from 'react-router-dom'
+import { UpdateUserRequest, updateUserProfile } from './user.mutations'
 
 export const useCurrentUser = () => {
   return useQuery({
@@ -31,4 +32,16 @@ export const useLogout = () => {
   }
 
   return { logout: handleLogout }
+}
+
+export const useUpdateProfile = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: UpdateUserRequest) => updateUserProfile(data),
+    onSuccess: () => {
+      // Invalidate the user query to refetch the updated data
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+    },
+  })
 }
