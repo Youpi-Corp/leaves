@@ -23,6 +23,7 @@ export const registerQuery = async (
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(user),
   })
   if (!response.ok) throw new Error(response.status.toString())
