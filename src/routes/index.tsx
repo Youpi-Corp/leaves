@@ -11,7 +11,7 @@ import LessonViewPage from '../pages/course/LessonViewPage'
 import LessonContentPage from '../pages/course/LessonContentPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import ProfilePage from '../pages/ProfilePage'
-import MarketPlace from '../pages/marketplace/MarketPlace'
+import Library from '../pages/library/Library'
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -40,7 +40,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/editor" element={<CourseEditorPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/marketplace" element={<MarketPlace />} />
+        <Route path="/library" element={<Library />} />
       </Routes>
     </BrowserRouter>
   )
