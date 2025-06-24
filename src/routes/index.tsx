@@ -15,6 +15,7 @@ import NotFoundPage from '../pages/NotFoundPage'
 import ProfilePage from '../pages/ProfilePage'
 import Library from '../pages/library/Library'
 import SubscriptionsPage from '../pages/SubscriptionsPage'
+import AdminPanel from '../pages/admin/AdminPanel'
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -44,6 +45,8 @@ export const AppRoutes: React.FC = () => {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/library" element={<Library />} />
           <Route path="/subscriptions" element={<SubscriptionsPage />} />
+          {/* Admin routes */}
+          <Route path="/admin" element={<AdminPanel />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <NavigationDebugger />

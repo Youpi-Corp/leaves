@@ -68,7 +68,7 @@ const WidgetGrid: React.FC<WidgetGridProps> = ({
     <div className={`relative ${className}`}>
       {/* Widget Picker Dialog */}
       {showWidgetPicker && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black opacity-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl">
             <div className="flex justify-between items-center p-4 border-b">
               <h3 className="text-lg font-medium">Add Widget</h3>

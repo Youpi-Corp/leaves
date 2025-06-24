@@ -11,5 +11,5 @@ export interface NavigationItem {
 
 export interface UserNavigationProps {
     currentPath: string
-    userRole?: string
+    userRole?: string | string[]
 }
