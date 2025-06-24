@@ -56,9 +56,17 @@ export const userNavigationItems: NavigationItem[] = [
 ]
 
 export const getVisibleNavigationItems = (
-  userRole?: string,
+  userRoles?: string | string[],
   isAuthenticated: boolean = true
 ): NavigationItem[] => {
+  // Normalize userRoles to always be an array
+  const rolesArray = Array.isArray(userRoles)
+    ? userRoles
+    : userRoles
+    ? [userRoles]
+    : []
+  const normalizedRoles = rolesArray.map((role) => role.toLowerCase())
+
   return userNavigationItems.filter((item) => {
     // Check authentication requirement
     if (item.requiresAuth && !isAuthenticated) {
@@ -66,8 +74,10 @@ export const getVisibleNavigationItems = (
     }
 
     // Check role requirement
-    if (item.requiresRole && userRole) {
-      return item.requiresRole.includes(userRole.toLowerCase())
+    if (item.requiresRole && normalizedRoles.length > 0) {
+      return item.requiresRole.some((requiredRole) =>
+        normalizedRoles.includes(requiredRole.toLowerCase())
+      )
     }
 
     // If no role requirement, show the item

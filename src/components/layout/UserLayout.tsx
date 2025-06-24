@@ -7,7 +7,7 @@ import UserContentArea from './UserContentArea'
 
 interface UserLayoutProps {
   children: React.ReactNode
-  userRole?: string
+  userRole?: string | string[]
   isAuthenticated?: boolean
 }
 
