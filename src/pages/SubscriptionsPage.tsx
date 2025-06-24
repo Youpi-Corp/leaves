@@ -43,7 +43,7 @@ const SubscriptionsPage: React.FC = () => {
     return (
       <>
         <Header />
-        <UserLayout userRole={user?.roles?.[0]} isAuthenticated={!!user}>
+        <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
           <div className="flex items-center justify-center py-12">
             <Spinner />
           </div>
@@ -58,7 +58,7 @@ const SubscriptionsPage: React.FC = () => {
     return (
       <>
         <Header />
-        <UserLayout userRole={user?.roles?.[0]} isAuthenticated={!!user}>
+        <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
           <div className="flex items-center justify-center py-12">
             <div className="text-red-500 text-center">
               <p>Error loading subscriptions</p>
@@ -79,7 +79,7 @@ const SubscriptionsPage: React.FC = () => {
   return (
     <>
       <Header />
-      <UserLayout userRole={user?.roles?.[0]} isAuthenticated={!!user}>
+      <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl sm:text-4xl font-bold text-bfgreen-dark mb-8">
             My Subscriptions

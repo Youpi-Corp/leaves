@@ -155,9 +155,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
           isActive: true,
         },
       ]
-    }
-
-    // Profile and subscriptions
+    } // Profile and subscriptions
     if (currentPath === '/profile') {
       return [
         { label: 'Home', path: '/' },
@@ -169,6 +167,14 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
       return [
         { label: 'Home', path: '/' },
         { label: 'Subscriptions', path: '/subscriptions', isActive: true },
+      ]
+    }
+
+    // Admin panel
+    if (currentPath === '/admin') {
+      return [
+        { label: 'Home', path: '/' },
+        { label: 'Admin Panel', path: '/admin', isActive: true },
       ]
     }
 

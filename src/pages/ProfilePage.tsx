@@ -63,8 +63,8 @@ const ProfilePage: React.FC = () => {
   }
   return (
     <>
-      <Header />
-      <UserLayout userRole={user?.roles?.[0]} isAuthenticated={!!user}>
+      <Header />{' '}
+      <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
         <div className="max-w-6xl mx-auto">
           {/* Welcome section */}
           <div className="text-center mb-8">

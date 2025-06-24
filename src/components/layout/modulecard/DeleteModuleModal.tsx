@@ -43,7 +43,7 @@ const DeleteModuleModal: React.FC<DeleteModuleModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-opacity-30 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 opacity-30 backdrop-blur-sm"
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
     >
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-2xl">
