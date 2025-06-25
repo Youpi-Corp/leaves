@@ -76,6 +76,7 @@ export interface WidgetMetadata {
   author?: string
   authorUrl?: string
   tags?: string[]
+  interactive?: boolean // Whether this widget requires user interaction for completion
 }
 
 /**
