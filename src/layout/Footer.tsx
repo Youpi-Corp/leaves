@@ -74,6 +74,16 @@ const Footer: React.FC = () => {
           <li>
             <LinkInternal accent="secondary">Cookie Preferences</LinkInternal>
           </li>
+          <li>
+            <a
+              href="https://framaforms.org/brainforest-retour-general-1750810810"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-bfbrown-base hover:text-bfbrown-dark transition-colors cursor-pointer"
+            >
+              Signal a bug
+            </a>
+          </li>
         </ul>
 
         <ul className="absolute right-16 flex flex-row justify-end text-xl space-x-6 text-bfbrown-base">
