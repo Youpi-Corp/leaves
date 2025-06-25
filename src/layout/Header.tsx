@@ -21,7 +21,7 @@ const Header: React.FC = () => {
         </Button>{' '}
         <ul className="ml-8 flex">
           <li>
-            <LinkHeader to="/">Courses</LinkHeader>
+            <LinkHeader to="/">Home</LinkHeader>
           </li>
           <li>
             <LinkHeader to="/subscriptions">Subscriptions</LinkHeader>
