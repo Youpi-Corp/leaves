@@ -33,6 +33,7 @@ export * from './ImageWidget'
 export * from './ListWidget'
 export * from './CodeWidget'
 export * from './CalendarWidget'
+export * from './MatchingWidget'
 export * from '../quiz/MultipleChoiceWidget'
 
 // Create a consolidated export for easier access to all widgets

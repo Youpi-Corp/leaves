@@ -13,6 +13,11 @@ import {
   completeCourseQuery,
 } from '../../api/course/course.queries'
 import { BaseWidgetProps } from '../../types/WidgetTypes'
+import {
+  getInteractiveWidgets,
+  areAllInteractiveWidgetsCompletedCorrectly,
+  getInteractiveWidgetCorrectCompletion,
+} from '../../utils/widget.utils'
 import '../../components/widget/widgets' // Import all widgets
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
@@ -148,26 +153,19 @@ const LessonContentPage: React.FC = () => {
       setCanComplete(false)
       return
     }
-
     const widgets = lessonDetails.content.lesson.widgets
-    const quizWidgets = widgets.filter(
-      (widget) =>
-        widget.type === 'MultipleChoiceWidget' ||
-        widget.content?.type === 'MultipleChoiceWidget' ||
-        // Support for future quiz widget types
-        widget.type.includes('Quiz') ||
-        widget.content?.type?.includes('Quiz')
-    )
+    const interactiveWidgets = getInteractiveWidgets(widgets)
 
-    // If there are no quiz widgets, lesson can be completed immediately
-    if (quizWidgets.length === 0) {
+    // If there are no interactive widgets, lesson can be completed immediately
+    if (interactiveWidgets.length === 0) {
       setCanComplete(true)
       return
     }
 
-    // Check if all quiz widgets have been answered correctly
-    const allCorrect = quizWidgets.every(
-      (widget) => quizAnswers[widget.id] === true
+    // Check if all interactive widgets have been answered correctly
+    const allCorrect = areAllInteractiveWidgetsCompletedCorrectly(
+      widgets,
+      quizAnswers
     )
 
     setCanComplete(allCorrect)
@@ -352,35 +350,25 @@ const LessonContentPage: React.FC = () => {
               </div>
             </div>
             <div className="border-b border-bfbase-lightgrey mb-6"></div>
-            {/* Quiz Progress Indicator */}
+            {/* Interactive Widget Progress Indicator */}
             {lessonDetails?.content?.lesson?.widgets &&
               (() => {
                 const widgets = lessonDetails.content.lesson.widgets
-                const quizWidgets = widgets.filter(
-                  (widget) =>
-                    widget.type === 'MultipleChoiceWidget' ||
-                    widget.content?.type === 'MultipleChoiceWidget' ||
-                    // Support for future quiz widget types
-                    widget.type.includes('Quiz') ||
-                    widget.content?.type?.includes('Quiz')
-                )
+                const { completed, total } =
+                  getInteractiveWidgetCorrectCompletion(widgets, quizAnswers)
 
-                if (quizWidgets.length === 0) return null
+                if (total === 0) return null
 
-                const completedQuizzes = quizWidgets.filter(
-                  (widget) => quizAnswers[widget.id] === true
-                ).length
-                const progressPercentage =
-                  (completedQuizzes / quizWidgets.length) * 100
+                const progressPercentage = (completed / total) * 100
 
                 return (
                   <div className="mb-6 p-4 bg-bfbase-lightgrey rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="text-sm font-medium text-bfbase-darkgrey">
-                        Quiz Progress
+                        Progress
                       </h3>
                       <span className="text-sm text-bfbase-grey">
-                        {completedQuizzes} / {quizWidgets.length} completed
+                        {completed} / {total} completed
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -389,12 +377,6 @@ const LessonContentPage: React.FC = () => {
                         style={{ width: `${progressPercentage}%` }}
                       ></div>
                     </div>
-                    {completedQuizzes === quizWidgets.length && (
-                      <div className="mt-2 text-sm text-bfgreen-dark font-medium">
-                        🎉 All quizzes completed! You can now mark the lesson as
-                        complete.
-                      </div>
-                    )}
                   </div>
                 )
               })()}

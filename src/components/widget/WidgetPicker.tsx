@@ -92,6 +92,36 @@ const WidgetPicker: React.FC<WidgetPickerProps> = ({
         break
       }
 
+      case 'MatchingWidget': {
+        const widgetData: BaseWidgetProps = {
+          id,
+          type: widgetType,
+          label: metadata.displayName,
+          question:
+            'Match the items from the left column with the correct items from the right column.',
+          leftItems: [
+            { id: 'left1', text: 'Left Item 1' },
+            { id: 'left2', text: 'Left Item 2' },
+          ],
+          rightItems: [
+            { id: 'right1', text: 'Right Item 1' },
+            { id: 'right2', text: 'Right Item 2' },
+          ],
+          correctMatches: [
+            { leftId: 'left1', rightId: 'right1' },
+            { leftId: 'left2', rightId: 'right2' },
+          ],
+          shuffleItems: false,
+          showFeedback: true,
+          feedback: {
+            correct: 'Great job! All matches are correct.',
+            incorrect: 'Some matches are incorrect. Please try again.',
+          },
+        }
+        onWidgetSelect(widgetData)
+        break
+      }
+
       default: {
         // Default case for widgets without specific props
         const widgetData: BaseWidgetProps = {
