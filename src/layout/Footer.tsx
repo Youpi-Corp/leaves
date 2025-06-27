@@ -14,13 +14,17 @@ const Footer: React.FC = () => {
             Getting started
           </li>
           <li>
-            <LinkInternal accent="secondary">Why BrainForest</LinkInternal>
+            <LinkInternal accent="secondary" to="/about">
+              Why BrainForest
+            </LinkInternal>
           </li>
           <li>
-            <LinkInternal accent="secondary">Write a course</LinkInternal>
+            <LinkInternal accent="secondary" to="/write-course">
+              Write a course
+            </LinkInternal>
           </li>
           <li>
-            <LinkInternal accent="secondary">
+            <LinkInternal accent="secondary" to="/how-it-works">
               How BrainForest works
             </LinkInternal>
           </li>
@@ -31,13 +35,19 @@ const Footer: React.FC = () => {
             Developers
           </li>
           <li>
-            <LinkInternal accent="secondary">Documentation</LinkInternal>
+            <LinkInternal accent="secondary" to="/docs">
+              Documentation
+            </LinkInternal>
           </li>
           <li>
-            <LinkInternal accent="secondary">Changelogs</LinkInternal>
+            <LinkInternal accent="secondary" to="/changelog">
+              Changelogs
+            </LinkInternal>
           </li>
           <li>
-            <LinkInternal accent="secondary">Contribute</LinkInternal>
+            <LinkInternal accent="secondary" to="/contribute">
+              Contribute
+            </LinkInternal>
           </li>
         </ul>
 
@@ -66,13 +76,19 @@ const Footer: React.FC = () => {
             © 2025 BrainForest
           </li>
           <li>
-            <LinkInternal accent="secondary">Privacy Policy</LinkInternal>
+            <LinkInternal accent="secondary" to="/privacy">
+              Privacy Policy
+            </LinkInternal>
           </li>
           <li>
-            <LinkInternal accent="secondary">Terms of Service</LinkInternal>
+            <LinkInternal accent="secondary" to="/terms">
+              Terms of Service
+            </LinkInternal>
           </li>
           <li>
-            <LinkInternal accent="secondary">Cookie Preferences</LinkInternal>
+            <LinkInternal accent="secondary" to="/cookies">
+              Cookie Preferences
+            </LinkInternal>
           </li>
           <li>
             <a

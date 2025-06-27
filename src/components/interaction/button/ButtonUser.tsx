@@ -24,8 +24,12 @@ const ButtonUser: React.FC<UserButtonProps> = ({ className }) => {
         <ButtonDropdown
           dropdown={
             <Dropdown className="top-20 w-60 right-4">
-              <DropdownItem icon={<FaFolder />}>My Courses</DropdownItem>
-              <DropdownItem icon={<FaCog />}>Preferences</DropdownItem>
+              <DropdownItem icon={<FaFolder />} to="/my-courses">
+                My Courses
+              </DropdownItem>
+              <DropdownItem icon={<FaCog />} to="/preferences">
+                Preferences
+              </DropdownItem>
               <DropdownItem icon={<FaUser />} to="/profile">
                 Profile
               </DropdownItem>
