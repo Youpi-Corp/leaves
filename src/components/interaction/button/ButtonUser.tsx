@@ -1,5 +1,5 @@
 import React from 'react'
-import { useCurrentUser } from '../../../api/user/user.services'
+import { useAuth } from '../../../contexts/AuthContext'
 import Button from './Button'
 import { FaCog, FaFolder, FaUser, FaUserCircle } from 'react-icons/fa'
 import ButtonDropdown from './ButtonDropdown'
@@ -7,20 +7,18 @@ import { Dropdown, DropdownItem } from '../../layout/Dropdown'
 import Separator from '../../layout/Separator'
 import { FaArrowRightFromBracket } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom'
-import { useLogout } from '../../../api/user/user.services'
 
 interface UserButtonProps {
   className?: string
 }
 
 const ButtonUser: React.FC<UserButtonProps> = ({ className }) => {
-  const { data, isSuccess } = useCurrentUser()
+  const { user, isAuthenticated, logout } = useAuth()
   const navigate = useNavigate()
-  const { logout } = useLogout()
 
   return (
     <>
-      {isSuccess ? (
+      {isAuthenticated ? (
         <ButtonDropdown
           dropdown={
             <Dropdown className="top-20 w-60 right-4">
@@ -46,7 +44,7 @@ const ButtonUser: React.FC<UserButtonProps> = ({ className }) => {
           icon={<FaUserCircle />}
           className={className}
         >
-          {data?.pseudo}
+          {user?.pseudo}
         </ButtonDropdown>
       ) : (
         <Button
