@@ -72,7 +72,7 @@ const LoginBox: React.FC = () => {
           )}
 
           <div className="flex flex-col space-y-2 ml-auto items-end text-sm">
-            <LinkInternal>Forgot password?</LinkInternal>
+            <LinkInternal to="/forgot-password">Forgot password?</LinkInternal>
             <span>
               Don&apos;t have an account yet?{' '}
               <LinkInternal to="/register">Sign up here</LinkInternal>

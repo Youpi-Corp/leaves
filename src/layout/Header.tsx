@@ -30,7 +30,7 @@ const Header: React.FC = () => {
             <LinkHeader to="/edition/dashboard/">Create</LinkHeader>
           </li>
           <li>
-            <LinkHeader to="/">Contribute</LinkHeader>
+            <LinkHeader to="/contribute">Contribute</LinkHeader>
           </li>{' '}
           <li>
             <LinkHeader to="/library">Library</LinkHeader>
