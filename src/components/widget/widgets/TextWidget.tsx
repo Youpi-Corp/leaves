@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   BaseWidgetProps,
   WidgetViewProps,
@@ -94,8 +94,6 @@ const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
   widgetData,
   onChange,
 }) => {
-  const [previewEnabled, setPreviewEnabled] = useState(false)
-
   // Apply font size classes
   const fontSizeClass =
     {
@@ -219,70 +217,6 @@ const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
           </select>
         </div>
       </div>
-
-      {/* Preview toggle */}
-      {widgetData.format === 'markdown' && (
-        <div className="flex items-center pt-2">
-          <button
-            type="button"
-            onClick={() => setPreviewEnabled(!previewEnabled)}
-            className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-          >
-            {previewEnabled ? (
-              <>
-                <svg
-                  className="w-4 h-4 mr-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                  />
-                </svg>
-                Edit Content
-              </>
-            ) : (
-              <>
-                <svg
-                  className="w-4 h-4 mr-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-                Preview
-              </>
-            )}
-          </button>
-        </div>
-      )}
-
-      {/* Markdown Preview */}
-      {previewEnabled && widgetData.format === 'markdown' && (
-        <div className="mt-2 p-4 border border-gray-200 rounded-md bg-gray-50">
-          <div className={`prose max-w-none ${fontSizeClass}`}>
-            <ReactMarkdown>{widgetData.text}</ReactMarkdown>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
