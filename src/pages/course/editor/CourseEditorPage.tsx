@@ -12,6 +12,7 @@ import ExportSidebar from './ExportSidebar'
 import { widgetRegistry } from '../../../components/widget/WidgetRegistry'
 import WidgetFactory from '../../../components/widget/WidgetFactory'
 import { BaseWidgetProps } from '../../../types/WidgetTypes'
+import { WidgetEditProvider } from '../../../contexts/WidgetEditContext'
 import {
   createCourseQuery,
   updateCourseQuery,
@@ -316,8 +317,9 @@ const CourseEditorPage = () => {
   }
 
   return (
-    <div className="h-screen overflow-hidden">
-      <DndContext>
+    <WidgetEditProvider>
+      <div className="h-screen overflow-hidden">
+        <DndContext>
         <div className="flex w-full h-full bg-[url(./assets/graph-paper.svg)]">
           {' '}
           <ExportSidebar
@@ -439,6 +441,7 @@ const CourseEditorPage = () => {
         </div>
       </DndContext>
     </div>
+    </WidgetEditProvider>
   )
 }
 

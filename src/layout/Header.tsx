@@ -24,6 +24,9 @@ const Header: React.FC = () => {
             <LinkHeader to="/">Home</LinkHeader>
           </li>
           <li>
+            <LinkHeader to="/library">Library</LinkHeader>
+          </li>
+          <li>
             <LinkHeader to="/subscriptions">Subscriptions</LinkHeader>
           </li>
           <li>
@@ -32,9 +35,6 @@ const Header: React.FC = () => {
           <li>
             <LinkHeader to="/contribute">Contribute</LinkHeader>
           </li>{' '}
-          <li>
-            <LinkHeader to="/library">Library</LinkHeader>
-          </li>
         </ul>
       </div>
       <div className="flex ml-auto">
