@@ -94,18 +94,6 @@ const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
   widgetData,
   onChange,
 }) => {
-  // Apply font size classes
-  const fontSizeClass =
-    {
-      xs: 'text-xs',
-      sm: 'text-sm',
-      base: 'text-base',
-      lg: 'text-lg',
-      xl: 'text-xl',
-      '2xl': 'text-2xl',
-      '3xl': 'text-3xl',
-    }[widgetData.fontSize || 'base'] || 'text-base'
-
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange({
       ...widgetData,
