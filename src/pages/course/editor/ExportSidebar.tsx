@@ -77,7 +77,10 @@ const ExportSidebar: React.FC<ExportSidebarProps> = ({
             <input
               type="text"
               value={lessonName}
-              onChange={(e) => setLessonName(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= 50) setLessonName(e.target.value)
+              }}
+              maxLength={50}
               className="w-full border border-gray-300 rounded-md shadow-sm p-2"
               placeholder="Enter lesson name"
             />

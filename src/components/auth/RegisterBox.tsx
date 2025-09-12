@@ -84,7 +84,7 @@ const RegisterBox: React.FC = () => {
             </Button>
           ) : (
             <Button
-              onClick={(e) => {
+              onClick={() => {
                 if (!password) {
                   setError('Please enter a password.')
                   return
