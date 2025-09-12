@@ -49,7 +49,7 @@ const LoginBox: React.FC = () => {
         <InputBox
           onChange={(e) => setEmail(e.target.value)}
           className="w-[40rem]"
-          placeholder="Username or e-mail"
+          placeholder="E-mail"
           type="email"
         />
 
