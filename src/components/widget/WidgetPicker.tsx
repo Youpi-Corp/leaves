@@ -153,7 +153,7 @@ const WidgetPicker: React.FC<WidgetPickerProps> = ({
             onClick={() => setSelectedCategory(null)}
             className={`px-3 py-1 text-sm rounded-full ${
               selectedCategory === null
-                ? 'bg-blue-600 text-white'
+                ? 'bg-bfgreen-base text-white'
                 : 'bg-gray-200 hover:bg-gray-300'
             }`}
           >
@@ -166,7 +166,7 @@ const WidgetPicker: React.FC<WidgetPickerProps> = ({
               onClick={() => setSelectedCategory(category)}
               className={`px-3 py-1 text-sm rounded-full ${
                 selectedCategory === category
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-bfgreen-base text-white'
                   : 'bg-gray-200 hover:bg-gray-300'
               }`}
             >
@@ -208,9 +208,9 @@ const WidgetPickerItem: React.FC<WidgetPickerItemProps> = ({
   return (
     <button
       onClick={onSelect}
-      className="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-bfgreen-base transition-colors focus:outline-none focus:ring-2 focus:ring-bfgreen-base"
     >
-      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-2">
+      <div className="w-10 h-10 bg-bfgreen-light rounded-lg flex items-center justify-center text-bfgreen-dark mb-2">
         <svg
           className="w-6 h-6"
           fill="none"

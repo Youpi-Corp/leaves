@@ -47,6 +47,14 @@ const EditModuleModal: React.FC<EditModuleModalProps> = ({
     if (!title.trim() || !module) {
       return
     }
+    if (title.length > 50) {
+      setError('Title must be 50 characters or less.')
+      return
+    }
+    if (description.length > 200) {
+      setError('Description must be 200 characters or less.')
+      return
+    }
     try {
       setIsUpdating(true)
       setError(null)
@@ -99,7 +107,10 @@ const EditModuleModal: React.FC<EditModuleModalProps> = ({
               id="moduleTitle"
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= 50) setTitle(e.target.value)
+              }}
+              maxLength={50}
               className="w-full p-2 border border-bfbase-lightgrey rounded focus:ring-2 focus:ring-bfgreen-light focus:border-bfgreen-base outline-none transition-all"
               placeholder="Enter module title"
               required
@@ -116,7 +127,10 @@ const EditModuleModal: React.FC<EditModuleModalProps> = ({
             <textarea
               id="moduleDescription"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= 300) setDescription(e.target.value)
+              }}
+              maxLength={300}
               className="w-full p-2 border border-bfbase-lightgrey rounded focus:ring-2 focus:ring-bfgreen-light focus:border-bfgreen-base outline-none transition-all"
               placeholder="Enter module description"
               rows={3}

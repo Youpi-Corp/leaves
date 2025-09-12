@@ -14,6 +14,7 @@ const RegisterBox: React.FC = () => {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const registerCredentials: RegisterCredentials = {
     email,
@@ -30,6 +31,11 @@ const RegisterBox: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!password) {
+      setError('Password cannot be empty.')
+      return
+    }
+    setError(null)
     mutate()
   }
 
@@ -41,6 +47,9 @@ const RegisterBox: React.FC = () => {
         onSubmit={handleSubmit}
         className="flex flex-col items-center space-y-4"
       >
+        {error && (
+          <div className="text-red-500 text-sm mb-2">{error}</div>
+        )}
         <InputBox
           onChange={(e) => setEmail(e.target.value)}
           className="w-[40rem]"
@@ -75,7 +84,14 @@ const RegisterBox: React.FC = () => {
             </Button>
           ) : (
             <Button
-              onClick={() => mutate()}
+              onClick={() => {
+                if (!password) {
+                  setError('Please enter a password.')
+                  return
+                }
+                setError(null)
+                mutate()
+              }}
               className="h-10 w-44"
               icon={<FaCheck />}
             >

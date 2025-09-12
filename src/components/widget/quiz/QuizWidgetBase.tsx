@@ -85,7 +85,7 @@ export const QuizBaseEditor = <T extends QuizWidgetProps>({
           type="text"
           value={widgetData.label || ''}
           onChange={(e) => onChange({ ...widgetData, label: e.target.value })}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
         />
       </div>
       
@@ -97,7 +97,7 @@ export const QuizBaseEditor = <T extends QuizWidgetProps>({
           value={widgetData.question}
           onChange={handleQuestionChange}
           rows={3}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           placeholder="Enter your question here..."
         />
       </div>
@@ -122,7 +122,7 @@ export const QuizBaseEditor = <T extends QuizWidgetProps>({
                 }
               })}
               placeholder="Great job!"
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
             />
           </div>
           
@@ -141,7 +141,7 @@ export const QuizBaseEditor = <T extends QuizWidgetProps>({
                 }
               })}
               placeholder="Try again"
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
             />
           </div>
         </div>
@@ -155,7 +155,7 @@ export const QuizBaseEditor = <T extends QuizWidgetProps>({
           value={widgetData.explanation || ''}
           onChange={handleExplanationChange}
           rows={2}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           placeholder="Explanation shown after answering"
         />
       </div>

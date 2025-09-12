@@ -12,7 +12,7 @@ import ExportSidebar from './ExportSidebar'
 import { widgetRegistry } from '../../../components/widget/WidgetRegistry'
 import WidgetFactory from '../../../components/widget/WidgetFactory'
 import { BaseWidgetProps } from '../../../types/WidgetTypes'
-import { WidgetEditProvider } from '../../../contexts/WidgetEditContext'
+import { WidgetEditProvider, useWidgetEdit } from '../../../contexts/WidgetEditContext'
 import {
   createCourseQuery,
   updateCourseQuery,
@@ -55,10 +55,11 @@ interface StoredWidgetData {
   [key: string]: unknown
 }
 
-const CourseEditorPage = () => {
+const CourseEditorPageContent = () => {
   const { lessonId } = useParams<{ lessonId?: string }>()
   const navigate = useNavigate()
   const isEditMode = Boolean(lessonId)
+  const { openEditModal } = useWidgetEdit()
 
   const [layout, setLayout] = useState<Layout[]>([])
   const [widgets, setWidgets] = useState<BaseWidgetProps[]>([])
@@ -285,8 +286,21 @@ const CourseEditorPage = () => {
       minH: 2,
     }
 
-    setWidgets([...widgets, newWidget])
-    setLayout([...layout, newLayoutItem])
+    const updatedWidgets = [...widgets, newWidget]
+    const updatedLayout = [...layout, newLayoutItem]
+    
+    setWidgets(updatedWidgets)
+    setLayout(updatedLayout)
+    
+    // Automatically open the edit modal for the newly added widget
+    openEditModal(newWidget, (updatedWidget: BaseWidgetProps) => {
+      // Update the widget in the list when saved from the edit modal
+      setWidgets(prevWidgets => 
+        prevWidgets.map((widget) =>
+          widget.id === widgetId ? updatedWidget : widget
+        )
+      )
+    })
   }
 
   const handleUpdateWidget = (id: string, updatedData: BaseWidgetProps) => {
@@ -317,7 +331,6 @@ const CourseEditorPage = () => {
   }
 
   return (
-    <WidgetEditProvider>
       <div className="h-screen overflow-hidden">
         <DndContext>
         <div className="flex w-full h-full bg-[url(./assets/graph-paper.svg)]">
@@ -341,7 +354,7 @@ const CourseEditorPage = () => {
           {isLoading ? (
             <div className="flex w-full h-full pl-72 pr-72 items-center justify-center">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-bfgreen-base mx-auto mb-4"></div>
                 <p className="text-gray-600">Loading lesson...</p>
               </div>
             </div>
@@ -441,6 +454,13 @@ const CourseEditorPage = () => {
         </div>
       </DndContext>
     </div>
+  )
+}
+
+const CourseEditorPage = () => {
+  return (
+    <WidgetEditProvider>
+      <CourseEditorPageContent />
     </WidgetEditProvider>
   )
 }

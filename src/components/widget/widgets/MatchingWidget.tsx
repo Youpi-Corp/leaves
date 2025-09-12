@@ -126,7 +126,7 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
         const y2 = rightRect.top + rightRect.height / 2 - containerRect.top
 
         // Determine line color based on correctness
-        let color = '#3B82F6' // blue
+        let color = '#5fbb63' // blue
         if (showResult) {
           const isCorrectMatch = correctMatches.some(
             (correct) =>
@@ -265,7 +265,7 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
           {onEdit && (
             <button
               onClick={onEdit}
-              className="text-sm text-blue-600 hover:text-blue-800"
+              className="text-sm text-bfgreen-dark hover:text-bfgreen-dark"
             >
               Edit
             </button>
@@ -294,10 +294,10 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
                   onClick={() => handleLeftItemClick(item.id)}
                   className={`p-3 border rounded-lg cursor-pointer transition-all relative ${
                     isSelected
-                      ? 'bg-blue-100 border-blue-500 ring-2 ring-blue-200'
+                      ? 'bg-bfgreen-light border-bfgreen-base ring-2 ring-bfgreen-light'
                       : matchedRightId
                       ? 'bg-green-50 border-green-300'
-                      : 'bg-white border-gray-300 hover:border-blue-300'
+                      : 'bg-white border-gray-300 hover:border-bfgreen-base'
                   } ${showResult ? 'cursor-default' : ''}`}
                 >
                   <div className="flex items-center justify-between">
@@ -340,7 +340,7 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
                   onClick={() => handleRightItemClick(item.id)}
                   className={`p-3 border rounded-lg transition-all relative ${
                     canSelect
-                      ? 'bg-blue-50 border-blue-300 cursor-pointer hover:bg-blue-100'
+                      ? 'bg-bfgreen-light border-bfgreen-base cursor-pointer hover:bg-bfgreen-light'
                       : isMatched
                       ? 'bg-green-50 border-green-300 cursor-default'
                       : 'bg-gray-50 border-gray-200 cursor-default'
@@ -352,7 +352,7 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
                         isMatched
                           ? 'text-green-700'
                           : canSelect
-                          ? 'text-blue-700'
+                          ? 'text-bfgreen-dark'
                           : 'text-gray-600'
                       }
                     >
@@ -372,7 +372,7 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
           <button
             onClick={checkAnswer}
             disabled={userMatches.length !== correctMatches.length}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-bfgreen-base text-white rounded-lg hover:bg-bfgreen-dark disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Check Answer
           </button>
@@ -419,15 +419,15 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
           </div>
 
           {explanation && (
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="p-4 bg-bfgreen-light border border-blue-200 rounded-lg">
               <h5 className="font-medium text-blue-900 mb-2">Explanation:</h5>
-              <p className="text-blue-800 text-sm">{explanation}</p>
+              <p className="text-bfgreen-dark text-sm">{explanation}</p>
             </div>
           )}
 
           <button
             onClick={resetAnswers}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-4 py-2 bg-bfgreen-base text-white rounded-lg hover:bg-bfgreen-dark"
           >
             Try Again
           </button>
@@ -594,7 +594,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
             type="text"
             value={widgetData.label || ''}
             onChange={handleLabelChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
             placeholder="Enter widget title"
           />
         </div>
@@ -607,7 +607,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
             value={widgetData.question || ''}
             onChange={handleQuestionChange}
             rows={3}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
             placeholder="Enter the matching question or instructions"
           />
         </div>
@@ -622,7 +622,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
             <button
               type="button"
               onClick={addLeftItem}
-              className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200"
+              className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-bfgreen-dark bg-bfgreen-light hover:bg-blue-200"
             >
               <FaPlus className="mr-1" size={12} />
               Add Item
@@ -637,7 +637,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
                   type="text"
                   value={item.text}
                   onChange={(e) => updateLeftItem(item.id, e.target.value)}
-                  className="flex-grow border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-grow border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
                   placeholder={`Left item ${index + 1}`}
                 />
                 <button
@@ -659,7 +659,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
             <button
               type="button"
               onClick={addRightItem}
-              className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200"
+              className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-bfgreen-dark bg-bfgreen-light hover:bg-blue-200"
             >
               <FaPlus className="mr-1" size={12} />
               Add Item
@@ -674,7 +674,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
                   type="text"
                   value={item.text}
                   onChange={(e) => updateRightItem(item.id, e.target.value)}
-                  className="flex-grow border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-grow border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
                   placeholder={`Right item ${index + 1}`}
                 />
                 <button
@@ -713,7 +713,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
                   onChange={(e) =>
                     updateCorrectMatch(leftItem.id, e.target.value)
                   }
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
                 >
                   <option value="">Select match...</option>
                   {(widgetData.rightItems || []).map((rightItem) => (
@@ -741,7 +741,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
             type="checkbox"
             checked={widgetData.shuffleItems || false}
             onChange={handleShuffleChange}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            className="h-4 w-4 text-bfgreen-dark focus:ring-bfgreen-base border-gray-300 rounded"
           />
           <label
             htmlFor="shuffle-items"
@@ -757,7 +757,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
             type="checkbox"
             checked={widgetData.showFeedback || false}
             onChange={handleShowFeedbackChange}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            className="h-4 w-4 text-bfgreen-dark focus:ring-bfgreen-base border-gray-300 rounded"
           />
           <label
             htmlFor="show-feedback"
@@ -783,7 +783,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
                   handleFeedbackChange('correct', e.target.value)
                 }
                 rows={2}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
                 placeholder="Great job!"
               />
             </div>
@@ -797,7 +797,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
                   handleFeedbackChange('incorrect', e.target.value)
                 }
                 rows={2}
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
                 placeholder="Try again!"
               />
             </div>
@@ -814,7 +814,7 @@ const MatchingWidgetEdit: React.FC<WidgetEditProps<MatchingWidgetProps>> = ({
           value={widgetData.explanation || ''}
           onChange={handleExplanationChange}
           rows={3}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           placeholder="Provide an explanation of the correct answers..."
         />
       </div>
