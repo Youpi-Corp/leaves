@@ -51,3 +51,18 @@ layer(base);
     border-color: var(--color-gray-200, currentColor);
   }
 }
+
+/* Enhanced styling for React Grid Layout widget placement preview */
+.react-grid-item.react-grid-placeholder {
+  background: var(--color-bfblue-light) !important;
+  border: 2px dashed var(--color-bfblue-base) !important;
+  border-radius: 12px;
+  opacity: 0.8 !important;
+  transition: all 200ms ease;
+  box-shadow: 0 4px 12px rgba(52, 76, 183, 0.15);
+}
+
+.react-grid-item.react-grid-placeholder.placeholder-resizing {
+  transition: none;
+  opacity: 0.3;
+}
