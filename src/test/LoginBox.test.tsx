@@ -26,7 +26,7 @@ describe('LoginBox', () => {
     render(<LoginBox />, { wrapper: TestWrapper })
 
     expect(screen.getByText('Login'))
-    expect(screen.getByPlaceholderText('Username or e-mail'))
+    expect(screen.getByPlaceholderText('E-mail'))
     expect(screen.getByPlaceholderText('Password'))
     expect(screen.getByText('Validate'))
   })
@@ -34,7 +34,7 @@ describe('LoginBox', () => {
   it('handles input changes', () => {
     render(<LoginBox />, { wrapper: TestWrapper })
 
-    const emailInput = screen.getByPlaceholderText('Username or e-mail')
+    const emailInput = screen.getByPlaceholderText('E-mail')
     const passwordInput = screen.getByPlaceholderText('Password')
 
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } })
