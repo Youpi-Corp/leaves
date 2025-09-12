@@ -117,9 +117,9 @@ export const WidgetEditProvider: React.FC<WidgetEditProviderProps> = ({ children
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50">
               <div className="flex items-center space-x-3">
-                <div className="p-3 bg-blue-100 rounded-xl">
+                <div className="p-3 bg-bfgreen-light rounded-xl">
                   <svg
-                    className="w-6 h-6 text-blue-600"
+                    className="w-6 h-6 text-bfgreen-dark"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -227,7 +227,7 @@ export const WidgetEditProvider: React.FC<WidgetEditProviderProps> = ({ children
               </button>
               <button
                 onClick={handleSave}
-                className="px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                className="px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-bfgreen-base hover:bg-bfgreen-dark transition-colors"
               >
                 {hasChanges ? 'Save Changes' : 'Done'}
               </button>

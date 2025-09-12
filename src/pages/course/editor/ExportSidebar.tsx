@@ -91,7 +91,7 @@ const ExportSidebar: React.FC<ExportSidebarProps> = ({
             </label>
             {isLoading ? (
               <div className="flex justify-center py-2">
-                <Spinner size="sm" className="border-l-blue-500" />
+                <Spinner size="sm" className="border-l-bfgreen-base" />
               </div>
             ) : error ? (
               <div className="text-red-500 text-sm">Failed to load modules</div>
@@ -132,7 +132,7 @@ const ExportSidebar: React.FC<ExportSidebarProps> = ({
               id="isPublic"
               checked={isPublic}
               onChange={(e) => setIsPublic(e.target.checked)}
-              className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+              className="h-4 w-4 text-bfgreen-base border-gray-300 rounded"
             />
             <label
               htmlFor="isPublic"
@@ -154,7 +154,7 @@ const ExportSidebar: React.FC<ExportSidebarProps> = ({
             </div>
           )}
           <button
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md disabled:opacity-50"
+            className="w-full bg-bfgreen-base hover:bg-bfgreen-dark text-white px-4 py-2 rounded-md disabled:opacity-50"
             onClick={onExport}
             disabled={isExporting || !lessonName || !moduleId}
           >

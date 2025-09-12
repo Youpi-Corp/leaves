@@ -78,7 +78,7 @@ const CalendarWidgetView: React.FC<WidgetViewProps<CalendarWidgetProps>> = ({
 
       <div className="flex justify-between items-center mb-4">
         <div className="font-medium">{formatDate(selectedDate)}</div>
-        <div className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">
+        <div className="text-sm bg-bfgreen-light text-bfgreen-dark px-2 py-1 rounded">
           {view.charAt(0).toUpperCase() + view.slice(1)} View
         </div>
       </div>
@@ -90,7 +90,7 @@ const CalendarWidgetView: React.FC<WidgetViewProps<CalendarWidgetProps>> = ({
               <li
                 key={event.id}
                 className="p-2 border-l-4 rounded"
-                style={{ borderColor: event.color || '#3B82F6' }}
+                style={{ borderColor: event.color || '#5fbb63' }}
               >
                 <div className="font-medium">{event.title}</div>
                 <div className="text-xs text-gray-500">
@@ -126,7 +126,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
     title: '',
     start: new Date().toISOString().split('T')[0],
     end: '',
-    color: '#3B82F6',
+    color: '#5fbb63',
     description: '',
   })
 
@@ -189,7 +189,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
       title: '',
       start: new Date().toISOString().split('T')[0],
       end: '',
-      color: '#3B82F6',
+      color: '#5fbb63',
       description: '',
     })
 
@@ -222,7 +222,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
           type="text"
           value={widgetData.label}
           onChange={handleLabelChange}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
         />
       </div>
 
@@ -234,7 +234,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
           <select
             value={widgetData.view || 'month'}
             onChange={handleViewChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           >
             <option value="month">Month</option>
             <option value="week">Week</option>
@@ -254,7 +254,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
               new Date().toISOString().split('T')[0]
             }
             onChange={handleDateChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           />
         </div>
       </div>
@@ -267,7 +267,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
           <select
             value={widgetData.firstDayOfWeek?.toString() || '0'}
             onChange={handleFirstDayChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           >
             <option value="0">Sunday</option>
             <option value="1">Monday</option>
@@ -281,7 +281,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
             id="showWeekends"
             checked={widgetData.showWeekends !== false}
             onChange={handleWeekendsChange}
-            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            className="h-4 w-4 text-bfgreen-dark border-gray-300 rounded focus:ring-bfgreen-base"
           />
           <label
             htmlFor="showWeekends"
@@ -298,7 +298,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
           <button
             type="button"
             onClick={() => setShowEventForm(true)}
-            className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+            className="text-sm text-bfgreen-dark hover:text-bfgreen-dark flex items-center"
             disabled={showEventForm}
           >
             + Add Event
@@ -316,7 +316,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
                 type="text"
                 value={currentEvent.title}
                 onChange={(e) => handleEventChange('title', e.target.value)}
-                className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
               />
             </div>
 
@@ -329,7 +329,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
                   type="date"
                   value={currentEvent.start}
                   onChange={(e) => handleEventChange('start', e.target.value)}
-                  className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
                 />
               </div>
 
@@ -341,7 +341,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
                   type="date"
                   value={currentEvent.end || ''}
                   onChange={(e) => handleEventChange('end', e.target.value)}
-                  className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
                 />
               </div>
             </div>
@@ -352,7 +352,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
               </label>
               <input
                 type="color"
-                value={currentEvent.color || '#3B82F6'}
+                value={currentEvent.color || '#5fbb63'}
                 onChange={(e) => handleEventChange('color', e.target.value)}
                 className="w-full h-8 p-0 border-gray-300 rounded-md shadow-sm"
               />
@@ -367,7 +367,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
                 onChange={(e) =>
                   handleEventChange('description', e.target.value)
                 }
-                className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
                 rows={2}
               />
             </div>
@@ -376,7 +376,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
               <button
                 type="button"
                 onClick={() => setShowEventForm(false)}
-                className="px-2 py-1 text-xs text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-2 py-1 text-xs text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-bfgreen-base"
               >
                 Cancel
               </button>
@@ -384,7 +384,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
                 type="button"
                 onClick={handleAddEvent}
                 disabled={!currentEvent.title || !currentEvent.start}
-                className="px-2 py-1 text-xs text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="px-2 py-1 text-xs text-white bg-bfgreen-base border border-transparent rounded-md hover:bg-bfgreen-dark focus:outline-none focus:ring-2 focus:ring-bfgreen-base disabled:opacity-50"
               >
                 Add
               </button>
@@ -404,7 +404,7 @@ const CalendarWidgetEdit: React.FC<WidgetEditProps<CalendarWidgetProps>> = ({
                   <div className="flex items-center space-x-2">
                     <div
                       className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: event.color || '#3B82F6' }}
+                      style={{ backgroundColor: event.color || '#5fbb63' }}
                     />
                     <div>
                       <div className="font-medium text-sm">{event.title}</div>

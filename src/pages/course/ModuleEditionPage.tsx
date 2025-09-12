@@ -438,7 +438,7 @@ const ModuleEditionPage: React.FC = () => {
                     <div className="flex justify-between items-start">
                       <div className="flex-grow">
                         <div className="flex items-center">
-                          <span className="flex items-center justify-center rounded-full bg-bfblue-light w-7 h-7 text-bfblue-base font-semibold text-sm mr-3">
+                          <span className="flex items-center justify-center rounded-full bg-bfgreen-light w-7 h-7 text-bfgreen-dark font-semibold text-sm mr-3">
                             {index + 1}
                           </span>
                           <h3 className="text-lg font-semibold text-bfbase-black">
@@ -452,7 +452,7 @@ const ModuleEditionPage: React.FC = () => {
 
                       <div className="text-right flex items-start">
                         <div className="mr-4">
-                          <span className="text-sm font-medium bg-bfblue-light text-bfblue-base px-2 py-1 rounded-full">
+                          <span className="text-sm font-medium bg-bfgreen-light text-bfgreen-dark px-2 py-1 rounded-full">
                             {formatDuration(lesson.duration)}
                           </span>
                           <p className="text-xs text-bfbase-grey mt-2">

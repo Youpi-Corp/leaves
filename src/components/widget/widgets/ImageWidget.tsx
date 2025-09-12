@@ -184,7 +184,7 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
   return (
     <div
       className={`space-y-4 border-dashed border-2 ${
-        isDragging ? 'border-blue-500' : 'border-gray-300'
+        isDragging ? 'border-bfgreen-base' : 'border-gray-300'
       } p-4 rounded-md`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -198,7 +198,7 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
           type="text"
           value={widgetData.label}
           onChange={handleLabelChange}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
         />
       </div>
 
@@ -210,7 +210,7 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
           type="url"
           value={widgetData.imageUrl}
           onChange={handleImageUrlChange}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           placeholder="https://example.com/image.jpg"
         />
       </div>
@@ -224,7 +224,7 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
             type="text"
             value={widgetData.altText || ''}
             onChange={handleAltTextChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
             placeholder="Description for accessibility"
           />
         </div>
@@ -236,7 +236,7 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
           <select
             value={widgetData.aspectRatio || 'original'}
             onChange={handleAspectRatioChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           >
             {/* Dynamically generate options from the ASPECT_RATIOS object */}
             {Object.entries(ASPECT_RATIOS).map(([value, { label }]) => (
@@ -256,7 +256,7 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
           type="text"
           value={widgetData.caption || ''}
           onChange={handleCaptionChange}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           placeholder="Image caption"
         />
       </div>

@@ -81,7 +81,7 @@ const Sidebar: FC<SidebarProps> = ({
         <input
           type="text"
           placeholder="Search widgets..."
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bfgreen-base"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -95,7 +95,7 @@ const Sidebar: FC<SidebarProps> = ({
               key={category}
               className={`px-3 py-1 mr-1 text-sm rounded-full ${
                 selectedCategory === category
-                  ? 'bg-blue-100 text-blue-800'
+                  ? 'bg-bfgreen-light text-bfgreen-dark'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
               onClick={() => setSelectedCategory(category)}
@@ -122,10 +122,10 @@ const Sidebar: FC<SidebarProps> = ({
                     {categoryWidgets.map((widget) => (
                       <button
                         key={widget.type}
-                        className="flex items-start p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-left"
+                        className="flex items-start p-3 bg-white rounded-lg border border-gray-200 hover:border-bfgreen-base hover:bg-bfgreen-light transition-colors text-left"
                         onClick={() => onWidgetSelect(widget.type)}
                       >
-                        <div className="flex-shrink-0 mr-3 mt-1 bg-blue-100 rounded-md p-2 text-blue-600">
+                        <div className="flex-shrink-0 mr-3 mt-1 bg-bfgreen-light rounded-md p-2 text-bfgreen-dark">
                           {widget.icon ? (
                             // Use provided icon if available (would need an icon library or custom component)
                             <span>{widget.icon}</span>
@@ -153,10 +153,10 @@ const Sidebar: FC<SidebarProps> = ({
               {filteredWidgets.map((widget) => (
                 <button
                   key={widget.type}
-                  className="flex items-start p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-left"
+                  className="flex items-start p-3 bg-white rounded-lg border border-gray-200 hover:border-bfgreen-base hover:bg-bfgreen-light transition-colors text-left"
                   onClick={() => onWidgetSelect(widget.type)}
                 >
-                  <div className="flex-shrink-0 mr-3 mt-1 bg-blue-100 rounded-md p-2 text-blue-600">
+                  <div className="flex-shrink-0 mr-3 mt-1 bg-bfgreen-light rounded-md p-2 text-bfgreen-dark">
                     {widget.icon ? (
                       <span>{widget.icon}</span>
                     ) : (
@@ -181,7 +181,7 @@ const Sidebar: FC<SidebarProps> = ({
             {filteredWidgets.map((widget) => (
               <button
                 key={widget.type}
-                className="p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-center"
+                className="p-3 bg-white rounded-lg border border-gray-200 hover:border-bfgreen-base hover:bg-bfgreen-light transition-colors text-center"
                 onClick={() => onWidgetSelect(widget.type)}
               >
                 {widget.label}

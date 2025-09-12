@@ -101,8 +101,8 @@ const MultipleChoiceWidgetView: React.FC<
             onClick={() => handleOptionClick(option.id)}
             className={`p-3 border rounded-lg cursor-pointer transition-colors ${
               selectedOptions.includes(option.id)
-                ? 'bg-blue-100 border-blue-500'
-                : 'bg-white border-gray-300 hover:border-blue-300'
+                ? 'bg-bfgreen-light border-bfgreen-base'
+                : 'bg-white border-gray-300 hover:border-bfgreen-base'
             }`}
           >
             <div className="flex items-center">
@@ -111,7 +111,7 @@ const MultipleChoiceWidgetView: React.FC<
                   allowMultiple ? 'sm' : 'full'
                 } border ${
                   selectedOptions.includes(option.id)
-                    ? 'bg-blue-500 border-blue-500 text-white flex items-center justify-center'
+                    ? 'bg-bfgreen-light0 border-bfgreen-base text-white flex items-center justify-center'
                     : 'border-gray-400'
                 }`}
               >
@@ -130,7 +130,7 @@ const MultipleChoiceWidgetView: React.FC<
           <button
             onClick={checkAnswer}
             disabled={selectedOptions.length === 0}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md disabled:bg-blue-300 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-bfgreen-base text-white rounded-md disabled:bg-blue-300 disabled:cursor-not-allowed"
           >
             Check Answer
           </button>
@@ -261,7 +261,7 @@ const MultipleChoiceWidgetEdit: React.FC<
                 id="allow-multiple"
                 checked={widgetData.allowMultiple || false}
                 onChange={handleAllowMultipleChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 text-bfgreen-dark focus:ring-bfgreen-base border-gray-300 rounded"
               />
               <label
                 htmlFor="allow-multiple"
@@ -276,7 +276,7 @@ const MultipleChoiceWidgetEdit: React.FC<
                 id="shuffle-options"
                 checked={widgetData.shuffleOptions || false}
                 onChange={handleShuffleChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 text-bfgreen-dark focus:ring-bfgreen-base border-gray-300 rounded"
               />
               <label
                 htmlFor="shuffle-options"
@@ -353,7 +353,7 @@ const MultipleChoiceWidgetEdit: React.FC<
                     updateOption(option.id, 'text', e.target.value)
                   }
                   placeholder="Option text"
-                  className="w-full mb-1 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full mb-1 border-gray-300 rounded-md focus:ring-bfgreen-base focus:border-bfgreen-base"
                 />
               </div>
 
@@ -386,7 +386,7 @@ const MultipleChoiceWidgetEdit: React.FC<
         <button
           type="button"
           onClick={addOption}
-          className="mt-2 flex items-center text-sm text-blue-600 hover:text-blue-800"
+          className="mt-2 flex items-center text-sm text-bfgreen-dark hover:text-bfgreen-dark"
         >
           <FaPlus className="w-3 h-3 mr-1" />
           Add Option
