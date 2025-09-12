@@ -8,6 +8,7 @@ import {
 import { BaseWidgetProps } from '../../types/WidgetTypes'
 import WidgetFactory from './WidgetFactory'
 import WidgetPicker from './WidgetPicker'
+import { useWidgetEdit } from '../../contexts/WidgetEditContext'
 
 interface WidgetGridProps {
   widgets: BaseWidgetProps[]
@@ -28,11 +29,22 @@ const WidgetGrid: React.FC<WidgetGridProps> = ({
   isEditable = true,
 }) => {
   const [showWidgetPicker, setShowWidgetPicker] = useState(false)
+  const { openEditModal } = useWidgetEdit()
 
   // Handle adding a new widget to the grid
   const handleAddWidget = (widgetData: BaseWidgetProps) => {
-    onWidgetsChange([...widgets, widgetData])
+    const updatedWidgets = [...widgets, widgetData]
+    onWidgetsChange(updatedWidgets)
     setShowWidgetPicker(false)
+    
+    // Automatically open the edit modal for the newly added widget
+    openEditModal(widgetData, (updatedWidget: BaseWidgetProps) => {
+      // Update the widget in the list when saved from the edit modal
+      const finalWidgets = updatedWidgets.map((widget) =>
+        widget.id === widgetData.id ? updatedWidget : widget
+      )
+      onWidgetsChange(finalWidgets)
+    })
   }
 
   // Handle updating a widget's data
