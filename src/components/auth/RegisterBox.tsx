@@ -85,7 +85,6 @@ const RegisterBox: React.FC = () => {
           ) : (
             <Button
               onClick={(e) => {
-                // Empêche la validation si le mot de passe est vide
                 if (!password) {
                   setError('Please enter a password.')
                   return
