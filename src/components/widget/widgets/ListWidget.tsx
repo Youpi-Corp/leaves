@@ -209,7 +209,7 @@ const ListWidgetEdit: React.FC<WidgetEditProps<ListWidgetProps>> = ({
           type="text"
           value={widgetData.label}
           onChange={handleLabelChange}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
         />
       </div>
 
@@ -220,7 +220,7 @@ const ListWidgetEdit: React.FC<WidgetEditProps<ListWidgetProps>> = ({
             type="checkbox"
             checked={widgetData.ordered || false}
             onChange={handleOrderedChange}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            className="h-4 w-4 text-bfgreen-dark focus:ring-bfgreen-base border-gray-300 rounded"
           />
           <label
             htmlFor="ordered-list"
@@ -240,7 +240,7 @@ const ListWidgetEdit: React.FC<WidgetEditProps<ListWidgetProps>> = ({
               min="1"
               value={widgetData.startNumber || 1}
               onChange={handleStartNumberChange}
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
             />
           </div>
         ) : (
@@ -251,7 +251,7 @@ const ListWidgetEdit: React.FC<WidgetEditProps<ListWidgetProps>> = ({
             <select
               value={widgetData.bulletStyle || 'disc'}
               onChange={handleBulletStyleChange}
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
               disabled={widgetData.ordered}
             >
               <option value="disc">Disc</option>
@@ -275,7 +275,7 @@ const ListWidgetEdit: React.FC<WidgetEditProps<ListWidgetProps>> = ({
                   type="text"
                   value={item}
                   onChange={(e) => handleEditItem(index, e.target.value)}
-                  className="flex-grow border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-grow border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
                 />
                 <div className="flex space-x-1">
                   <button
@@ -367,12 +367,12 @@ const ListWidgetEdit: React.FC<WidgetEditProps<ListWidgetProps>> = ({
           onChange={(e) => setNewItem(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Add a new item..."
-          className="flex-grow border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="flex-grow border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
         />
         <button
           type="button"
           onClick={handleAddItem}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-bfgreen-base hover:bg-bfgreen-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bfgreen-base"
         >
           Add
         </button>

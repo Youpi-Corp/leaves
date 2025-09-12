@@ -139,7 +139,7 @@ const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
           type="text"
           value={widgetData.label}
           onChange={handleLabelChange}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
         />
       </div>
 
@@ -150,7 +150,7 @@ const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
         <textarea
           value={widgetData.text}
           onChange={handleTextChange}
-          className="w-full h-[calc(100%-1.5rem)] border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full h-[calc(100%-1.5rem)] border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           placeholder="Enter your text here..."
         />
       </div>
@@ -163,7 +163,7 @@ const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
           <select
             value={widgetData.format || 'plain'}
             onChange={handleFormatChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           >
             <option value="plain">Plain Text</option>
             <option value="markdown">Markdown</option>
@@ -177,7 +177,7 @@ const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
           <select
             value={widgetData.fontSize || 'base'}
             onChange={handleFontSizeChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           >
             <option value="xs">Extra Small</option>
             <option value="sm">Small</option>
@@ -196,7 +196,7 @@ const TextWidgetEdit: React.FC<WidgetEditProps<TextWidgetProps>> = ({
           <select
             value={widgetData.textAlign || 'left'}
             onChange={handleTextAlignChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           >
             <option value="left">Left</option>
             <option value="center">Center</option>

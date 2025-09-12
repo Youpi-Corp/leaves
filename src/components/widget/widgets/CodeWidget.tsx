@@ -169,7 +169,7 @@ const CodeWidgetEdit: React.FC<WidgetEditProps<CodeWidgetProps>> = ({
           type="text"
           value={widgetData.label}
           onChange={handleLabelChange}
-          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
         />
       </div>
 
@@ -181,7 +181,7 @@ const CodeWidgetEdit: React.FC<WidgetEditProps<CodeWidgetProps>> = ({
           value={widgetData.code}
           onChange={handleCodeChange}
           rows={8}
-          className="w-full font-mono border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          className="w-full font-mono border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           placeholder="Enter your code here..."
         />
       </div>
@@ -194,7 +194,7 @@ const CodeWidgetEdit: React.FC<WidgetEditProps<CodeWidgetProps>> = ({
           <select
             value={widgetData.language}
             onChange={handleLanguageChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           >
             {languageOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -211,7 +211,7 @@ const CodeWidgetEdit: React.FC<WidgetEditProps<CodeWidgetProps>> = ({
           <select
             value={widgetData.theme || 'light'}
             onChange={handleThemeChange}
-            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border-gray-300 rounded-md shadow-sm focus:ring-bfgreen-base focus:border-bfgreen-base"
           >
             <option value="light">Light</option>
             <option value="dark">Dark</option>
@@ -226,7 +226,7 @@ const CodeWidgetEdit: React.FC<WidgetEditProps<CodeWidgetProps>> = ({
           type="checkbox"
           checked={widgetData.showLineNumbers}
           onChange={handleShowLineNumbersChange}
-          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          className="h-4 w-4 text-bfgreen-dark focus:ring-bfgreen-base border-gray-300 rounded"
         />
         <label
           htmlFor="show-line-numbers"

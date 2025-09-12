@@ -354,7 +354,7 @@ const CourseEditorPageContent = () => {
           {isLoading ? (
             <div className="flex w-full h-full pl-72 pr-72 items-center justify-center">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-bfgreen-base mx-auto mb-4"></div>
                 <p className="text-gray-600">Loading lesson...</p>
               </div>
             </div>

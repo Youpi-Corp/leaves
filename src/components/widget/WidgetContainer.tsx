@@ -107,7 +107,7 @@ function WidgetContainer<T extends BaseWidgetProps>({
     isEditable ? 'shadow-sm hover:shadow-md' : 'shadow-none',
     isDragging ? 'opacity-50 shadow-xl' : 'opacity-100',
     widgetState.isSelected
-      ? 'border-blue-400 shadow-md'
+      ? 'border-bfgreen-base shadow-md'
       : isEditable
       ? 'border-transparent hover:border-gray-200'
       : 'border-transparent',
@@ -131,7 +131,7 @@ function WidgetContainer<T extends BaseWidgetProps>({
       {widgetState.isSelected && isEditable && (
         <div className="absolute top-0 right-0 p-1 bg-white/70 backdrop-blur-sm flex gap-1 rounded-bl-md z-10">
           <button
-            className="text-blue-600 hover:bg-blue-50 p-1 rounded"
+            className="text-bfgreen-dark hover:bg-bfgreen-light p-1 rounded"
             onClick={handleEdit}
             aria-label="Edit widget"
           >
