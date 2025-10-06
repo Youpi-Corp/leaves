@@ -118,6 +118,7 @@ const LessonContentPage: React.FC = () => {
   const [quizAnswers, setQuizAnswers] = useState<Record<string, boolean>>({})
   const [canComplete, setCanComplete] = useState(false)
   const [isCompleting, setIsCompleting] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
 
   useEffect(() => {
     const getLessonDetails = async () => {
@@ -147,6 +148,25 @@ const LessonContentPage: React.FC = () => {
 
     getLessonDetails()
   }, [lessonId])
+
+  // Track scroll progress
+  useEffect(() => {
+    const handleScroll = () => {
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      const scrollTop = window.scrollY
+
+      const totalScrollableHeight = documentHeight - windowHeight
+      const progress = totalScrollableHeight > 0
+        ? (scrollTop / totalScrollableHeight) * 100
+        : 0
+
+      setScrollProgress(progress)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Check if all quiz widgets have been answered correctly
   useEffect(() => {
@@ -253,26 +273,26 @@ const LessonContentPage: React.FC = () => {
 
     return (
       <div className="bg-white rounded-lg border p-4">
-        <div className="max-w-[920px] m-auto">
+        <div className="max-w-[920px] m-auto py-8">
           <style>
             {`
               /* Hide resize handles in view mode */
               .react-resizable-handle {
                 display: none !important;
               }
-              
+
               /* Remove hover effects on widget containers in view mode */
               .widget-container:hover {
                 border-color: transparent !important;
                 box-shadow: none !important;
               }
-              
+
               /* Ensure proper containment without breaking layout */
               .widget-container {
                 overflow: hidden;
               }
-              
-              /* Ensure layout container matches editor */
+
+              /* Allow grid to expand vertically for scrolling */
               .react-grid-layout {
                 min-height: auto !important;
               }
@@ -317,6 +337,13 @@ const LessonContentPage: React.FC = () => {
   return (
     <WidgetEditProvider>
       <div className="flex flex-col min-h-screen">
+        {/* Fixed scroll progress bar */}
+        <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+          <div
+            className="h-full bg-bfgreen-base transition-all duration-300"
+            style={{ width: `${scrollProgress}%` }}
+          ></div>
+        </div>
         <Header />
         <div className="container mx-auto max-w-5xl py-8 px-4 flex-grow">
           {loading ? (

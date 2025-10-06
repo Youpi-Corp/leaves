@@ -370,11 +370,11 @@ const CourseEditorPageContent = () => {
                   }
                   `}
                 </style>
-                <div className="p-4 w-full">
-                  <div className="max-w-[920px] bg-white shadow-md h-full m-auto rounded-xl flex flex-col">
-                    <div className="w-full px-4 flex-1 relative">
+                <div className="p-4 w-full overflow-y-auto">
+                  <div className="max-w-[920px] bg-white shadow-md min-h-screen m-auto rounded-xl flex flex-col">
+                    <div className="w-full px-4 py-8 relative">
                       <ReactGridLayout
-                        className="layout h-full"
+                        className="layout"
                         layout={layout}
                         cols={12}
                         rowHeight={40}
@@ -416,7 +416,7 @@ const CourseEditorPageContent = () => {
                         ))}
                       </ReactGridLayout>
                       {widgets.length === 0 && (
-                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 absolute inset-0 flex flex-col items-center justify-center">
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 min-h-[400px] flex flex-col items-center justify-center">
                           <svg
                             className="w-16 h-16 mb-4 text-gray-400"
                             fill="none"
