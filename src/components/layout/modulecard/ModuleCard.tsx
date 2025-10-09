@@ -7,7 +7,7 @@ interface CardProps {
 }
 
 const ModuleCard: React.FC<CardProps> = ({ module, onClick }) => {
-  const truncateDescription = (
+  const truncateText = (
     text: string | null,
     maxLength: number = 100
   ) => {
@@ -47,11 +47,21 @@ const ModuleCard: React.FC<CardProps> = ({ module, onClick }) => {
               />
             </svg>
           </div>
-          <h2 className="text-lg font-semibold text-bfbase-black mb-2">
-            {module.title || 'Untitled Module'}
+          <h2 className="text-lg font-semibold text-bfbase-black mb-2 truncate" title={module.title || 'Untitled Module'}>
+            {truncateText(module.title, 50) || 'Untitled Module'}
           </h2>
-          <p className="text-sm text-bfbase-grey mb-2">
-            {truncateDescription(module.description, 40)}
+          <p 
+            className="text-sm text-bfbase-grey mb-2 overflow-hidden" 
+            style={{
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              lineHeight: '1.2em',
+              maxHeight: '2.4em'
+            }}
+            title={module.description || ''}
+          >
+            {truncateText(module.description, 80)}
           </p>
           <div className="mt-4 flex justify-between text-sm text-bfgreen-base">
             <span>
