@@ -238,17 +238,61 @@ const ModuleViewPage: React.FC = () => {
         ) : moduleDetails ? (
           <>
             <Breadcrumb className="mb-6" />
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <div className="mb-6">
               <div>
                 <div className="flex items-center mb-2">
                   <BackButton className="mr-2" variant="link" />
-                  <h1 className="text-3xl font-bold text-bfbase-black">
+                  <h1 className="text-3xl font-bold text-bfbase-black break-words">
                     {moduleDetails.title}
                   </h1>
                 </div>
-                <p className="text-bfbase-grey mb-4 max-w-3xl text-lg">
+                <p className="text-bfbase-grey mb-4 max-w-3xl text-lg break-words">
                   {moduleDetails.description}
                 </p>
+
+                {/* Subscription Button*/}
+                <div className="mb-6">
+                  {currentUser && !isUserLoading && !isSubscriptionLoading && (
+                    <button
+                      onClick={handleSubscriptionToggle}
+                      disabled={
+                        subscribeToModule.isPending ||
+                        unsubscribeFromModule.isPending
+                      }
+                      className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+                        isSubscribed
+                          ? 'bg-bfred-light text-bfred-base hover:bg-bfred-base hover:text-white border border-bfred-base'
+                          : 'bg-bfgreen-base text-white hover:bg-bfgreen-dark'
+                      } ${
+                        subscribeToModule.isPending ||
+                        unsubscribeFromModule.isPending
+                          ? 'opacity-50 cursor-not-allowed'
+                          : ''
+                      }`}
+                    >
+                      {subscribeToModule.isPending ||
+                      unsubscribeFromModule.isPending ? (
+                        <div className="flex items-center">
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
+                          Loading...
+                        </div>
+                      ) : isSubscribed ? (
+                        'Unsubscribe'
+                      ) : (
+                        'Subscribe'
+                      )}
+                    </button>
+                  )}
+                  {!currentUser && !isUserLoading && (
+                    <button
+                      onClick={() => goToLogin()}
+                      className="px-6 py-3 bg-bfgreen-base text-white rounded-lg font-medium hover:bg-bfgreen-dark transition-colors"
+                    >
+                      Login to Subscribe
+                    </button>
+                  )}
+                </div>
+
                 <div className="flex items-center space-x-6 text-sm text-bfbase-grey">
                   <span className="flex items-center">
                     <svg
@@ -303,49 +347,6 @@ const ModuleViewPage: React.FC = () => {
                       ></div>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Subscription Button */}
-              <div className="mt-4 md:mt-0">
-                {currentUser && !isUserLoading && !isSubscriptionLoading && (
-                  <button
-                    onClick={handleSubscriptionToggle}
-                    disabled={
-                      subscribeToModule.isPending ||
-                      unsubscribeFromModule.isPending
-                    }
-                    className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                      isSubscribed
-                        ? 'bg-bfred-light text-bfred-base hover:bg-bfred-base hover:text-white border border-bfred-base'
-                        : 'bg-bfgreen-base text-white hover:bg-bfgreen-dark'
-                    } ${
-                      subscribeToModule.isPending ||
-                      unsubscribeFromModule.isPending
-                        ? 'opacity-50 cursor-not-allowed'
-                        : ''
-                    }`}
-                  >
-                    {subscribeToModule.isPending ||
-                    unsubscribeFromModule.isPending ? (
-                      <div className="flex items-center">
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
-                        Loading...
-                      </div>
-                    ) : isSubscribed ? (
-                      'Unsubscribe'
-                    ) : (
-                      'Subscribe'
-                    )}
-                  </button>
-                )}
-                {!currentUser && !isUserLoading && (
-                  <button
-                    onClick={() => goToLogin()}
-                    className="px-6 py-3 bg-bfgreen-base text-white rounded-lg font-medium hover:bg-bfgreen-dark transition-colors"
-                  >
-                    Login to Subscribe
-                  </button>
                 )}
               </div>
 
