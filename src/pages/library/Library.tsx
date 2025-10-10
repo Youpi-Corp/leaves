@@ -3,7 +3,6 @@ import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import SearchBar from '../../components/library/SearchBar'
 import SortDropdown from '../../components/library/SortDropdown'
-import ModuleList from '../../components/library/ModuleList'
 import CreateModuleModal from '../../components/layout/modulecard/CreateModuleModal'
 import { Module } from '../../api/module/module.queries'
 import { getAllModulesQuery } from '../../api/module/module.queries'
@@ -38,7 +37,6 @@ const Library: React.FC = () => {
               new Date(b.dtc || 0).getTime() - new Date(a.dtc || 0).getTime()
           )
         } else if (sortOption === 'popularity') {
-          // Sort by title alphabetically as a fallback since popularity field doesn't exist
           filteredModules = filteredModules.sort((a, b) =>
             (a.title || '').localeCompare(b.title || '')
           )
