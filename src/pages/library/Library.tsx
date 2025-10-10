@@ -7,12 +7,15 @@ import ModuleList from '../../components/library/ModuleList'
 import CreateModuleModal from '../../components/layout/modulecard/CreateModuleModal'
 import { Module } from '../../api/module/module.queries'
 import { getAllModulesQuery } from '../../api/module/module.queries'
+import { useNavigate } from 'react-router-dom'
+import ModuleCard from '../../components/layout/modulecard/ModuleCard'
 
 const Library: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortOption, setSortOption] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modules, setModules] = useState<Module[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -121,7 +124,15 @@ const Library: React.FC = () => {
             </div>
           ) : (
             <div className="border rounded-lg bg-white p-6 shadow-sm">
-              <ModuleList modules={modules} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {modules.map((module) => (
+                  <ModuleCard
+                    key={module.id}
+                    module={module}
+                    onClick={(id) => navigate(`/module/${id}`)}
+                  />
+                ))}
+              </div>
             </div>
           )}
         </div>

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import ModuleCard from './modulecard/ModuleCard'
+import ModuleCard, { ButtonType } from './modulecard/ModuleCard'
 import { CarouselService } from '../../api/services/carousel.service'
 import { Module } from '../../api/module/module.queries'
 
@@ -18,12 +18,16 @@ interface CardCarouselProps {
   carouselId: string
   itemsToShow?: number
   className?: string
+  buttonType?: ButtonType
+  onActionComplete?: (moduleId: number, success: boolean) => void
 }
 
 const CardCarousel: React.FC<CardCarouselProps> = ({
   carouselId,
   itemsToShow = 3,
   className = '',
+  buttonType,
+  onActionComplete,
 }) => {
   const navigate = useNavigate()
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -167,14 +171,18 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
               transform: `translateX(-${currentIndex * cardWidth}px)`,
             }}
           >
-            {' '}
             {modules.map((module) => (
               <div
                 key={module.id}
                 className="flex-shrink-0 px-2"
                 style={{ width: `${cardWidth}px` }}
               >
-                <ModuleCard module={module} onClick={handleCardClick} />
+                <ModuleCard
+                  module={module}
+                  onClick={handleCardClick}
+                  buttonType={buttonType}
+                  onActionComplete={onActionComplete}
+                />
               </div>
             ))}
           </div>

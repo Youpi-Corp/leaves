@@ -5,11 +5,9 @@ import Footer from '../layout/Footer'
 import UserLayout from '../components/layout/UserLayout'
 import ModuleCard from '../components/layout/modulecard/ModuleCard'
 import Spinner from '../components/feedback/Spinner'
-import {
-  useSubscribedModules,
-  useUnsubscribeFromModule,
-} from '../api/module/module.services'
+import { useSubscribedModules } from '../api/module/module.services'
 import { useCurrentUser } from '../api/user/user.services'
+import { unsubscribeFromModuleQuery } from '../api/module/module.queries'
 import { FaBookmark } from 'react-icons/fa'
 
 const SubscriptionsPage: React.FC = () => {
@@ -27,18 +25,10 @@ const SubscriptionsPage: React.FC = () => {
     data: subscribedModules,
     isLoading: modulesLoading,
     error: modulesError,
+    refetch: refetchSubscriptions,
   } = useSubscribedModules()
 
-  // Unsubscribe mutation
-  const unsubscribeMutation = useUnsubscribeFromModule()
-
-  const handleUnsubscribe = async (moduleId: number) => {
-    try {
-      await unsubscribeMutation.mutateAsync(moduleId)
-    } catch (error) {
-      console.error('Failed to unsubscribe:', error)
-    }
-  } // Loading state
+  // Loading state
   if (userLoading || modulesLoading) {
     return (
       <>
@@ -116,29 +106,17 @@ const SubscriptionsPage: React.FC = () => {
               </div>{' '}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {subscribedModules.map((module) => (
-                  <div key={module.id} className="relative">
-                    <ModuleCard
-                      module={module}
-                      onClick={() => navigate(`/module/${module.id}`)}
-                    />
-
-                    {/* Unsubscribe button overlay */}
-                    <div className="absolute top-2 right-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleUnsubscribe(module.id)
-                        }}
-                        disabled={unsubscribeMutation.isPending}
-                        className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors disabled:opacity-50"
-                        title="Unsubscribe from this module"
-                      >
-                        {unsubscribeMutation.isPending
-                          ? 'Removing...'
-                          : 'Unsubscribe'}
-                      </button>
-                    </div>
-                  </div>
+                  <ModuleCard
+                    key={module.id}
+                    module={module}
+                    onClick={(id) => navigate(`/module/${id}`)}
+                    buttonType="UNSUBSCRIBE"
+                    onActionComplete={(moduleId, success) => {
+                      if (success) {
+                        refetchSubscriptions()
+                      }
+                    }}
+                  />
                 ))}
               </div>
               {/* Additional actions */}

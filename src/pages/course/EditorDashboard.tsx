@@ -126,7 +126,8 @@ const EditorDashboard: React.FC = () => {
               <ModuleCard
                 key={module.id}
                 module={module}
-                onClick={handleModuleClick}
+                onClick={(id) => navigate(`/edition/dashboard/${id}`)}
+                buttonType="EDIT"
               />
             ))}
           </div>

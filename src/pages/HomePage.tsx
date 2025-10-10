@@ -8,9 +8,12 @@ const HomePage: React.FC = () => {
     <>
       <Header />
       <div className="min-h-screen mx-4 md:mx-8 lg:mx-12">
-        <CardCarousel carouselId="featured" itemsToShow={5} />
-        <CardCarousel carouselId="recent" itemsToShow={5} />
-        <CardCarousel carouselId="continue" itemsToShow={5} />
+        <CardCarousel 
+          carouselId="featured-modules" 
+        />
+        <CardCarousel 
+          carouselId="popular-modules" 
+        />
       </div>
       <Footer />
     </>
