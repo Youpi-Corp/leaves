@@ -50,6 +50,27 @@ layer(base);
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
+
+  /* Prevent overscroll bounce/rubber-band effect */
+  html,
+  body {
+    overscroll-behavior-y: none;
+    overflow-y: scroll;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    min-height: 100%;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 /* Enhanced styling for React Grid Layout widget placement preview */

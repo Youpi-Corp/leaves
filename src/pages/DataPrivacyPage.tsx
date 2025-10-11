@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Header from '../layout/Header'
-import Footer from '../layout/Footer'
+import PageWrapper from '../components/layout/PageWrapper'
 import { userQuery, exportUserData, deleteUserAccount, updatePrivacySettings } from '../api/user/user.queries'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { FaShieldAlt, FaEye, FaTrash, FaDownload, FaCog } from 'react-icons/fa'
@@ -92,8 +91,7 @@ const DataPrivacyPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <>
-        <Header />
+      <PageWrapper>
         <UserLayout userRole={undefined} isAuthenticated={false}>
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
@@ -102,15 +100,13 @@ const DataPrivacyPage: React.FC = () => {
             </div>
           </div>
         </UserLayout>
-        <Footer />
-      </>
+      </PageWrapper>
     )
   }
 
   if (error) {
     return (
-      <>
-        <Header />
+      <PageWrapper>
         <UserLayout userRole={undefined} isAuthenticated={false}>
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
@@ -126,14 +122,12 @@ const DataPrivacyPage: React.FC = () => {
             </div>
           </div>
         </UserLayout>
-        <Footer />
-      </>
+      </PageWrapper>
     )
   }
 
   return (
-    <>
-      <Header />
+    <PageWrapper>
       <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
         <div className="max-w-6xl mx-auto">
           {/* Welcome section */}
@@ -374,7 +368,6 @@ const DataPrivacyPage: React.FC = () => {
           </div>
         </div>
       </UserLayout>
-      <Footer />
 
       {/* Delete Account Confirmation Modal */}
       {showDeleteModal && (
@@ -633,7 +626,7 @@ const DataPrivacyPage: React.FC = () => {
           </div>
         </div>
       )}
-    </>
+    </PageWrapper>
   )
 }
 

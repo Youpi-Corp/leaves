@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Header from '../layout/Header'
-import Footer from '../layout/Footer'
+import PageWrapper from '../components/layout/PageWrapper'
 import { userQuery } from '../api/user/user.queries'
 import { useQuery } from '@tanstack/react-query'
 import { useLogout } from '../api/user/user.services'
@@ -24,8 +23,7 @@ const ProfilePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <>
-        <Header />
+      <PageWrapper>
         <UserLayout userRole={undefined} isAuthenticated={false}>
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
@@ -34,14 +32,12 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
         </UserLayout>
-        <Footer />
-      </>
+      </PageWrapper>
     )
   }
   if (error) {
     return (
-      <>
-        <Header />
+      <PageWrapper>
         <UserLayout userRole={undefined} isAuthenticated={false}>
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
@@ -57,13 +53,11 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
         </UserLayout>
-        <Footer />
-      </>
+      </PageWrapper>
     )
   }
   return (
-    <>
-      <Header />{' '}
+    <PageWrapper>
       <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
         <div className="max-w-6xl mx-auto">
           {/* Welcome section */}
@@ -206,8 +200,7 @@ const ProfilePage: React.FC = () => {
           )}
         </div>
       </UserLayout>
-      <Footer />
-    </>
+    </PageWrapper>
   )
 }
 
