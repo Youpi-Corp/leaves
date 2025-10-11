@@ -54,7 +54,7 @@ layer(base);
   /* Prevent overscroll bounce/rubber-band effect */
   html,
   body {
-    overscroll-behavior-y: none;
+    overscroll-behavior: none;
     overflow-y: scroll;
   }
 
