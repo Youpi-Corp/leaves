@@ -6,4 +6,5 @@ export interface User {
   roles: string[]
   biography?: string
   profile_picture?: string
+  community_updates?: boolean
 }

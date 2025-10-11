@@ -16,6 +16,10 @@ export const API_CONFIG = {
       UPDATE: '/user/update',
       // Update the current user's profile (simplified for frontend)
       UPDATE_ME: '/user/update/me',
+      // Data privacy endpoints
+      EXPORT_DATA: '/user/export-data/me',
+      DELETE_ACCOUNT: '/user/delete/me',
+      PRIVACY_SETTINGS: '/user/privacy-settings',
     }, COURSE: {
       CREATE: '/course/create',
       GET: '/course/get',

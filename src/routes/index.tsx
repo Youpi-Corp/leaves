@@ -15,6 +15,7 @@ import LessonViewPage from '../pages/course/LessonViewPage'
 import LessonContentPage from '../pages/course/LessonContentPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import ProfilePage from '../pages/ProfilePage'
+import DataPrivacyPage from '../pages/DataPrivacyPage'
 import Library from '../pages/library/Library'
 import SubscriptionsPage from '../pages/SubscriptionsPage'
 import AdminPanel from '../pages/admin/AdminPanel'
@@ -117,6 +118,14 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/data-privacy"
+          element={
+            <ProtectedRoute>
+              <DataPrivacyPage />
             </ProtectedRoute>
           }
         />
