@@ -1,7 +1,7 @@
 export interface User {
   email: string
   id: number
-  password_hash: string
+  password_hash?: string | null
   pseudo: string
   roles: string[]
   biography?: string

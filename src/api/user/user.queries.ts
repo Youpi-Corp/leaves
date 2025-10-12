@@ -37,14 +37,18 @@ export const exportUserData = async (): Promise<Record<string, unknown>> => {
   return (await response.json()).data
 }
 
-export const deleteUserAccount = async (password: string): Promise<void> => {
+export const deleteUserAccount = async (passwordOrPhrase: string, isOAuthUser: boolean): Promise<void> => {
   const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.USER.DELETE_ACCOUNT), {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify({ password }),
+    body: JSON.stringify(
+      isOAuthUser
+        ? { validationPhrase: passwordOrPhrase }
+        : { password: passwordOrPhrase }
+    ),
   })
   if (!response.ok) {
     const errorData = await response.json()
