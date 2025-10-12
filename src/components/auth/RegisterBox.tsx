@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import InputBox from '../interaction/input/InputBox'
 import Button from '../interaction/button/Button'
-import { FaCheck, FaGithub, FaGoogle } from 'react-icons/fa'
+import { FaCheck, FaGithub } from 'react-icons/fa'
 import LinkInternal from '../interaction/link/LinkInternal'
 import Separator from '../layout/Separator'
 import { useMutation } from '@tanstack/react-query'
@@ -9,6 +9,7 @@ import { registerQuery } from '../../api/auth/auth.queries'
 import { RegisterCredentials } from '../../api/types/auth.types'
 import Spinner from '../feedback/Spinner'
 import { useNavigate } from 'react-router-dom'
+import { API_CONFIG, getApiUrl } from '../../api/config/api.config'
 
 const RegisterBox: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -37,6 +38,20 @@ const RegisterBox: React.FC = () => {
     }
     setError(null)
     mutate()
+  }
+
+  const handleGitHubLogin = async () => {
+    try {
+      const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.AUTH.GITHUB), {
+        credentials: 'include',
+      })
+      const data = await response.json()
+      if (data.success && data.data.url) {
+        window.location.href = data.data.url
+      }
+    } catch (error) {
+      console.error('Failed to initiate GitHub OAuth:', error)
+    }
   }
 
   return (
@@ -83,18 +98,7 @@ const RegisterBox: React.FC = () => {
               <Spinner size="md" className="border-t-white" />
             </Button>
           ) : (
-            <Button
-              onClick={() => {
-                if (!password) {
-                  setError('Please enter a password.')
-                  return
-                }
-                setError(null)
-                mutate()
-              }}
-              className="h-10 w-44"
-              icon={<FaCheck />}
-            >
+            <Button type="submit" className="h-10 w-44" icon={<FaCheck />}>
               Validate
             </Button>
           )}
@@ -110,15 +114,14 @@ const RegisterBox: React.FC = () => {
 
       <Separator>or</Separator>
 
-      <div className="flex flex-row justify-between w-full">
-        <Button accent="tertiary" icon={<FaGoogle />} className="px-14 py-2">
-          Sign up with Google
-        </Button>
-
-        <Button accent="tertiary" icon={<FaGithub />} className="px-14 py-2">
-          Sign up with Github
-        </Button>
-      </div>
+      <Button
+        accent="tertiary"
+        icon={<FaGithub />}
+        className="px-14 py-2 w-full"
+        onClick={handleGitHubLogin}
+      >
+        Sign up with Github
+      </Button>
     </div>
   )
 }

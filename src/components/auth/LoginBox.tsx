@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaCheck, FaGithub, FaGoogle } from 'react-icons/fa'
+import { FaCheck, FaGithub } from 'react-icons/fa'
 import Button from '../../components/interaction/button/Button'
 import InputBox from '../../components/interaction/input/InputBox'
 import LinkInternal from '../interaction/link/LinkInternal'
@@ -98,20 +98,14 @@ const LoginBox: React.FC = () => {
 
       <Separator>or</Separator>
 
-      <div className="flex flex-row justify-between w-full">
-        <Button accent="tertiary" icon={<FaGoogle />} className="px-14 py-2">
-          Sign in with Google
-        </Button>
-
-        <Button
-          accent="tertiary"
-          icon={<FaGithub />}
-          className="px-14 py-2"
-          onClick={handleGitHubLogin}
-        >
-          Sign in with Github
-        </Button>
-      </div>
+      <Button
+        accent="tertiary"
+        icon={<FaGithub />}
+        className="px-14 py-2 w-full"
+        onClick={handleGitHubLogin}
+      >
+        Sign in with Github
+      </Button>
     </div>
   )
 }
