@@ -1,5 +1,5 @@
 // src/components/widget/widgets/MultipleChoiceWidget.tsx
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { registerWidget } from '../WidgetRegistry'
 import {
@@ -38,12 +38,20 @@ const MultipleChoiceWidgetView: React.FC<
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
   const [showResult, setShowResult] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
-
-  // Shuffle options if needed
-  const displayOptions =
-    widgetData?.shuffleOptions && options.length > 0
-      ? [...options].sort(() => Math.random() - 0.5)
-      : options
+  
+  // Initialize shuffled options once
+  const [displayOptions] = useState(() => {
+    if (widgetData?.shuffleOptions && options.length > 0) {
+      const shuffled = [...options]
+      // Fisher-Yates shuffle algorithm
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      }
+      return shuffled
+    }
+    return options
+  })
 
   const handleOptionClick = (optionId: string) => {
     if (readonly) return
@@ -159,7 +167,7 @@ const MultipleChoiceWidgetEdit: React.FC<
   QuizWidgetEditProps<MultipleChoiceWidgetProps>
 > = ({ widgetData, onChange }) => {
   // Initialize with default data immediately if options is undefined
-  React.useEffect(() => {
+  useEffect(() => {
     if (!widgetData.options) {
       const defaultData = getDefaultWidgetData()
       onChange({
@@ -171,7 +179,7 @@ const MultipleChoiceWidgetEdit: React.FC<
         feedback: defaultData.feedback,
       })
     }
-  }, [])
+  }, [onChange, widgetData])
 
   // Add a safeguard to ensure options is always an array
   const options = widgetData.options || []
