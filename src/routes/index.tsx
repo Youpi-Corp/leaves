@@ -5,6 +5,7 @@ import NavigationDebugger from '../components/navigation/NavigationDebugger'
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import AuthRedirect from '../components/auth/AuthRedirect'
 import LoginPage from '../pages/auth/LoginPage'
+import GitHubCallbackPage from '../pages/auth/GitHubCallbackPage'
 import CourseEditorPage from '../pages/course/editor/CourseEditorPage'
 import HomePage from '../pages/HomePage'
 import RegisterPage from '../pages/auth/RegisterPage'
@@ -50,6 +51,10 @@ export const AppRoutes: React.FC = () => {
               <RegisterPage />
             </AuthRedirect>
           }
+        />
+        <Route
+          path="/auth/github/callback"
+          element={<GitHubCallbackPage />}
         />
 
         {/* Protected routes */}
