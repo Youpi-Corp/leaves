@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react'
 import { BaseWidgetProps } from '../types/WidgetTypes'
 import { getWidgetByType } from '../components/widget/WidgetRegistry'
 
@@ -40,7 +40,7 @@ export const WidgetEditProvider: React.FC<WidgetEditProviderProps> = ({ children
     document.body.style.overflow = 'hidden'
   }
 
-  const closeEditModal = (force = false) => {
+  const closeEditModal = useCallback((force = false) => {
     if (hasChanges && !force) {
       const confirmClose = window.confirm(
         'You have unsaved changes. Are you sure you want to close without saving?'
@@ -57,7 +57,7 @@ export const WidgetEditProvider: React.FC<WidgetEditProviderProps> = ({ children
     setHasChanges(false)
     // Restore body scroll
     document.body.style.overflow = 'unset'
-  }
+  }, [hasChanges])
 
   const handleDataChange = (newData: BaseWidgetProps) => {
     setEditedData(newData)
@@ -98,7 +98,7 @@ export const WidgetEditProvider: React.FC<WidgetEditProviderProps> = ({ children
     return () => {
       document.removeEventListener('keydown', handleEscape)
     }
-  }, [isOpen, hasChanges])
+  }, [isOpen, hasChanges, closeEditModal])
 
   // Get widget implementation for rendering
   const widget = editedData ? getWidgetByType(editedData.type) : null

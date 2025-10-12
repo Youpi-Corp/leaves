@@ -11,15 +11,18 @@ import { getAllModulesQuery } from '../../api/module/module.queries'
 
 const Library: React.FC = () => {
   const [searchParams] = useSearchParams()
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
+  // Derive state from URL params instead of using effect
+  const urlSearchTerm = searchParams.get('search') || ''
+  const [searchTerm, setSearchTerm] = useState(urlSearchTerm)
   const [sortOption, setSortOption] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modules, setModules] = useState<Module[]>([])
 
-  // Update search term when URL parameters change
+  // Sync search term with URL when it changes
   useEffect(() => {
-    const urlSearchTerm = searchParams.get('search') || ''
-    setSearchTerm(urlSearchTerm)
+    const newSearchTerm = searchParams.get('search') || ''
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearchTerm(newSearchTerm)
   }, [searchParams])
 
   useEffect(() => {

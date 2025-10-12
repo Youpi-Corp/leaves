@@ -40,8 +40,9 @@ function WidgetContainer<T extends BaseWidgetProps>({
   // Use the widget edit context
   const { openEditModal } = useWidgetEdit()
 
-  // Update internal state when isSelected prop changes
+  // Update internal state when isSelected prop changes - this is needed to sync with prop changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setWidgetState((prev) => ({
       ...prev,
       isSelected,
@@ -49,6 +50,15 @@ function WidgetContainer<T extends BaseWidgetProps>({
   }, [isSelected])
 
   const containerRef = useRef<HTMLDivElement>(null)
+  const dragHandleRef = useRef<HTMLDivElement>(null)
+
+  // Setup drag-and-drop - only used for additional drag effects
+  // The actual drag behavior is controlled by ReactGridLayout
+  const dragConfig = useDraggable({
+    id: data.id,
+    disabled: !isDraggable,
+  })
+  const { isDragging } = dragConfig
 
   // Get the widget implementation from registry
   const widget = getWidgetByType<T>(data.type)
@@ -63,15 +73,6 @@ function WidgetContainer<T extends BaseWidgetProps>({
 
   // Extract the View component
   const { ViewComponent } = widget.component
-
-  // Setup drag-and-drop - only used for additional drag effects
-  // The actual drag behavior is controlled by ReactGridLayout
-  const { isDragging } = useDraggable({
-    id: data.id,
-    disabled: !isDraggable,
-  })
-
-  const dragHandleRef = useRef<HTMLDivElement>(null)
 
   // Event handlers
   const handleSelect = (e: React.MouseEvent) => {

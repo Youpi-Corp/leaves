@@ -5,20 +5,24 @@ import { useNavigate, useLocation } from 'react-router-dom'
 const SearchBar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const [searchTerm, setSearchTerm] = useState('')
 
-  // Update search term if we're on the library page with a search param
-  useEffect(() => {
+  // Derive initial search term from URL params
+  const getSearchTermFromUrl = () => {
     if (location.pathname === '/library') {
       const params = new URLSearchParams(location.search)
-      const query = params.get('search')
-      if (query) {
-        setSearchTerm(query)
-      } else {
-        setSearchTerm('')
-      }
+      return params.get('search') || ''
     }
-  }, [location])
+    return ''
+  }
+
+  const [searchTerm, setSearchTerm] = useState(getSearchTermFromUrl)
+
+  // Update search term when location changes
+  useEffect(() => {
+    const newSearchTerm = getSearchTermFromUrl()
+    setSearchTerm(newSearchTerm)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, location.search])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
