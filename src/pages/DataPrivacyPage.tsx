@@ -44,10 +44,11 @@ const DataPrivacyPage: React.FC = () => {
 
   // Delete account mutation
   const deleteMutation = useMutation({
-    mutationFn: deleteUserAccount,
+    mutationFn: ({ passwordOrPhrase, isOAuthUser }: { passwordOrPhrase: string, isOAuthUser: boolean }) =>
+      deleteUserAccount(passwordOrPhrase, isOAuthUser),
     onSuccess: () => {
       queryClient.clear()
-      navigate('/')
+      navigate('/login')
     },
     onError: (error: Error) => {
       setDeleteError(error.message || 'Failed to delete account')
@@ -67,12 +68,13 @@ const DataPrivacyPage: React.FC = () => {
   }
 
   const handleDeleteAccount = () => {
+    const isOAuthUser = !user?.password_hash
     if (!deletePassword) {
-      setDeleteError('Please enter your password')
+      setDeleteError(isOAuthUser ? 'Please enter the validation phrase' : 'Please enter your password')
       return
     }
     setDeleteError('')
-    deleteMutation.mutate(deletePassword)
+    deleteMutation.mutate({ passwordOrPhrase: deletePassword, isOAuthUser })
   }
 
   const handlePrivacyToggle = (checked: boolean) => {
@@ -371,16 +373,27 @@ const DataPrivacyPage: React.FC = () => {
 
       {/* Delete Account Confirmation Modal */}
       {showDeleteModal && (
-        <div 
+        <div
           className="fixed inset-0 flex items-center justify-center z-50 p-4"
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
         >
           <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl">
             <h3 className="text-2xl font-bold text-gray-800 mb-4">Delete Account</h3>
-            <p className="text-gray-600 mb-4">
-              This action cannot be undone. All your data will be permanently deleted. Please enter your password to confirm.
-            </p>
-            
+            {user?.password_hash ? (
+              <p className="text-gray-600 mb-4">
+                This action cannot be undone. All your data will be permanently deleted. Please enter your password to confirm.
+              </p>
+            ) : (
+              <div className="mb-4">
+                <p className="text-gray-600 mb-2">
+                  This action cannot be undone. All your data will be permanently deleted.
+                </p>
+                <p className="text-gray-700 font-medium">
+                  Please type <span className="font-bold text-red-600">delete my account</span> to confirm.
+                </p>
+              </div>
+            )}
+
             {deleteError && (
               <div className="bg-red-50 border border-red-200 text-red-800 rounded p-3 mb-4">
                 {deleteError}
@@ -388,12 +401,16 @@ const DataPrivacyPage: React.FC = () => {
             )}
 
             <input
-              type="password"
+              type={user?.password_hash ? "password" : "text"}
               value={deletePassword}
               onChange={(e) => setDeletePassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder={user?.password_hash ? "Enter your password" : "Type: delete my account"}
               className="w-full px-4 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-red-500"
               disabled={deleteMutation.isPending}
+              onCopy={(e) => !user?.password_hash && e.preventDefault()}
+              onCut={(e) => !user?.password_hash && e.preventDefault()}
+              onPaste={(e) => !user?.password_hash && e.preventDefault()}
+              autoComplete="off"
             />
 
             <div className="flex gap-3">

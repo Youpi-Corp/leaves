@@ -7,6 +7,8 @@ export const API_CONFIG = {
       LOGIN: '/auth/login',
       REGISTER: '/auth/register',
       LOGOUT: '/auth/logout',
+      GITHUB: '/auth/github',
+      GITHUB_CALLBACK: '/auth/github/callback',
     },
     USER: {
       ME: '/user/me',

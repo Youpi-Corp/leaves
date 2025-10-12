@@ -242,11 +242,11 @@ const ModuleViewPage: React.FC = () => {
               <div>
                 <div className="flex items-center mb-2">
                   <BackButton className="mr-2" variant="link" />
-                  <h1 className="text-3xl font-bold text-bfbase-black">
+                  <h1 className="text-3xl font-bold text-bfbase-black break-words">
                     {moduleDetails.title}
                   </h1>
                 </div>
-                <p className="text-bfbase-grey mb-4 max-w-3xl text-lg">
+                <p className="text-bfbase-grey mb-4 max-w-3xl text-lg break-words">
                   {moduleDetails.description}
                 </p>
                 <div className="flex items-center space-x-6 text-sm text-bfbase-grey">
@@ -441,7 +441,7 @@ const ModuleViewPage: React.FC = () => {
                             )}
                           </span>
                           <h3
-                            className={`text-lg font-semibold ${
+                            className={`text-lg font-semibold break-words ${
                               lesson.isCompleted
                                 ? 'text-green-700'
                                 : 'text-bfbase-black'
