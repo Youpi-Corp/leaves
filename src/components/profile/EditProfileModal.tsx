@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { User } from '../../api/types/user.types'
 import { useUpdateProfile } from '../../api/user/user.services'
+import Modal from '../feedback/Modal'
 
 interface EditProfileModalProps {
   user: User
@@ -72,112 +73,110 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl border border-gray-200">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Edit Profile</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              ✕
-            </button>
-          </div>
+    <Modal isOpen={isOpen} onClose={onClose} className="max-w-2xl w-full">
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">Edit Profile</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            ✕
+          </button>
+        </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label className="block text-gray-700 font-medium mb-2">
-                Profile Picture
-              </label>
-              <div className="flex flex-col items-center mb-4">
-                {previewUrl ? (
-                  <img
-                    src={previewUrl}
-                    alt="Profile preview"
-                    className="w-32 h-32 rounded-full object-cover mb-4"
-                  />
-                ) : (
-                  <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-                    <span className="text-4xl text-gray-400">
-                      {pseudo.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept="image/*"
-                  className="hidden"
+        <form onSubmit={handleSubmit}>
+          <div className="mb-6">
+            <label className="block text-gray-700 font-medium mb-2">
+              Profile Picture
+            </label>
+            <div className="flex flex-col items-center mb-4">
+              {previewUrl ? (
+                <img
+                  src={previewUrl}
+                  alt="Profile preview"
+                  className="w-32 h-32 rounded-full object-cover mb-4"
                 />
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-                >
-                  Choose Image
-                </button>
-                {fileError && (
-                  <p className="text-red-500 text-sm mt-2">{fileError}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <label
-                htmlFor="username"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Username
-              </label>
+              ) : (
+                <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center mb-4">
+                  <span className="text-4xl text-gray-400">
+                    {pseudo.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
               <input
-                type="text"
-                id="username"
-                value={pseudo}
-                onChange={(e) => setPseudo(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-bfgreen-base"
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+                className="hidden"
               />
-            </div>
-
-            <div className="mb-6">
-              <label
-                htmlFor="biography"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Biography
-              </label>
-              <textarea
-                id="biography"
-                value={biography}
-                onChange={(e) => setBiography(e.target.value)}
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-bfgreen-base"
-                placeholder="Tell us about yourself..."
-              ></textarea>
-            </div>
-
-            <div className="flex justify-end gap-4">
               <button
                 type="button"
-                onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-100"
-                disabled={isLoading}
+                onClick={() => fileInputRef.current?.click()}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
               >
-                Cancel
+                Choose Image
               </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-bfgreen-base text-white rounded hover:bg-bfgreen-dark disabled:opacity-50"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Saving...' : 'Save Changes'}
-              </button>
+              {fileError && (
+                <p className="text-red-500 text-sm mt-2">{fileError}</p>
+              )}
             </div>
-          </form>
-        </div>
+          </div>
+
+          <div className="mb-6">
+            <label
+              htmlFor="username"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              value={pseudo}
+              onChange={(e) => setPseudo(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-bfgreen-base"
+            />
+          </div>
+
+          <div className="mb-6">
+            <label
+              htmlFor="biography"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Biography
+            </label>
+            <textarea
+              id="biography"
+              value={biography}
+              onChange={(e) => setBiography(e.target.value)}
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-bfgreen-base"
+              placeholder="Tell us about yourself..."
+            ></textarea>
+          </div>
+
+          <div className="flex justify-end gap-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-100"
+              disabled={isLoading}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-bfgreen-base text-white rounded hover:bg-bfgreen-dark disabled:opacity-50"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
+    </Modal>
   )
 }
 

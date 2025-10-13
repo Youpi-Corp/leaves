@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Module, deleteModuleQuery } from '../../../api/module/module.queries'
+import Modal from '../../feedback/Modal'
 
 interface DeleteModuleModalProps {
   isOpen: boolean
@@ -42,11 +43,8 @@ const DeleteModuleModal: React.FC<DeleteModuleModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 opacity-30 backdrop-blur-sm"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-    >
-      <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-2xl">
+    <Modal isOpen={isOpen} onClose={onClose} className="w-full max-w-md">
+      <div className="p-6">
         <div className="flex items-center mb-4">
           <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
             <svg
@@ -183,7 +181,7 @@ const DeleteModuleModal: React.FC<DeleteModuleModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }
 

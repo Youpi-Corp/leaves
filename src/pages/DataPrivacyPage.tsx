@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { FaShieldAlt, FaEye, FaTrash, FaDownload, FaCog } from 'react-icons/fa'
 import UserLayout from '../components/layout/UserLayout'
 import { useNavigate } from 'react-router-dom'
+import Modal from '../components/feedback/Modal'
 
 const DataPrivacyPage: React.FC = () => {
   const queryClient = useQueryClient()
@@ -372,121 +373,120 @@ const DataPrivacyPage: React.FC = () => {
       </UserLayout>
 
       {/* Delete Account Confirmation Modal */}
-      {showDeleteModal && (
-        <div
-          className="fixed inset-0 flex items-center justify-center z-50 p-4"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-        >
-          <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Delete Account</h3>
-            {user?.password_hash ? (
-              <p className="text-gray-600 mb-4">
-                This action cannot be undone. All your data will be permanently deleted. Please enter your password to confirm.
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        className="max-w-md w-full"
+      >
+        <div className="p-6">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">Delete Account</h3>
+          {user?.password_hash ? (
+            <p className="text-gray-600 mb-4">
+              This action cannot be undone. All your data will be permanently deleted. Please enter your password to confirm.
+            </p>
+          ) : (
+            <div className="mb-4">
+              <p className="text-gray-600 mb-2">
+                This action cannot be undone. All your data will be permanently deleted.
               </p>
-            ) : (
-              <div className="mb-4">
-                <p className="text-gray-600 mb-2">
-                  This action cannot be undone. All your data will be permanently deleted.
-                </p>
-                <p className="text-gray-700 font-medium">
-                  Please type <span className="font-bold text-red-600">delete my account</span> to confirm.
-                </p>
-              </div>
-            )}
-
-            {deleteError && (
-              <div className="bg-red-50 border border-red-200 text-red-800 rounded p-3 mb-4">
-                {deleteError}
-              </div>
-            )}
-
-            <input
-              type={user?.password_hash ? "password" : "text"}
-              value={deletePassword}
-              onChange={(e) => setDeletePassword(e.target.value)}
-              placeholder={user?.password_hash ? "Enter your password" : "Type: delete my account"}
-              className="w-full px-4 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-red-500"
-              disabled={deleteMutation.isPending}
-              onCopy={(e) => !user?.password_hash && e.preventDefault()}
-              onCut={(e) => !user?.password_hash && e.preventDefault()}
-              onPaste={(e) => !user?.password_hash && e.preventDefault()}
-              autoComplete="off"
-            />
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setShowDeleteModal(false)
-                  setDeletePassword('')
-                  setDeleteError('')
-                }}
-                disabled={deleteMutation.isPending}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100 transition-colors disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteAccount}
-                disabled={deleteMutation.isPending}
-                className="flex-1 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {deleteMutation.isPending ? 'Deleting...' : 'Delete Account'}
-              </button>
+              <p className="text-gray-700 font-medium">
+                Please type <span className="font-bold text-red-600">delete my account</span> to confirm.
+              </p>
             </div>
+          )}
+
+          {deleteError && (
+            <div className="bg-red-50 border border-red-200 text-red-800 rounded p-3 mb-4">
+              {deleteError}
+            </div>
+          )}
+
+          <input
+            type={user?.password_hash ? "password" : "text"}
+            value={deletePassword}
+            onChange={(e) => setDeletePassword(e.target.value)}
+            placeholder={user?.password_hash ? "Enter your password" : "Type: delete my account"}
+            className="w-full px-4 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-red-500"
+            disabled={deleteMutation.isPending}
+            onCopy={(e) => !user?.password_hash && e.preventDefault()}
+            onCut={(e) => !user?.password_hash && e.preventDefault()}
+            onPaste={(e) => !user?.password_hash && e.preventDefault()}
+            autoComplete="off"
+          />
+
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={() => {
+                setShowDeleteModal(false)
+                setDeletePassword('')
+                setDeleteError('')
+              }}
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100"
+              disabled={deleteMutation.isPending}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleDeleteAccount}
+              disabled={deleteMutation.isPending}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+            >
+              {deleteMutation.isPending ? 'Deleting...' : 'Delete Account'}
+            </button>
           </div>
         </div>
-      )}
+      </Modal>
 
       {/* Data Report Modal */}
-      {showDataReport && dataReport && (
-        <div 
-          className="fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-        >
-          <div className="bg-white rounded-lg max-w-4xl w-full p-6 my-8 shadow-2xl overflow-hidden">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-2xl font-bold text-gray-800">Your Data Report</h3>
-              <button
-                onClick={() => setShowDataReport(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl flex-shrink-0"
-              >
-                ×
-              </button>
-            </div>
-            
-            <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden">
-              {/* User Profile Section */}
-              {!!dataReport.user_profile && (
-                <div className="mb-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <FaEye className="mr-2 text-bfgreen-base" />
-                    User Profile
-                  </h4>
-                  <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                    {Object.entries(dataReport.user_profile as Record<string, unknown>).map(([key, value]) => (
-                      <div key={key} className="flex justify-between gap-4 py-2 border-b border-gray-200 last:border-0">
-                        <span className="font-medium text-gray-700 capitalize flex-shrink-0">{key.replace(/_/g, ' ')}:</span>
-                        <span className="text-gray-600 text-right break-words">{String(value)}</span>
-                      </div>
-                    ))}
-                  </div>
+      <Modal
+        isOpen={showDataReport && !!dataReport}
+        onClose={() => setShowDataReport(false)}
+        className="max-w-4xl w-full"
+      >
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-2xl font-bold text-gray-800">Your Data Report</h3>
+            <button
+              onClick={() => setShowDataReport(false)}
+              className="text-gray-500 hover:text-gray-700 text-2xl flex-shrink-0"
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden">
+            {/* User Profile Section */}
+            {dataReport && !!dataReport.user_profile && (
+              <div className="mb-6">
+                <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                  <FaEye className="mr-2 text-bfgreen-base" />
+                  User Profile
+                </h4>
+                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                  {Object.entries(dataReport.user_profile as Record<string, unknown>).map(([key, value]) => (
+                    <div key={key} className="flex justify-between gap-4 py-2 border-b border-gray-200 last:border-0">
+                      <span className="font-medium text-gray-700 capitalize flex-shrink-0">{key.replace(/_/g, ' ')}:</span>
+                      <span className="text-gray-600 text-right break-words">{String(value)}</span>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* Learning Activity Section */}
-              {!!dataReport.learning_activity && (
-                <div className="mb-6">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-3">Learning Activity</h4>
-                  <div className="space-y-4">
-                    {/* Module Subscriptions */}
-                    {!!((dataReport.learning_activity as Record<string, unknown>).module_subscriptions) && (
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <h5 className="font-medium text-gray-700 mb-2">
-                          Module Subscriptions ({Array.isArray((dataReport.learning_activity as Record<string, unknown>).module_subscriptions) ? ((dataReport.learning_activity as Record<string, unknown>).module_subscriptions as unknown[]).length : 0})
-                        </h5>
-                        {Array.isArray((dataReport.learning_activity as Record<string, unknown>).module_subscriptions) && ((dataReport.learning_activity as Record<string, unknown>).module_subscriptions as unknown[]).length > 0 ? (
-                          <div className="space-y-2">
-                            {((dataReport.learning_activity as Record<string, unknown>).module_subscriptions as Array<Record<string, unknown>>).map((sub, idx) => (
+            {/* Learning Activity Section */}
+            {dataReport && !!dataReport.learning_activity && (
+              <div className="mb-6">
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">Learning Activity</h4>
+                <div className="space-y-4">
+                  {/* Module Subscriptions */}
+                  {!!((dataReport.learning_activity as Record<string, unknown>).module_subscriptions) && (
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <h5 className="font-medium text-gray-700 mb-2">
+                        Module Subscriptions ({Array.isArray((dataReport.learning_activity as Record<string, unknown>).module_subscriptions) ? ((dataReport.learning_activity as Record<string, unknown>).module_subscriptions as unknown[]).length : 0})
+                      </h5>
+                      {Array.isArray((dataReport.learning_activity as Record<string, unknown>).module_subscriptions) && ((dataReport.learning_activity as Record<string, unknown>).module_subscriptions as unknown[]).length > 0 ? (
+                        <div className="space-y-2">
+                          {((dataReport.learning_activity as Record<string, unknown>).module_subscriptions as Array<Record<string, unknown>>).map((sub, idx) => (
                               <div key={idx} className="text-sm text-gray-600 break-words">
                                 • {String(sub.module_title || 'Unknown')} (subscribed: {String(sub.subscribed_at || 'N/A')})
                               </div>
@@ -542,7 +542,7 @@ const DataPrivacyPage: React.FC = () => {
               )}
 
               {/* User Contributions Section */}
-              {!!dataReport.user_contributions && (
+              {dataReport && !!dataReport.user_contributions && (
                 <div className="mb-6">
                   <h4 className="text-lg font-semibold text-gray-800 mb-3">Your Contributions</h4>
                   <div className="space-y-4">
@@ -592,7 +592,7 @@ const DataPrivacyPage: React.FC = () => {
               )}
 
               {/* Metadata Summary */}
-              {!!dataReport.metadata && (
+              {dataReport && !!dataReport.metadata && (
                 <div className="mb-6">
                   <h4 className="text-lg font-semibold text-gray-800 mb-3">Summary Statistics</h4>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -607,42 +607,42 @@ const DataPrivacyPage: React.FC = () => {
               )}
 
               {/* Export Date */}
-              {!!dataReport.export_date && (
+              {dataReport && !!dataReport.export_date && (
                 <div className="text-center text-sm text-gray-500 mt-6">
                   Data exported on: {new Date(String(dataReport.export_date)).toLocaleString()}
                 </div>
               )}
             </div>
 
-            <div className="mt-6 flex gap-3">
-              <button
-                onClick={() => {
-                  const dataStr = JSON.stringify(dataReport, null, 2)
-                  const dataBlob = new Blob([dataStr], { type: 'application/json' })
-                  const url = URL.createObjectURL(dataBlob)
-                  const link = document.createElement('a')
-                  link.href = url
-                  link.download = `brainforest-data-report-${new Date().toISOString().split('T')[0]}.json`
-                  document.body.appendChild(link)
-                  link.click()
-                  document.body.removeChild(link)
-                  URL.revokeObjectURL(url)
-                }}
-                className="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-              >
-                <FaDownload className="inline mr-2" />
-                Download as JSON
-              </button>
-              <button
-                onClick={() => setShowDataReport(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100 transition-colors"
-              >
-                Close
-              </button>
-            </div>
+          <div className="mt-6 flex gap-3">
+            <button
+              onClick={() => {
+                if (!dataReport) return
+                const dataStr = JSON.stringify(dataReport, null, 2)
+                const dataBlob = new Blob([dataStr], { type: 'application/json' })
+                const url = URL.createObjectURL(dataBlob)
+                const link = document.createElement('a')
+                link.href = url
+                link.download = `brainforest-data-report-${new Date().toISOString().split('T')[0]}.json`
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                URL.revokeObjectURL(url)
+              }}
+              className="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            >
+              <FaDownload className="inline mr-2" />
+              Download as JSON
+            </button>
+            <button
+              onClick={() => setShowDataReport(false)}
+              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100 transition-colors"
+            >
+              Close
+            </button>
           </div>
         </div>
-      )}
+      </Modal>
     </PageWrapper>
   )
 }
