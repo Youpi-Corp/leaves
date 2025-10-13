@@ -4,6 +4,7 @@ import {
   ModuleCreateData,
   Module,
 } from '../../../api/module/module.queries'
+import Modal from '../../feedback/Modal'
 
 interface CreateModuleModalProps {
   isOpen: boolean
@@ -58,11 +59,8 @@ const CreateModuleModal: React.FC<CreateModuleModalProps> = ({
 
   if (!isOpen) return null
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-    >
-      <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+    <Modal isOpen={isOpen} onClose={onClose} className="w-full max-w-md">
+      <div className="p-6">
         <h2 className="text-xl font-bold text-bfbase-black mb-4">
           Create New Module
         </h2>
@@ -146,7 +144,7 @@ const CreateModuleModal: React.FC<CreateModuleModalProps> = ({
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   )
 }
 
