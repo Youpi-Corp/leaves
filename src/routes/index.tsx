@@ -5,6 +5,7 @@ import NavigationDebugger from '../components/navigation/NavigationDebugger'
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import AuthRedirect from '../components/auth/AuthRedirect'
 import LoginPage from '../pages/auth/LoginPage'
+import GitHubCallbackPage from '../pages/auth/GitHubCallbackPage'
 import CourseEditorPage from '../pages/course/editor/CourseEditorPage'
 import HomePage from '../pages/HomePage'
 import RegisterPage from '../pages/auth/RegisterPage'
@@ -15,6 +16,7 @@ import LessonViewPage from '../pages/course/LessonViewPage'
 import LessonContentPage from '../pages/course/LessonContentPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import ProfilePage from '../pages/ProfilePage'
+import DataPrivacyPage from '../pages/DataPrivacyPage'
 import Library from '../pages/library/Library'
 import SubscriptionsPage from '../pages/SubscriptionsPage'
 import AdminPanel from '../pages/admin/AdminPanel'
@@ -49,6 +51,10 @@ export const AppRoutes: React.FC = () => {
               <RegisterPage />
             </AuthRedirect>
           }
+        />
+        <Route
+          path="/auth/github/callback"
+          element={<GitHubCallbackPage />}
         />
 
         {/* Protected routes */}
@@ -117,6 +123,14 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/data-privacy"
+          element={
+            <ProtectedRoute>
+              <DataPrivacyPage />
             </ProtectedRoute>
           }
         />

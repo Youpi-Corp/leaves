@@ -113,7 +113,7 @@ const ModuleManagement: React.FC = () => {
                 <tr key={module.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-gray-900 max-w-xs truncate">
                         {module.title}
                       </div>
                       <div className="text-sm text-gray-500 max-w-xs truncate">

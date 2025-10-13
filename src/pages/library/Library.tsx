@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import SearchBar from '../../components/library/SearchBar'
@@ -9,10 +10,20 @@ import { Module } from '../../api/module/module.queries'
 import { getAllModulesQuery } from '../../api/module/module.queries'
 
 const Library: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchParams] = useSearchParams()
+  // Derive state from URL params instead of using effect
+  const urlSearchTerm = searchParams.get('search') || ''
+  const [searchTerm, setSearchTerm] = useState(urlSearchTerm)
   const [sortOption, setSortOption] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modules, setModules] = useState<Module[]>([])
+
+  // Sync search term with URL when it changes
+  useEffect(() => {
+    const newSearchTerm = searchParams.get('search') || ''
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearchTerm(newSearchTerm)
+  }, [searchParams])
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -22,7 +33,8 @@ const Library: React.FC = () => {
         let filteredModules = fetchedModules
         if (searchTerm) {
           filteredModules = filteredModules.filter((module) =>
-            module.title?.toLowerCase().includes(searchTerm.toLowerCase())
+            module.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            module.description?.toLowerCase().includes(searchTerm.toLowerCase())
           )
         }
         if (sortOption === 'mostCourses') {
@@ -52,6 +64,12 @@ const Library: React.FC = () => {
 
   const handleSearch = (term: string) => {
     setSearchTerm(term)
+    // Update URL parameters
+    if (term.trim()) {
+      window.history.pushState({}, '', `/library?search=${encodeURIComponent(term.trim())}`)
+    } else {
+      window.history.pushState({}, '', '/library')
+    }
   }
 
   const handleSortChange = (option: string) => {
@@ -99,7 +117,10 @@ const Library: React.FC = () => {
             </h2>
             {searchTerm && (
               <button
-                onClick={() => setSearchTerm('')}
+                onClick={() => {
+                  setSearchTerm('')
+                  window.history.pushState({}, '', '/library')
+                }}
                 className="text-sm text-bfgreen-base hover:text-bfgreen-dark underline"
               >
                 Clear search

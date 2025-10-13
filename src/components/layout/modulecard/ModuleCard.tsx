@@ -47,10 +47,10 @@ const ModuleCard: React.FC<CardProps> = ({ module, onClick }) => {
               />
             </svg>
           </div>
-          <h2 className="text-lg font-semibold text-bfbase-black mb-2">
+          <h2 className="text-lg font-semibold text-bfbase-black mb-2 overflow-hidden text-ellipsis line-clamp-2">
             {module.title || 'Untitled Module'}
           </h2>
-          <p className="text-sm text-bfbase-grey mb-2">
+          <p className="text-sm text-bfbase-grey mb-2 overflow-hidden text-ellipsis line-clamp-2">
             {truncateDescription(module.description, 40)}
           </p>
           <div className="mt-4 flex justify-between text-sm text-bfgreen-base">

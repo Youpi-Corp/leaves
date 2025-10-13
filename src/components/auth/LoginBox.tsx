@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaCheck, FaGithub, FaGoogle } from 'react-icons/fa'
+import { FaCheck, FaGithub } from 'react-icons/fa'
 import Button from '../../components/interaction/button/Button'
 import InputBox from '../../components/interaction/input/InputBox'
 import LinkInternal from '../interaction/link/LinkInternal'
@@ -10,6 +10,7 @@ import Spinner from '../feedback/Spinner'
 import AlertBox from '../layout/AlertBox'
 import { loginQuery } from '../../api/auth/auth.queries'
 import { useNavigate } from 'react-router-dom'
+import { API_CONFIG, getApiUrl } from '../../api/config/api.config'
 
 const LoginBox: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -30,6 +31,20 @@ const LoginBox: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     mutate()
+  }
+
+  const handleGitHubLogin = async () => {
+    try {
+      const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.AUTH.GITHUB), {
+        credentials: 'include',
+      })
+      const data = await response.json()
+      if (data.success && data.data.url) {
+        window.location.href = data.data.url
+      }
+    } catch (error) {
+      console.error('Failed to initiate GitHub OAuth:', error)
+    }
   }
 
   return (
@@ -83,15 +98,14 @@ const LoginBox: React.FC = () => {
 
       <Separator>or</Separator>
 
-      <div className="flex flex-row justify-between w-full">
-        <Button accent="tertiary" icon={<FaGoogle />} className="px-14 py-2">
-          Sign in with Google
-        </Button>
-
-        <Button accent="tertiary" icon={<FaGithub />} className="px-14 py-2">
-          Sign in with Github
-        </Button>
-      </div>
+      <Button
+        accent="tertiary"
+        icon={<FaGithub />}
+        className="px-14 py-2 w-full"
+        onClick={handleGitHubLogin}
+      >
+        Sign in with Github
+      </Button>
     </div>
   )
 }
