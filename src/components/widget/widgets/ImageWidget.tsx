@@ -115,8 +115,6 @@ const ImageWidgetView: React.FC<WidgetViewProps<ImageWidgetProps>> = ({
 const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
   widgetData,
   onChange,
-  onSave,
-  onCancel,
 }) => {
   const [isDragging, setIsDragging] = useState(false)
   const [uploadError, setUploadError] = useState<string>('')
@@ -214,21 +212,6 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null
     handleFileUpload(file)
-  }
-
-  const validateWidget = () => {
-    if (!widgetData.altText || widgetData.altText.trim() === '') {
-      setValidationError('Alt text is required for accessibility')
-      return false
-    }
-    setValidationError('')
-    return true
-  }
-
-  const handleSave = () => {
-    if (validateWidget()) {
-      onSave()
-    }
   }
 
   // Validate on any data change that affects required fields

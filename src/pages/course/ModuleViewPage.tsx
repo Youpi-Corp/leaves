@@ -5,6 +5,7 @@ import Footer from '../../layout/Footer'
 import Spinner from '../../components/feedback/Spinner'
 import Breadcrumb from '../../components/navigation/Breadcrumb'
 import BackButton from '../../components/navigation/BackButton'
+import ModuleComments from '../../components/interaction/ModuleComments'
 import { useNavigation } from '../../contexts/NavigationContext'
 import {
   getModuleByIdQuery,
@@ -528,6 +529,13 @@ const ModuleViewPage: React.FC = () => {
             )}
           </>
         ) : null}
+
+        {/* Section Commentaires */}
+        {moduleDetails && (
+          <div className="mt-8">
+            <ModuleComments moduleId={moduleDetails.id} />
+          </div>
+        )}
       </div>
       <Footer />
     </div>

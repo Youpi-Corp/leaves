@@ -54,10 +54,6 @@ const EditorDashboard: React.FC = () => {
     getModules()
   }, [currentUser, userLoading, userError])
 
-  const handleModuleClick = (moduleId: number) => {
-    navigate(`/edition/dashboard/${moduleId}`)
-  }
-
   const openCreateModal = () => {
     setIsCreateModalOpen(true)
   }

@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
-import { userQuery, logoutUser } from './user.queries'
+import { userQuery, logoutUser, getUserByIdQuery } from './user.queries'
 import { UpdateUserRequest, updateUserProfile } from './user.mutations'
 
 export const useCurrentUser = () => {
@@ -51,5 +51,15 @@ export const useUpdateProfile = () => {
       // Invalidate the user query to refetch the updated data
       queryClient.invalidateQueries({ queryKey: ['user'] })
     },
+  })
+}
+
+export const useUserById = (userId: number) => {
+  return useQuery({
+    queryKey: ['user', userId],
+    queryFn: () => getUserByIdQuery(userId),
+    retry: 1,
+    staleTime: 1000 * 60 * 10, // 10 minutes
+    enabled: !!userId,
   })
 }

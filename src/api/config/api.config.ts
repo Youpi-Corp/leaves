@@ -40,6 +40,13 @@ export const API_CONFIG = {
       SUBSCRIBED: '/module/subscribed',
       IS_SUBSCRIBED: '/module/is-subscribed',
       DELETE: '/module/delete',
+    }, MODULE_COMMENT: {
+      GET_BY_MODULE: '/module-comment',
+      GET_BY_ID: '/module-comment/comment',
+      CREATE: '/module-comment/create',
+      UPDATE: '/module-comment/update',
+      DELETE: '/module-comment/delete',
+      GET_BY_USER: '/module-comment/user',
     }
   },
 } as const

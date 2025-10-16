@@ -7,7 +7,6 @@ import ModuleCard from '../components/layout/modulecard/ModuleCard'
 import Spinner from '../components/feedback/Spinner'
 import { useSubscribedModules } from '../api/module/module.services'
 import { useCurrentUser } from '../api/user/user.services'
-import { unsubscribeFromModuleQuery } from '../api/module/module.queries'
 import { FaBookmark } from 'react-icons/fa'
 
 const SubscriptionsPage: React.FC = () => {
