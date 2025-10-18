@@ -26,7 +26,6 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
   className = '',
 }) => {
   const navigate = useNavigate()
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [visibleItems, setVisibleItems] = useState(itemsToShow)
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -81,8 +80,6 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
       window.removeEventListener('resize', updateVisibleItems)
     }
   }, [itemsToShow, cardWidth])
-
-  const totalSlides = Math.max(0, modules.length - visibleItems + 1)
   
   const handlePrev = () => {
     if (scrollContainerRef.current) {
@@ -125,7 +122,6 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
     setIsDragging(false)
   }
 
-  const showNavigation = modules.length > visibleItems
   const handleCardClick = (id: number) => {
     if (!isDragging) {
       navigate(`/module/${id}`)
@@ -213,11 +209,10 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
       )}
 
       <div className="relative">
-        {showNavigation && (
+        {modules.length > visibleItems && (
           <>
             <button
               onClick={handlePrev}
-              disabled={currentIndex === 0}
               aria-label="Previous slides"
               className="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all focus:outline-none focus:ring-2 focus:ring-green-500"
             >
@@ -226,7 +221,6 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
 
             <button
               onClick={handleNext}
-              disabled={currentIndex >= totalSlides - 1}
               aria-label="Next slides"
               className="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all focus:outline-none focus:ring-2 focus:ring-green-500"
             >

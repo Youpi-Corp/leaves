@@ -55,12 +55,6 @@ const HighlightBanner: React.FC<HighlightBannerProps> = ({
     return () => clearInterval(interval)
   }, [modules.length, resetTimer]) // Depend on resetTimer to restart the interval
 
-  const handleBannerClick = () => {
-    if (modules[currentIndex]) {
-      navigate(`/module/${modules[currentIndex].id}`)
-    }
-  }
-
   const handleStartLearningClick = (e: React.MouseEvent) => {
     e.stopPropagation() // Prevent any parent click handlers
     if (modules[currentIndex]) {
