@@ -22,3 +22,4 @@ tsconfig.tsbuildinfo
 *.njsproj
 *.sln
 *.sw?
+.claude/*
