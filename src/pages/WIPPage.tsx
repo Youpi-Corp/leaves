@@ -25,12 +25,12 @@ const WIPPage: React.FC = () => {
         </h1>
         
         <p className="text-lg text-bfbase-grey mb-2">
-          We're still building this page.
+          We&apos;re still building this page.
         </p>
         
         <p className="text-base text-bfbase-grey mb-8">
           Our team is hard at work creating something amazing for you. 
-          Check back soon to see what we've been working on!
+          Check back soon to see what we&apos;ve been working on!
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
