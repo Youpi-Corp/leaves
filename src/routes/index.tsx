@@ -15,6 +15,7 @@ import ModuleViewPage from '../pages/course/ModuleViewPage'
 import LessonViewPage from '../pages/course/LessonViewPage'
 import LessonContentPage from '../pages/course/LessonContentPage'
 import NotFoundPage from '../pages/NotFoundPage'
+import WIPPage from '../pages/WIPPage'
 import ProfilePage from '../pages/ProfilePage'
 import DataPrivacyPage from '../pages/DataPrivacyPage'
 import Library from '../pages/library/Library'
@@ -160,6 +161,15 @@ export const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* WIP (Work In Progress) routes for pages under development */}
+        <Route path="/about" element={<WIPPage />} />
+        <Route path="/write-course" element={<WIPPage />} />
+        <Route path="/how-it-works" element={<WIPPage />} />
+        <Route path="/docs" element={<WIPPage />} />
+        <Route path="/terms" element={<WIPPage />} />
+        <Route path="/cookies" element={<WIPPage />} />
+        <Route path="/preferences" element={<WIPPage />} />
 
         {/* 404 page */}
         <Route path="*" element={<NotFoundPage />} />

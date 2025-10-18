@@ -34,7 +34,11 @@ const Header: React.FC = () => {
             <LinkHeader to="/edition/dashboard/">Create</LinkHeader>
           </li>
           <li>
-            <LinkExternal href="https://github.com/Youpi-Corp">
+            <LinkExternal 
+              href="https://github.com/Youpi-Corp"
+              accent="primary"
+              className="mr-8 text-sm font-semibold text-bfgreen-darker hover:text-bfgreen-dark"
+            >
               Contribute
             </LinkExternal>
           </li>{' '}

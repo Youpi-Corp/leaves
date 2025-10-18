@@ -230,7 +230,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
         )}
         <div 
           ref={scrollContainerRef}
-          className="overflow-x-auto overflow-y-hidden mx-4 scrollbar-hide cursor-grab active:cursor-grabbing"
+          className="overflow-x-auto overflow-y-visible mx-4 scrollbar-hide cursor-grab active:cursor-grabbing pt-2"
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
