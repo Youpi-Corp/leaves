@@ -76,6 +76,26 @@ export const getPublicModulesQuery = async (): Promise<Module[]> => {
 }
 
 /**
+ * Fetch trending modules (most liked in the past week, no authentication required)
+ */
+export const getTrendingModulesQuery = async (): Promise<Module[]> => {
+    const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.MODULE.TRENDING), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch trending modules: ${response.status}`)
+    }
+
+    const result: ApiResponse<Module[]> = await response.json()
+    return result.data
+}
+
+/**
  * Fetch a specific module by ID
  */
 export const getModuleByIdQuery = async (moduleId: number): Promise<Module> => {
@@ -267,6 +287,26 @@ export const getSubscribedModulesQuery = async (): Promise<Module[]> => {
 
     if (!response.ok) {
         throw new Error(`Failed to fetch subscribed modules: ${response.status}`)
+    }
+
+    const result: ApiResponse<Module[]> = await response.json()
+    return result.data
+}
+
+/**
+ * Get modules user has started but not completed
+ */
+export const getInProgressModulesQuery = async (): Promise<Module[]> => {
+    const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.MODULE.IN_PROGRESS), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch in-progress modules: ${response.status}`)
     }
 
     const result: ApiResponse<Module[]> = await response.json()

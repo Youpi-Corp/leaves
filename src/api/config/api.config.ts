@@ -33,9 +33,11 @@ export const API_CONFIG = {
       DELETE: '/course/delete',
       COMPLETE: '/course/complete',
       IS_COMPLETED: '/course/is-completed',
-    }, MODULE: {
+    },
+    MODULE: {
       LIST: '/module/list',
       PUBLIC: '/module/public',
+      TRENDING: '/module/trending',
       GET: '/module/get',
       OWNER: '/module/owner',
       COURSES: '/module/courses',
@@ -45,6 +47,7 @@ export const API_CONFIG = {
       UNSUBSCRIBE: '/module/unsubscribe',
       SUBSCRIBED: '/module/subscribed',
       IS_SUBSCRIBED: '/module/is-subscribed',
+      IN_PROGRESS: '/module/in-progress',
       DELETE: '/module/delete',
     }
   },
