@@ -193,11 +193,20 @@ const LessonContentPage: React.FC = () => {
   }, [lessonDetails, quizAnswers])
 
   // Handle quiz answer callback
-  const handleQuizAnswer = (widgetId: string, isCorrect: boolean) => {
-    setQuizAnswers((prev) => ({
-      ...prev,
-      [widgetId]: isCorrect,
-    }))
+  const handleQuizAnswer = (widgetIds: string[], isCorrect: boolean) => {
+    if (widgetIds.length === 0) {
+      return
+    }
+
+    setQuizAnswers((prev) => {
+      const nextAnswers = { ...prev }
+
+      widgetIds.forEach((id) => {
+        nextAnswers[id] = isCorrect
+      })
+
+      return nextAnswers
+    })
   }
 
   const handleQuizCompletion = async () => {
@@ -313,21 +322,32 @@ const LessonContentPage: React.FC = () => {
             isDraggable={false}
             isResizable={false}
           >
-            {widgets.map((widget: WidgetContent) => (
-              <div key={widget.id} className="widget-container">
-                {widget.content && (
-                  <WidgetFactory
-                    data={widget.content}
-                    isEditable={false}
-                    isDraggable={false}
-                    className="h-full"
-                    onQuizAnswer={(isCorrect) =>
-                      handleQuizAnswer(widget.id, isCorrect)
-                    }
-                  />
-                )}
-              </div>
-            ))}
+            {widgets.map((widget: WidgetContent) => {
+              const answerIds = Array.from(
+                new Set(
+                  [widget.id, widget.content?.id]
+                    .filter((id): id is string =>
+                      typeof id === 'string' && id.trim().length > 0
+                    )
+                )
+              )
+
+              return (
+                <div key={widget.id} className="widget-container">
+                  {widget.content && (
+                    <WidgetFactory
+                      data={widget.content}
+                      isEditable={false}
+                      isDraggable={false}
+                      className="h-full"
+                      onQuizAnswer={(isCorrect) =>
+                        handleQuizAnswer(answerIds, isCorrect)
+                      }
+                    />
+                  )}
+                </div>
+              )
+            })}
           </ReactGridLayout>
         </div>
       </div>

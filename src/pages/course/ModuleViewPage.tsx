@@ -443,7 +443,7 @@ const ModuleViewPage: React.FC = () => {
                             )}
                           </span>
                           <h3
-                            className={`text-lg font-semibold ${
+                            className={`text-lg font-semibold break-words ${
                               lesson.isCompleted
                                 ? 'text-green-700'
                                 : 'text-bfbase-black'

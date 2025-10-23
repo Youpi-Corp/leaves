@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Header from '../layout/Header'
-import Footer from '../layout/Footer'
+import PageWrapper from '../components/layout/PageWrapper'
 import { userQuery } from '../api/user/user.queries'
 import { useQuery } from '@tanstack/react-query'
 import { useLogout } from '../api/user/user.services'
@@ -24,8 +23,7 @@ const ProfilePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <>
-        <Header />
+      <PageWrapper>
         <UserLayout userRole={undefined} isAuthenticated={false}>
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
@@ -34,14 +32,12 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
         </UserLayout>
-        <Footer />
-      </>
+      </PageWrapper>
     )
   }
   if (error) {
     return (
-      <>
-        <Header />
+      <PageWrapper>
         <UserLayout userRole={undefined} isAuthenticated={false}>
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
@@ -57,13 +53,11 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
         </UserLayout>
-        <Footer />
-      </>
+      </PageWrapper>
     )
   }
   return (
-    <>
-      <Header />{' '}
+    <PageWrapper>
       <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
         <div className="max-w-6xl mx-auto">
           {/* Welcome section */}
@@ -115,7 +109,7 @@ const ProfilePage: React.FC = () => {
                   </h3>
                   <div className="bg-gray-50 rounded-lg p-4 min-h-[100px]">
                     {user?.biography ? (
-                      <p className="text-gray-600">{user.biography}</p>
+                      <p className="text-gray-600 whitespace-pre-wrap break-words">{user.biography}</p>
                     ) : (
                       <p className="text-gray-400 italic">
                         No biography provided
@@ -131,7 +125,7 @@ const ProfilePage: React.FC = () => {
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg">
                     <span className="font-medium text-gray-700">Username:</span>
-                    <span className="text-gray-600">{user?.pseudo}</span>
+                    <span className="text-gray-600 break-words">{user?.pseudo}</span>
                   </div>{' '}
                   <div className="flex flex-col sm:flex-row sm:justify-between py-3 px-4 rounded-lg bg-gray-50">
                     <span className="font-medium text-gray-700">Roles:</span>
@@ -143,7 +137,7 @@ const ProfilePage: React.FC = () => {
                     <span className="font-medium text-gray-700">
                       Email address:
                     </span>
-                    <span className="text-gray-600">{user?.email}</span>
+                    <span className="text-gray-600 break-all">{user?.email}</span>
                   </div>
                 </div>
               </div>
@@ -206,8 +200,7 @@ const ProfilePage: React.FC = () => {
           )}
         </div>
       </UserLayout>
-      <Footer />
-    </>
+    </PageWrapper>
   )
 }
 

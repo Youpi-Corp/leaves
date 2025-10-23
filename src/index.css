@@ -50,6 +50,27 @@ layer(base);
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
+
+  /* Prevent overscroll bounce/rubber-band effect */
+  html,
+  body {
+    overscroll-behavior: none;
+    overflow-y: scroll;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    min-height: 100%;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 /* Enhanced styling for React Grid Layout widget placement preview */
@@ -65,4 +86,30 @@ layer(base);
 .react-grid-item.react-grid-placeholder.placeholder-resizing {
   transition: none;
   opacity: 0.3;
+}
+
+/* Hide scrollbar for carousel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Fade in animation for cycling content */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
 }

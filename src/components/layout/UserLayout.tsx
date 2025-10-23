@@ -24,21 +24,19 @@ const UserLayout: React.FC<UserLayoutProps> = ({
   const handleSidebarClose = () => setSidebarOpen(false)
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="flex flex-1">
-        <MobileOverlay isVisible={sidebarOpen} onClose={handleSidebarClose} />
+    <div className="flex flex-1">
+      <MobileOverlay isVisible={sidebarOpen} onClose={handleSidebarClose} />
 
-        <UserSidebar
-          visibleItems={visibleItems}
-          isOpen={sidebarOpen}
-          onClose={handleSidebarClose}
-        />
+      <UserSidebar
+        visibleItems={visibleItems}
+        isOpen={sidebarOpen}
+        onClose={handleSidebarClose}
+      />
 
-        <main className="flex-1 min-h-0">
-          <MobileHeader onMenuToggle={handleSidebarToggle} />
-          <UserContentArea>{children}</UserContentArea>
-        </main>
-      </div>
+      <main className="flex-1 min-h-0">
+        <MobileHeader onMenuToggle={handleSidebarToggle} />
+        <UserContentArea>{children}</UserContentArea>
+      </main>
     </div>
   )
 }

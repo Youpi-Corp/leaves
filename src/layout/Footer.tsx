@@ -2,6 +2,7 @@ import React from 'react'
 import { FaArrowRight, FaYoutube } from 'react-icons/fa'
 import { FaMeta, FaXTwitter } from 'react-icons/fa6'
 import LinkInternal from '../components/interaction/link/LinkInternal'
+import LinkExternal from '../components/interaction/link/LinkExternal'
 import Button from '../components/interaction/button/Button'
 import Separator from '../components/layout/Separator'
 
@@ -41,14 +42,14 @@ const Footer: React.FC = () => {
               </LinkInternal>
             </li>
             <li>
-              <LinkInternal accent="secondary" to="/changelog">
+              <LinkExternal href="https://github.com/Youpi-Corp/leaves/commits/main/" accent="secondary">
                 Changelogs
-              </LinkInternal>
+              </LinkExternal>
             </li>
             <li>
-              <LinkInternal accent="secondary" to="/contribute">
+              <LinkExternal href="https://github.com/Youpi-Corp" accent="secondary">
                 Contribute
-              </LinkInternal>
+              </LinkExternal>
             </li>
           </ul>
         </div>
@@ -75,10 +76,10 @@ const Footer: React.FC = () => {
       <div className="flex items-center justify-between w-full">
         <ul className="flex flex-row space-x-6 text-sm font-medium">
           <li className="text-bfbrown-dark font-semibold">
-            © 2025 BrainForest
+            © {new Date().getFullYear()} BrainForest
           </li>
           <li>
-            <LinkInternal accent="secondary" to="/privacy">
+            <LinkInternal accent="secondary" to="/profile/data-privacy">
               Privacy Policy
             </LinkInternal>
           </li>
@@ -86,12 +87,7 @@ const Footer: React.FC = () => {
             <LinkInternal accent="secondary" to="/terms">
               Terms of Service
             </LinkInternal>
-          </li>
-          <li>
-            <LinkInternal accent="secondary" to="/cookies">
-              Cookie Preferences
-            </LinkInternal>
-          </li>
+          </li> 
           <li>
             <a
               href="https://framaforms.org/brainforest-retour-general-1750810810"

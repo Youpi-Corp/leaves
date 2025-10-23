@@ -5,6 +5,7 @@ import NavigationDebugger from '../components/navigation/NavigationDebugger'
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import AuthRedirect from '../components/auth/AuthRedirect'
 import LoginPage from '../pages/auth/LoginPage'
+import GitHubCallbackPage from '../pages/auth/GitHubCallbackPage'
 import CourseEditorPage from '../pages/course/editor/CourseEditorPage'
 import HomePage from '../pages/HomePage'
 import RegisterPage from '../pages/auth/RegisterPage'
@@ -14,7 +15,9 @@ import ModuleViewPage from '../pages/course/ModuleViewPage'
 import LessonViewPage from '../pages/course/LessonViewPage'
 import LessonContentPage from '../pages/course/LessonContentPage'
 import NotFoundPage from '../pages/NotFoundPage'
+import WIPPage from '../pages/WIPPage'
 import ProfilePage from '../pages/ProfilePage'
+import DataPrivacyPage from '../pages/DataPrivacyPage'
 import Library from '../pages/library/Library'
 import SubscriptionsPage from '../pages/SubscriptionsPage'
 import AdminPanel from '../pages/admin/AdminPanel'
@@ -49,6 +52,10 @@ export const AppRoutes: React.FC = () => {
               <RegisterPage />
             </AuthRedirect>
           }
+        />
+        <Route
+          path="/auth/github/callback"
+          element={<GitHubCallbackPage />}
         />
 
         {/* Protected routes */}
@@ -121,6 +128,14 @@ export const AppRoutes: React.FC = () => {
           }
         />
         <Route
+          path="/profile/data-privacy"
+          element={
+            <ProtectedRoute>
+              <DataPrivacyPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/library"
           element={
             <ProtectedRoute>
@@ -146,6 +161,15 @@ export const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* WIP (Work In Progress) routes for pages under development */}
+        <Route path="/about" element={<WIPPage />} />
+        <Route path="/write-course" element={<WIPPage />} />
+        <Route path="/how-it-works" element={<WIPPage />} />
+        <Route path="/docs" element={<WIPPage />} />
+        <Route path="/terms" element={<WIPPage />} />
+        <Route path="/cookies" element={<WIPPage />} />
+        <Route path="/preferences" element={<WIPPage />} />
 
         {/* 404 page */}
         <Route path="*" element={<NotFoundPage />} />

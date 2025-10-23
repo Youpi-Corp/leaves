@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '../components/interaction/button/Button'
 import LinkHeader from '../components/interaction/link/LinkHeader'
+import LinkExternal from '../components/interaction/link/LinkExternal'
 import SearchBar from '../components/interaction/input/SearchBar'
 import ButtonUser from '../components/interaction/button/ButtonUser'
 
@@ -33,7 +34,13 @@ const Header: React.FC = () => {
             <LinkHeader to="/edition/dashboard/">Create</LinkHeader>
           </li>
           <li>
-            <LinkHeader to="/contribute">Contribute</LinkHeader>
+            <LinkExternal 
+              href="https://github.com/Youpi-Corp"
+              accent="primary"
+              className="mr-8 text-sm font-semibold text-bfgreen-darker hover:text-bfgreen-dark"
+            >
+              Contribute
+            </LinkExternal>
           </li>{' '}
         </ul>
       </div>

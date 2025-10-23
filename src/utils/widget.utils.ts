@@ -28,6 +28,31 @@ function extractWidget(widget: WidgetLike): BaseWidgetProps {
 }
 
 /**
+ * Derive all possible identifiers associated with a widget.
+ * Older lesson content might store different ids on the wrapper and the widget itself,
+ * so we collect every non-empty identifier to cross-reference with answer maps.
+ */
+function getWidgetIdentifiers(widget: WidgetLike): string[] {
+    const identifiers = new Set<string>()
+    const actualWidget = extractWidget(widget)
+
+    if (typeof actualWidget.id === 'string' && actualWidget.id.trim().length > 0) {
+        identifiers.add(actualWidget.id)
+    }
+
+    if ('content' in widget) {
+        const wrapperId = widget.id
+        if (typeof wrapperId === 'string' && wrapperId.trim().length > 0) {
+            identifiers.add(wrapperId)
+        }
+    } else if (typeof (widget as BaseWidgetProps).id === 'string' && (widget as BaseWidgetProps).id.trim().length > 0) {
+        identifiers.add((widget as BaseWidgetProps).id)
+    }
+
+    return Array.from(identifiers)
+}
+
+/**
  * Check if a widget is interactive (requires user input for completion)
  */
 export function isInteractiveWidget(widget: WidgetLike): boolean {
@@ -48,8 +73,8 @@ export function isWidgetCompleted(widget: WidgetLike, widgetAnswers: Record<stri
     }
 
     // For interactive widgets, check if there's an answer recorded
-    const widgetId = 'content' in widget ? widget.id : widget.id
-    return widgetId in widgetAnswers
+    const identifiers = getWidgetIdentifiers(widget)
+    return identifiers.some((identifier) => identifier in widgetAnswers)
 }
 
 /**
@@ -64,8 +89,8 @@ export function isWidgetCompletedCorrectly(widget: WidgetLike, widgetAnswers: Re
     }
 
     // For interactive widgets, check if there's a correct answer recorded
-    const widgetId = 'content' in widget ? widget.id : widget.id
-    return widgetAnswers[widgetId] === true
+    const identifiers = getWidgetIdentifiers(widget)
+    return identifiers.some((identifier) => widgetAnswers[identifier] === true)
 }
 
 /**

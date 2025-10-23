@@ -15,7 +15,7 @@ const WidgetBase = <T extends BaseWidgetProps>({
 }: WidgetBaseProps<T>) => {
   const [isActive, setIsActive] = useState(false)
   const nodeRef = useRef<HTMLDivElement>(null)
-  const headerRef = { current: null } as { current: HTMLDivElement | null }
+  const headerRef = useRef<HTMLDivElement | null>(null)
 
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: info.id,
@@ -39,7 +39,7 @@ const WidgetBase = <T extends BaseWidgetProps>({
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [headerRef])
 
   const handleWidgetClick = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -56,9 +56,7 @@ const WidgetBase = <T extends BaseWidgetProps>({
         <div
           ref={(node) => {
             setNodeRef(node)
-            if (node) {
-              headerRef.current = node
-            }
+            headerRef.current = node
           }}
           {...attributes}
           {...listeners}

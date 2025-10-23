@@ -1,7 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import Header from '../layout/Header'
-import Footer from '../layout/Footer'
+import PageWrapper from '../components/layout/PageWrapper'
 import UserLayout from '../components/layout/UserLayout'
 import ModuleCard from '../components/layout/modulecard/ModuleCard'
 import Spinner from '../components/feedback/Spinner'
@@ -30,23 +29,20 @@ const SubscriptionsPage: React.FC = () => {
   // Loading state
   if (userLoading || modulesLoading) {
     return (
-      <>
-        <Header />
+      <PageWrapper>
         <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
           <div className="flex items-center justify-center py-12">
             <Spinner />
           </div>
         </UserLayout>
-        <Footer />
-      </>
+      </PageWrapper>
     )
   }
 
   // Error state
   if (userError || modulesError) {
     return (
-      <>
-        <Header />
+      <PageWrapper>
         <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
           <div className="flex items-center justify-center py-12">
             <div className="text-red-500 text-center">
@@ -60,14 +56,12 @@ const SubscriptionsPage: React.FC = () => {
             </div>
           </div>
         </UserLayout>
-        <Footer />
-      </>
+      </PageWrapper>
     )
   }
 
   return (
-    <>
-      <Header />
+    <PageWrapper>
       <UserLayout userRole={user?.roles} isAuthenticated={!!user}>
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl sm:text-4xl font-bold text-bfgreen-dark mb-8">
@@ -137,8 +131,7 @@ const SubscriptionsPage: React.FC = () => {
           )}
         </div>
       </UserLayout>
-      <Footer />
-    </>
+    </PageWrapper>
   )
 }
 

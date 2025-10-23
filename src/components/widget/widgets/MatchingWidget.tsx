@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import {
   BaseWidgetProps,
@@ -99,7 +99,7 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
   >([])
 
   // Calculate connection lines
-  const updateConnectionLines = () => {
+  const updateConnectionLines = useCallback(() => {
     if (!containerRef.current) return
 
     const containerRect = containerRef.current.getBoundingClientRect()
@@ -141,28 +141,45 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
     })
 
     setConnectionLines(lines)
-  }
+  }, [userMatches, showResult, correctMatches])
 
   // Update lines when matches change or component updates
   useEffect(() => {
     const timer = setTimeout(updateConnectionLines, 100) // Small delay to ensure DOM is updated
     return () => clearTimeout(timer)
-  }, [userMatches, showResult])
+  }, [userMatches, showResult, updateConnectionLines])
 
   // Update lines on window resize
   useEffect(() => {
     const handleResize = () => updateConnectionLines()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [userMatches])
+  }, [userMatches, updateConnectionLines])
 
-  // Shuffle items if enabled
-  const displayLeftItems = shuffleItems
-    ? [...leftItems].sort(() => Math.random() - 0.5)
-    : leftItems
-  const displayRightItems = shuffleItems
-    ? [...rightItems].sort(() => Math.random() - 0.5)
-    : rightItems
+  // Initialize shuffled items once
+  const [displayLeftItems] = useState(() => {
+    if (shuffleItems && leftItems.length > 0) {
+      const shuffled = [...leftItems]
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      }
+      return shuffled
+    }
+    return leftItems
+  })
+  
+  const [displayRightItems] = useState(() => {
+    if (shuffleItems && rightItems.length > 0) {
+      const shuffled = [...rightItems]
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      }
+      return shuffled
+    }
+    return rightItems
+  })
 
   const handleLeftItemClick = (leftId: string) => {
     if (showResult) return

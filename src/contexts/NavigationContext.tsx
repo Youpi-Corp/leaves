@@ -187,6 +187,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
   useEffect(() => {
     const currentPath = location.pathname
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setNavigationState((prev) => {
       // If this is the first navigation or coming from a fresh start
       if (prev.history.length === 0) {

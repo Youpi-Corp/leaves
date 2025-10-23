@@ -30,13 +30,16 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
   onActionComplete,
 }) => {
   const navigate = useNavigate()
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [visibleItems, setVisibleItems] = useState(itemsToShow)
   const containerRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [modules, setModules] = useState<Module[]>([])
   const [title, setTitle] = useState<string | undefined>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
   const cardWidth = 320 // Fixed card width in pixels, changed from state to constant
   useEffect(() => {
     const loadCarouselData = async () => {
@@ -81,40 +84,76 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
       window.removeEventListener('resize', updateVisibleItems)
     }
   }, [itemsToShow, cardWidth])
-
-  const totalSlides = Math.max(0, modules.length - visibleItems + 1)
+  
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => Math.max(0, prevIndex - 1))
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: -(cardWidth + 16),
+        behavior: 'smooth'
+      })
+    }
   }
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) =>
-      Math.min(modules.length - visibleItems, prevIndex + 1)
-    )
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: cardWidth + 16,
+        behavior: 'smooth'
+      })
+    }
   }
 
-  const showNavigation = modules.length > visibleItems
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollContainerRef.current) return
+    setIsDragging(true)
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft)
+    setScrollLeft(scrollContainerRef.current.scrollLeft)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollContainerRef.current) return
+    e.preventDefault()
+    const x = e.pageX - scrollContainerRef.current.offsetLeft
+    const walk = (x - startX) * 2 // Multiply by 2 for faster scrolling
+    scrollContainerRef.current.scrollLeft = scrollLeft - walk
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleMouseLeave = () => {
+    setIsDragging(false)
+  }
+
   const handleCardClick = (id: number) => {
-    navigate(`/module/${id}`)
+    if (!isDragging) {
+      navigate(`/module/${id}`)
+    }
   }
 
   if (loading) {
     return (
       <div className={`w-full py-6 ${className}`}>
-        {title && (
-          <h1 className="text-2xl font-bold mb-4 text-gray-800">{title}</h1>
-        )}
-        <div className="flex space-x-4">
+        <div className="h-8 bg-gray-200 rounded w-48 mb-4 animate-pulse"></div>
+        <div className="flex space-x-4 overflow-hidden">
           {[...Array(visibleItems)].map((_, index) => (
             <div
               key={index}
               className="flex-shrink-0 px-2"
               style={{ width: `${cardWidth}px` }}
             >
-              <div className="h-64 border rounded-lg shadow-sm bg-white p-4 animate-pulse">
-                <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded mb-4 w-3/4"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-64 border rounded-lg shadow-sm bg-white p-4">
+                <div className="flex mb-3">
+                  <div className="w-6 h-6 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                <div className="h-5 bg-gray-200 rounded mb-2 animate-pulse"></div>
+                <div className="h-5 bg-gray-200 rounded mb-2 w-3/4 animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded mb-2 w-full animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded mb-4 w-2/3 animate-pulse"></div>
+                <div className="mt-4 flex justify-between">
+                  <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                </div>
               </div>
             </div>
           ))}
@@ -136,6 +175,37 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
     )
   }
 
+  if (modules.length === 0) {
+    return (
+      <div className={`w-full py-6 ${className}`}>
+        {title && (
+          <h1 className="text-2xl font-bold mb-4 text-gray-800">{title}</h1>
+        )}
+        <div className="flex flex-col items-center justify-center py-12 px-4 bg-bfbase-lightergrey rounded-lg border-2 border-dashed border-gray-300">
+          <svg
+            className="w-16 h-16 text-gray-400 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+            />
+          </svg>
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">No modules available</h3>
+          <p className="text-sm text-gray-500 text-center max-w-md">
+            {title === 'Continue Learning' 
+              ? 'Start learning by subscribing to modules to see them here.'
+              : 'Check back later for new content.'}
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div ref={containerRef} className={`w-full py-6 ${className}`}>
       {title && (
@@ -143,11 +213,10 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
       )}
 
       <div className="relative">
-        {showNavigation && (
+        {modules.length > visibleItems && (
           <>
             <button
               onClick={handlePrev}
-              disabled={currentIndex === 0}
               aria-label="Previous slides"
               className="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all focus:outline-none focus:ring-2 focus:ring-green-500"
             >
@@ -156,7 +225,6 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
 
             <button
               onClick={handleNext}
-              disabled={currentIndex >= totalSlides - 1}
               aria-label="Next slides"
               className="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all focus:outline-none focus:ring-2 focus:ring-green-500"
             >
@@ -164,17 +232,23 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
             </button>
           </>
         )}
-        <div className="overflow-hidden mx-4">
-          <div
-            className="flex transition-transform duration-300 ease-in-out"
-            style={{
-              transform: `translateX(-${currentIndex * cardWidth}px)`,
-            }}
-          >
+        <div 
+          ref={scrollContainerRef}
+          className="overflow-x-auto overflow-y-visible mx-4 scrollbar-hide cursor-grab active:cursor-grabbing pt-2"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+          }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="flex gap-4">
             {modules.map((module) => (
               <div
                 key={module.id}
-                className="flex-shrink-0 px-2"
+                className="flex-shrink-0"
                 style={{ width: `${cardWidth}px` }}
               >
                 <ModuleCard

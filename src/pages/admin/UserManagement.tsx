@@ -17,6 +17,7 @@ import {
 } from '../../api/admin/admin.services'
 import { AdminUser, CreateUserRequest } from '../../api/admin/admin.queries'
 import Spinner from '../../components/feedback/Spinner'
+import Modal from '../../components/feedback/Modal'
 
 const UserManagement: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -285,8 +286,8 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+    <Modal isOpen={isOpen} onClose={onClose} className="w-full max-w-md">
+      <div className="p-6">
         <h3 className="text-lg font-semibold mb-4">Create New User</h3>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
@@ -381,7 +382,7 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   )
 }
 
@@ -414,8 +415,8 @@ const RoleManagementModal: React.FC<RoleManagementModalProps> = ({
   const assignedRoles = roles.filter((role) => userRoles.includes(role.name))
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+    <Modal isOpen={isOpen} onClose={onClose} className="w-full max-w-md">
+      <div className="p-6">
         <h3 className="text-lg font-semibold mb-4">
           Manage Roles for {user.pseudo || user.email}
         </h3>
@@ -483,7 +484,7 @@ const RoleManagementModal: React.FC<RoleManagementModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }
 

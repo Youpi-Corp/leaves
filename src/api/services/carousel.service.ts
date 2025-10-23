@@ -1,4 +1,4 @@
-import { Module, getPublicModulesQuery, getModulesByOwnerQuery } from '../module/module.queries'
+import { Module, getPublicModulesQuery, getModulesByOwnerQuery, getInProgressModulesQuery, getTrendingModulesQuery } from '../module/module.queries'
 import { userQuery } from '../user/user.queries'
 
 export interface CarouselData {
@@ -15,6 +15,8 @@ export class CarouselService {
      */
     static async getCarouselData(carouselId: string): Promise<CarouselData> {
         switch (carouselId) {
+            case 'trending':
+                return this.getTrendingModules()
             case 'featured':
                 return this.getFeaturedModules()
             case 'recent':
@@ -30,6 +32,23 @@ export class CarouselService {
                 return this.getPublicModules()
             default:
                 return this.getPublicModules()
+        }
+    }
+
+    /**
+     * Get trending modules (most liked in the past week)
+     */
+    private static async getTrendingModules(): Promise<CarouselData> {
+        try {
+            const modules = await getTrendingModulesQuery()
+
+            return {
+                title: 'Trending This Week',
+                modules: modules
+            }
+        } catch (error) {
+            console.error('Error fetching trending modules:', error)
+            return { title: 'Trending This Week', modules: [] }
         }
     }
 
@@ -76,21 +95,22 @@ export class CarouselService {
     }
 
     /**
-     * Get modules to continue (would need user progress data)
+     * Get modules to continue (based on user progress)
      */
     private static async getContinueModules(): Promise<CarouselData> {
         try {
-            // For now, return public modules
-            // In future, this would filter based on user's progress
-            const modules = await getPublicModulesQuery()
-            const continueModules = modules.slice(0, 5)
-
+            // Get modules user has started but not completed
+            const modules = await getInProgressModulesQuery()
+            
+            // Sort by most recently subscribed (if subscribed_at is available in future)
+            // For now, just return the in-progress modules
             return {
                 title: 'Continue Learning',
-                modules: continueModules
+                modules: modules
             }
         } catch (error) {
             console.error('Error fetching continue modules:', error)
+            // If user is not authenticated or there's an error, return empty
             return { title: 'Continue Learning', modules: [] }
         }
     }    /**
