@@ -38,6 +38,13 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
     const handleUpdate = () => {
         if (!editContent.trim() || !editingId) return
 
+        const currentComment = comments?.find((commentItem) => commentItem.id === editingId)
+        if (currentComment && currentComment.content.trim() === editContent.trim()) {
+            setEditingId(null)
+            setEditContent('')
+            return
+        }
+
         updateComment.mutate({
             commentId: editingId,
             content: editContent.trim()
@@ -50,19 +57,63 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
     }
 
     const handleDelete = (commentId: number) => {
-        if (confirm('Supprimer ce commentaire ?')) {
+        if (confirm('Delete this comment?')) {
             deleteComment.mutate(commentId)
         }
     }
 
+    const normalizeDate = (rawDate: string | null | undefined) => {
+        if (!rawDate) return null
+
+        const candidates: string[] = [rawDate]
+
+        if (!rawDate.includes('T')) {
+            const withT = rawDate.replace(' ', 'T')
+            candidates.push(withT)
+            candidates.push(`${withT}Z`)
+        } else if (!/[zZ]|[+-]\d{2}:?\d{2}$/.test(rawDate)) {
+            candidates.push(`${rawDate}Z`)
+        }
+
+        candidates.push(...candidates.map((value) => value.replace(/(\.\d{3})\d+/, '$1')))
+
+        for (const value of candidates) {
+            const parsed = new Date(value)
+            if (!Number.isNaN(parsed.getTime())) {
+                return parsed
+            }
+        }
+
+        return null
+    }
+
+    const formatCommentDate = (rawDate: string | null | undefined) => {
+        const parsed = normalizeDate(rawDate)
+        if (!parsed) return 'Unknown date'
+
+        return new Intl.DateTimeFormat(undefined, {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+        }).format(parsed)
+    }
+
+    const isCommentEdited = (createdAt: string, updatedAt: string) => {
+        const created = normalizeDate(createdAt)
+        const updated = normalizeDate(updatedAt)
+
+        if (!created || !updated) return false
+
+        return Math.abs(updated.getTime() - created.getTime()) > 1000
+    }
+
     if (isLoading) {
-        return <div className="text-center py-4">Chargement des commentaires...</div>
+        return <div className="text-center py-4">Loading comments...</div>
     }
 
     return (
         <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold mb-4">
-                Commentaires ({comments?.length || 0})
+                Comments ({comments?.length || 0})
             </h3>
 
             {/* Formulaire nouveau commentaire */}
@@ -71,7 +122,7 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
                     <textarea
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="Ajouter un commentaire..."
+                        placeholder="Add a comment..."
                         className="w-full p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
                         rows={3}
                         disabled={createComment.isPending}
@@ -81,7 +132,7 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
                         disabled={!newComment.trim() || createComment.isPending}
                         className="mt-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
                     >
-                        {createComment.isPending ? 'Publication...' : 'Publier'}
+                        {createComment.isPending ? 'Posting...' : 'Post'}
                     </button>
                 </form>
             )}
@@ -90,14 +141,15 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
             <div className="space-y-4">
                 {comments?.length === 0 ? (
                     <p className="text-gray-500 text-center py-4">
-                        Aucun commentaire pour le moment.
+                        No comments yet.
                     </p>
                 ) : (
                     comments?.map((comment) => (
                         <div key={comment.id} className="border rounded-lg p-4">
                             <div className="flex justify-between items-start mb-2">
                                 <div className="text-sm text-gray-600">
-                                    <UserDisplay userId={comment.user_id} /> • {new Date(comment.dtc).toLocaleDateString()}
+                                    <UserDisplay userId={comment.user_id} /> • {formatCommentDate(comment.created_at)}
+                                    {isCommentEdited(comment.created_at, comment.updated_at) ? ' (edited)' : ''}
                                 </div>
                                 {currentUser?.id === comment.user_id && (
                                     <div className="flex space-x-2">
@@ -105,13 +157,13 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
                                             onClick={() => handleEdit(comment.id, comment.content)}
                                             className="text-green-600 hover:text-green-800 text-sm"
                                         >
-                                            Modifier
+                                            Edit
                                         </button>
                                         <button
                                             onClick={() => handleDelete(comment.id)}
                                             className="text-red-600 hover:text-red-800 text-sm"
                                         >
-                                            Supprimer
+                                            Delete
                                         </button>
                                     </div>
                                 )}
@@ -131,13 +183,13 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
                                             disabled={updateComment.isPending}
                                             className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
                                         >
-                                            Sauvegarder
+                                            Save
                                         </button>
                                         <button
                                             onClick={() => setEditingId(null)}
                                             className="px-3 py-1 bg-gray-300 text-gray-700 rounded text-sm hover:bg-gray-400"
                                         >
-                                            Annuler
+                                            Cancel
                                         </button>
                                     </div>
                                 </div>
