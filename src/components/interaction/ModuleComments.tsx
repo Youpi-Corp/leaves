@@ -18,6 +18,10 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
     const updateComment = useUpdateModuleComment()
     const deleteComment = useDeleteModuleComment()
 
+    const isAdminUser = currentUser?.roles?.includes('admin') ?? false
+    const canEditComment = (commentUserId: number) => currentUser?.id === commentUserId
+    const canDeleteComment = (commentUserId: number) => canEditComment(commentUserId) || isAdminUser
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!newComment.trim()) return
@@ -151,20 +155,24 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
                                     <UserDisplay userId={comment.user_id} /> • {formatCommentDate(comment.created_at)}
                                     {isCommentEdited(comment.created_at, comment.updated_at) ? ' (edited)' : ''}
                                 </div>
-                                {currentUser?.id === comment.user_id && (
+                                {(canEditComment(comment.user_id) || canDeleteComment(comment.user_id)) && (
                                     <div className="flex space-x-2">
-                                        <button
-                                            onClick={() => handleEdit(comment.id, comment.content)}
-                                            className="text-green-600 hover:text-green-800 text-sm"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(comment.id)}
-                                            className="text-red-600 hover:text-red-800 text-sm"
-                                        >
-                                            Delete
-                                        </button>
+                                        {canEditComment(comment.user_id) && (
+                                            <button
+                                                onClick={() => handleEdit(comment.id, comment.content)}
+                                                className="text-green-600 hover:text-green-800 text-sm"
+                                            >
+                                                Edit
+                                            </button>
+                                        )}
+                                        {canDeleteComment(comment.user_id) && (
+                                            <button
+                                                onClick={() => handleDelete(comment.id)}
+                                                className="text-red-600 hover:text-red-800 text-sm"
+                                            >
+                                                Delete
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>
