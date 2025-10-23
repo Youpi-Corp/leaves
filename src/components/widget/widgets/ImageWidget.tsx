@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   BaseWidgetProps,
   WidgetViewProps,
@@ -118,7 +118,11 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false)
   const [uploadError, setUploadError] = useState<string>('')
-  const [validationError, setValidationError] = useState<string>('')
+  const isAltTextMissing =
+    Boolean(widgetData.imageUrl) && (!widgetData.altText || widgetData.altText.trim() === '')
+  const validationError = isAltTextMissing
+    ? 'Alternative text is required when an image is provided.'
+    : ''
 
   const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUploadError('')
@@ -130,8 +134,7 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
 
   const handleAltTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newAltText = e.target.value
-    setValidationError('')
-    
+
     onChange({
       ...widgetData,
       altText: newAltText,
@@ -213,13 +216,6 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
     const file = e.target.files?.[0] || null
     handleFileUpload(file)
   }
-
-  // Validate on any data change that affects required fields
-  useEffect(() => {
-    if (widgetData.imageUrl && widgetData.altText && widgetData.altText.trim() !== '') {
-      setValidationError('')
-    }
-  }, [widgetData.altText, widgetData.imageUrl])
 
   return (
     <div className="space-y-4">
@@ -383,7 +379,7 @@ const ImageWidgetEdit: React.FC<WidgetEditProps<ImageWidgetProps>> = ({
       )}
 
       {/* Validation Alert*/}
-      {widgetData.imageUrl && (!widgetData.altText || widgetData.altText.trim() === '') && (
+      {isAltTextMissing && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
           <div className="flex items-center">
             <div className="flex-shrink-0">
