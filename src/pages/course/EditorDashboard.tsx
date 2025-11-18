@@ -54,10 +54,6 @@ const EditorDashboard: React.FC = () => {
     getModules()
   }, [currentUser, userLoading, userError])
 
-  const handleModuleClick = (moduleId: number) => {
-    navigate(`/edition/dashboard/${moduleId}`)
-  }
-
   const openCreateModal = () => {
     setIsCreateModalOpen(true)
   }
@@ -126,7 +122,8 @@ const EditorDashboard: React.FC = () => {
               <ModuleCard
                 key={module.id}
                 module={module}
-                onClick={handleModuleClick}
+                onClick={(id) => navigate(`/edition/dashboard/${id}`)}
+                buttonType="EDIT"
               />
             ))}
           </div>
