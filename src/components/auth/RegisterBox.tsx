@@ -66,7 +66,8 @@ const RegisterBox: React.FC = () => {
       return
     }
 
-    if (!passwordAnalysis || passwordAnalysis.score < 2) {
+    const passwordScoreValue = passwordAnalysis?.score ?? -1
+    if (passwordScoreValue < 2) {
       setError('Password is too weak. Try adding more unique words or symbols.')
       return
     }
@@ -121,7 +122,7 @@ const RegisterBox: React.FC = () => {
           type="password"
         />
 
-        {password && (
+        {passwordAnalysis && (
           <div className="w-full text-sm">
             <div className="flex items-center gap-2">
               <span className={`font-semibold ${passwordStrengthColor}`}>
@@ -134,15 +135,15 @@ const RegisterBox: React.FC = () => {
                 style={{ width: `${passwordStrengthWidth}%` }}
               />
             </div>
-            {passwordAnalysis?.feedback?.warning && (
+            {passwordAnalysis.feedback?.warning && (
               <p className="mt-1 text-bfbase-darkgrey">
-                {passwordAnalysis.feedback.warning}
+                {passwordAnalysis.feedback?.warning}
               </p>
             )}
-            {!passwordAnalysis?.feedback?.warning &&
-              (passwordAnalysis?.feedback?.suggestions?.length ?? 0) > 0 && (
+            {!passwordAnalysis.feedback?.warning &&
+              (passwordAnalysis.feedback?.suggestions?.length ?? 0) > 0 && (
               <p className="mt-1 text-bfbase-darkgrey">
-                {passwordAnalysis.feedback.suggestions[0]}
+                {passwordAnalysis.feedback?.suggestions?.[0]}
               </p>
             )}
           </div>
