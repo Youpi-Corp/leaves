@@ -4,7 +4,7 @@ import { useCurrentUser } from '../../api/user/user.services'
 import UserDisplay from '../user/UserDisplay'
 import { useNavigation } from '../../contexts/NavigationContext'
 import ReportModal from './ReportModal'
-import { ReportTargetContext } from '../../types/report.types'
+import { ReportTargetContext, ReportTargetType } from '../../types/report.types'
 
 interface ModuleCommentsProps {
     moduleId: number
