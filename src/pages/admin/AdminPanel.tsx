@@ -4,12 +4,14 @@ import Header from '../../layout/Header'
 import Footer from '../../layout/Footer'
 import { useCurrentUser } from '../../api/user/user.services'
 import Spinner from '../../components/feedback/Spinner'
-import { FaUsers, FaBook, FaGraduationCap } from 'react-icons/fa'
+import { FaUsers, FaBook, FaGraduationCap, FaCommentDots, FaFlag } from 'react-icons/fa'
 import UserManagement from './UserManagement'
 import ModuleManagement from './ModuleManagement'
 import LessonManagement from './LessonManagement'
+import CommentManagement from './CommentManagement'
+import ReportsManagement from './ReportsManagement'
 
-type AdminTab = 'users' | 'modules' | 'lessons'
+type AdminTab = 'users' | 'modules' | 'lessons' | 'comments' | 'reports'
 
 const AdminPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('users')
@@ -36,6 +38,8 @@ const AdminPanel: React.FC = () => {
     { id: 'users' as AdminTab, label: 'Users', icon: FaUsers },
     { id: 'modules' as AdminTab, label: 'Modules', icon: FaBook },
     { id: 'lessons' as AdminTab, label: 'Lessons', icon: FaGraduationCap },
+    { id: 'comments' as AdminTab, label: 'Comments', icon: FaCommentDots },
+    { id: 'reports' as AdminTab, label: 'Reports', icon: FaFlag },
   ]
 
   const renderTabContent = () => {
@@ -46,6 +50,10 @@ const AdminPanel: React.FC = () => {
         return <ModuleManagement />
       case 'lessons':
         return <LessonManagement />
+      case 'comments':
+        return <CommentManagement />
+      case 'reports':
+        return <ReportsManagement />
       default:
         return <UserManagement />
     }
@@ -61,7 +69,7 @@ const AdminPanel: React.FC = () => {
               Admin Panel
             </h1>
             <p className="text-bfbase-darkgrey">
-              Manage users, modules, and lessons
+              Manage users, modules, lessons, comments, and escalated reports
             </p>{' '}
           </div>
 

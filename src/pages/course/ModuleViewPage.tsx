@@ -7,6 +7,7 @@ import Breadcrumb from '../../components/navigation/Breadcrumb'
 import BackButton from '../../components/navigation/BackButton'
 import ModuleComments from '../../components/interaction/ModuleComments'
 import { useNavigation } from '../../contexts/NavigationContext'
+import ReportModal from '../../components/interaction/ReportModal'
 import {
   getModuleByIdQuery,
   getModuleCoursesQuery,
@@ -23,6 +24,8 @@ import {
 } from '../../api/module/module.services'
 import { useCurrentUser } from '../../api/user/user.services'
 import { isCourseCompletedQuery } from '../../api/course/course.queries'
+import { ReportTargetContext } from '../../types/report.types'
+import { FaFlag } from 'react-icons/fa'
 
 interface Lesson {
   id: number
@@ -120,6 +123,9 @@ const ModuleViewPage: React.FC = () => {
   const [moduleLikes, setModuleLikes] = useState<number>(0)
   const [isModuleLiked, setIsModuleLiked] = useState(false)
   const [isLikeUpdating, setIsLikeUpdating] = useState(false)
+  const [reportTarget, setReportTarget] = useState<ReportTargetContext | null>(
+    null
+  )
 
   // User and subscription hooks
   const { data: currentUser, isLoading: isUserLoading } = useCurrentUser()
@@ -287,6 +293,20 @@ const ModuleViewPage: React.FC = () => {
   // Add this after the module description and before the lessons count
   const completionStats = getCompletionStats()
 
+  const handleReportRequest = () => {
+    if (!moduleDetails) return
+    if (!currentUser) {
+      goToLogin()
+      return
+    }
+
+    setReportTarget({
+      targetType: 'module',
+      targetId: moduleDetails.id,
+      targetLabel: moduleDetails.title,
+    })
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -350,6 +370,14 @@ const ModuleViewPage: React.FC = () => {
                         ? `${moduleLikes} ${moduleLikes === 1 ? 'like' : 'likes'}`
                         : 'No likes yet'}
                     </span>
+                    <button
+                      type="button"
+                      onClick={handleReportRequest}
+                      className="inline-flex items-center gap-2 px-3 py-2 border border-bfbase-lightgrey rounded-lg text-sm text-bfbase-grey hover:text-bfred-base hover:border-bfred-base"
+                    >
+                      <FaFlag className="w-4 h-4" />
+                      Report
+                    </button>
                   </div>
                 </div>
                 <p className="text-bfbase-grey mb-4 max-w-3xl text-lg break-words">
@@ -643,6 +671,16 @@ const ModuleViewPage: React.FC = () => {
         )}
       </div>
       <Footer />
+
+      {reportTarget && (
+        <ReportModal
+          isOpen={!!reportTarget}
+          onClose={() => setReportTarget(null)}
+          targetType={reportTarget.targetType}
+          targetId={reportTarget.targetId}
+          targetLabel={reportTarget.targetLabel}
+        />
+      )}
     </div>
   )
 }

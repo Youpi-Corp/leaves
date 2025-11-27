@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { useModuleComments, useCreateModuleComment, useUpdateModuleComment, useDeleteModuleComment } from '../../api/module/module-comment.services'
 import { useCurrentUser } from '../../api/user/user.services'
 import UserDisplay from '../user/UserDisplay'
+import { useNavigation } from '../../contexts/NavigationContext'
+import ReportModal from './ReportModal'
+import { ReportTargetContext, ReportTargetType } from '../../types/report.types'
 
 interface ModuleCommentsProps {
     moduleId: number
@@ -11,12 +14,14 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
     const [newComment, setNewComment] = useState('')
     const [editingId, setEditingId] = useState<number | null>(null)
     const [editContent, setEditContent] = useState('')
+    const [reportTarget, setReportTarget] = useState<ReportTargetContext | null>(null)
     
     const { data: currentUser } = useCurrentUser()
     const { data: comments, isLoading } = useModuleComments(moduleId)
     const createComment = useCreateModuleComment()
     const updateComment = useUpdateModuleComment()
     const deleteComment = useDeleteModuleComment()
+    const { goToLogin } = useNavigation()
 
     const isAdminUser = currentUser?.roles?.includes('admin') ?? false
     const canEditComment = (commentUserId: number) => currentUser?.id === commentUserId
@@ -64,6 +69,23 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
         if (confirm('Delete this comment?')) {
             deleteComment.mutate(commentId)
         }
+    }
+
+    const handleReportRequest = (
+        targetType: ReportTargetType,
+        targetId: number,
+        label?: string
+    ) => {
+        if (!currentUser) {
+            goToLogin()
+            return
+        }
+
+        setReportTarget({
+            targetType,
+            targetId,
+            targetLabel: label,
+        })
     }
 
     const normalizeDate = (rawDate: string | null | undefined) => {
@@ -115,6 +137,7 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
     }
 
     return (
+        <>
         <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold mb-4">
                 Comments ({comments?.length || 0})
@@ -155,26 +178,50 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
                                     <UserDisplay userId={comment.user_id} /> • {formatCommentDate(comment.created_at)}
                                     {isCommentEdited(comment.created_at, comment.updated_at) ? ' (edited)' : ''}
                                 </div>
-                                {(canEditComment(comment.user_id) || canDeleteComment(comment.user_id)) && (
-                                    <div className="flex space-x-2">
-                                        {canEditComment(comment.user_id) && (
-                                            <button
-                                                onClick={() => handleEdit(comment.id, comment.content)}
-                                                className="text-green-600 hover:text-green-800 text-sm"
-                                            >
-                                                Edit
-                                            </button>
-                                        )}
-                                        {canDeleteComment(comment.user_id) && (
-                                            <button
-                                                onClick={() => handleDelete(comment.id)}
-                                                className="text-red-600 hover:text-red-800 text-sm"
-                                            >
-                                                Delete
-                                            </button>
-                                        )}
-                                    </div>
-                                )}
+                                <div className="flex flex-wrap items-center gap-2 text-sm">
+                                    {canEditComment(comment.user_id) && (
+                                        <button
+                                            onClick={() => handleEdit(comment.id, comment.content)}
+                                            className="text-green-600 hover:text-green-800"
+                                        >
+                                            Edit
+                                        </button>
+                                    )}
+                                    {canDeleteComment(comment.user_id) && (
+                                        <button
+                                            onClick={() => handleDelete(comment.id)}
+                                            className="text-red-600 hover:text-red-800"
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={() =>
+                                            handleReportRequest(
+                                                'comment',
+                                                comment.id,
+                                                `Comment #${comment.id}`
+                                            )
+                                        }
+                                        className="text-orange-600 hover:text-orange-700"
+                                    >
+                                        Report comment
+                                    </button>
+                                    {currentUser?.id !== comment.user_id && (
+                                        <button
+                                            onClick={() =>
+                                                handleReportRequest(
+                                                    'user',
+                                                    comment.user_id,
+                                                    `User #${comment.user_id}`
+                                                )
+                                            }
+                                            className="text-bfblue-base hover:text-bfblue-dark"
+                                        >
+                                            Report user
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
                             {editingId === comment.id ? (
@@ -209,6 +256,17 @@ const ModuleComments: React.FC<ModuleCommentsProps> = ({ moduleId }) => {
                 )}
             </div>
         </div>
+
+        {reportTarget && (
+            <ReportModal
+                isOpen={!!reportTarget}
+                onClose={() => setReportTarget(null)}
+                targetType={reportTarget.targetType}
+                targetId={reportTarget.targetId}
+                targetLabel={reportTarget.targetLabel}
+            />
+        )}
+        </>
     )
 }
 

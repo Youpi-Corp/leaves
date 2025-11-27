@@ -60,6 +60,13 @@ export const API_CONFIG = {
       UPDATE: '/module-comment/update',
       DELETE: '/module-comment/delete',
       GET_BY_USER: '/module-comment/user',
+      ADMIN: '/module-comment/admin',
+    }, REPORT: {
+      CREATE: '/report',
+      REASONS: '/report/reasons',
+      DETAILS: '/report/details',
+      SUMMARY: '/report/admin/summary',
+      TARGET_STATUS: '/report/target',
     }
   },
 } as const
