@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import InputBox from '../interaction/input/InputBox'
 import Button from '../interaction/button/Button'
 import { FaCheck, FaGithub } from 'react-icons/fa'
@@ -10,11 +10,13 @@ import { RegisterCredentials } from '../../api/types/auth.types'
 import Spinner from '../feedback/Spinner'
 import { useNavigate } from 'react-router-dom'
 import { API_CONFIG, getApiUrl } from '../../api/config/api.config'
+import zxcvbn from 'zxcvbn'
 
 const RegisterBox: React.FC = () => {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const registerCredentials: RegisterCredentials = {
@@ -24,10 +26,32 @@ const RegisterBox: React.FC = () => {
     role: '1000',
   }
 
+  const passwordAnalysis = useMemo(() => {
+    if (!password) return null
+    return zxcvbn(password)
+  }, [password])
+
+  const passwordScore = passwordAnalysis?.score ?? null
+  const passwordStrengthLabel = passwordScore !== null
+    ? ['Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'][passwordScore]
+    : null
+  const passwordStrengthColor = passwordScore !== null
+    ? ['text-red-500', 'text-orange-500', 'text-yellow-600', 'text-green-600', 'text-green-700'][passwordScore]
+    : 'text-bfbase-darkgrey'
+  const passwordStrengthBgColor = passwordScore !== null
+    ? ['bg-red-500', 'bg-orange-500', 'bg-yellow-600', 'bg-green-600', 'bg-green-700'][passwordScore]
+    : 'bg-bfbase-darkgrey'
+  const passwordStrengthWidth = passwordScore !== null ? ((passwordScore + 1) / 5) * 100 : 0
+
   const { mutate, isPending } = useMutation({
     mutationFn: () => registerQuery(registerCredentials),
     mutationKey: ['register'],
     onSuccess: () => navigate('/login'),
+    onError: (err) => {
+      const message =
+        err instanceof Error ? err.message : 'Registration failed. Please try again.'
+      setError(message)
+    },
   })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -36,6 +60,18 @@ const RegisterBox: React.FC = () => {
       setError('Password cannot be empty.')
       return
     }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.')
+      return
+    }
+
+    const passwordScoreValue = passwordAnalysis?.score ?? -1
+    if (passwordScoreValue < 2) {
+      setError('Password is too weak. Try adding more unique words or symbols.')
+      return
+    }
+
     setError(null)
     mutate()
   }
@@ -86,7 +122,35 @@ const RegisterBox: React.FC = () => {
           type="password"
         />
 
+        {passwordAnalysis && (
+          <div className="w-full text-sm">
+            <div className="flex items-center gap-2">
+              <span className={`font-semibold ${passwordStrengthColor}`}>
+                Strength: {passwordStrengthLabel}
+              </span>
+            </div>
+            <div className="mt-1 h-2 bg-gray-100 rounded-full">
+              <div
+                className={`h-full rounded-full ${passwordStrengthBgColor}`}
+                style={{ width: `${passwordStrengthWidth}%` }}
+              />
+            </div>
+            {passwordAnalysis.feedback?.warning && (
+              <p className="mt-1 text-bfbase-darkgrey">
+                {passwordAnalysis.feedback?.warning}
+              </p>
+            )}
+            {!passwordAnalysis.feedback?.warning &&
+              (passwordAnalysis.feedback?.suggestions?.length ?? 0) > 0 && (
+              <p className="mt-1 text-bfbase-darkgrey">
+                {passwordAnalysis.feedback?.suggestions?.[0]}
+              </p>
+            )}
+          </div>
+        )}
+
         <InputBox
+          onChange={(e) => setConfirmPassword(e.target.value)}
           className="w-[40rem]"
           placeholder="Confirm password"
           type="password"

@@ -10,6 +10,7 @@ import {
     deleteLessonQuery,
     assignRoleToUserQuery,
     removeRoleFromUserQuery,
+    getAdminCommentsQuery,
 } from './admin.queries'
 
 // User Management Hooks
@@ -80,6 +81,14 @@ export const useDeleteLesson = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin', 'lessons'] })
         },
+    })
+}
+
+export const useAdminComments = () => {
+    return useQuery({
+        queryKey: ['admin', 'comments'],
+        queryFn: getAdminCommentsQuery,
+        staleTime: 1000 * 60 * 2,
     })
 }
 

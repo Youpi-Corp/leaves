@@ -274,6 +274,98 @@ export const unsubscribeFromModuleQuery = async (moduleId: number): Promise<bool
 }
 
 /**
+ * Check if the authenticated user liked a module
+ */
+export const hasLikedModuleQuery = async (moduleId: number): Promise<boolean> => {
+    const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.MODULE.HAS_LIKED}/${moduleId}`), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error('Module not found')
+        }
+        throw new Error(`Failed to fetch like status: ${response.status}`)
+    }
+
+    const result: ApiResponse<{ hasLiked: boolean }> = await response.json()
+    return result.data.hasLiked
+}
+
+/**
+ * Like a module
+ */
+export const likeModuleQuery = async (moduleId: number): Promise<boolean> => {
+    const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.MODULE.LIKE}/${moduleId}`), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error('Module not found')
+        }
+        throw new Error(`Failed to like module: ${response.status}`)
+    }
+
+    const result: ApiResponse<{ liked: boolean }> = await response.json()
+    return result.data.liked
+}
+
+/**
+ * Unlike a module
+ */
+export const unlikeModuleQuery = async (moduleId: number): Promise<boolean> => {
+    const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.MODULE.UNLIKE}/${moduleId}`), {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error('Module not found')
+        }
+        throw new Error(`Failed to unlike module: ${response.status}`)
+    }
+
+    const result: ApiResponse<{ unliked: boolean }> = await response.json()
+    return result.data.unliked
+}
+
+/**
+ * Get the number of likes for a module
+ */
+export const getModuleLikesCountQuery = async (moduleId: number): Promise<number> => {
+    const response = await fetch(getApiUrl(`${API_CONFIG.ENDPOINTS.MODULE.NUMBER_OF_LIKES}/${moduleId}`), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    })
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error('Module not found')
+        }
+        throw new Error(`Failed to fetch module likes: ${response.status}`)
+    }
+
+    const result: ApiResponse<{ likesCount: number }> = await response.json()
+    return result.data.likesCount
+}
+
+/**
  * Get modules user is subscribed to
  */
 export const getSubscribedModulesQuery = async (): Promise<Module[]> => {

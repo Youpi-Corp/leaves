@@ -6,7 +6,11 @@ import {
     checkModuleSubscriptionQuery,
     subscribeToModuleQuery,
     unsubscribeFromModuleQuery,
-    getSubscribedModulesQuery
+    getSubscribedModulesQuery,
+    hasLikedModuleQuery,
+    likeModuleQuery,
+    unlikeModuleQuery,
+    getModuleLikesCountQuery
 } from './module.queries'
 
 /**
@@ -66,6 +70,32 @@ export const useSubscribedModules = () => {
 }
 
 /**
+ * Hook to fetch whether the current user liked a module
+ */
+export const useModuleLikeStatus = (moduleId: number, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ['moduleLikeStatus', moduleId],
+        queryFn: () => hasLikedModuleQuery(moduleId),
+        enabled: !!moduleId && enabled,
+        retry: 1,
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
+/**
+ * Hook to fetch module likes count
+ */
+export const useModuleLikesCount = (moduleId: number, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ['moduleLikesCount', moduleId],
+        queryFn: () => getModuleLikesCountQuery(moduleId),
+        enabled: !!moduleId && enabled,
+        retry: 1,
+        staleTime: 1000 * 60 * 5,
+    })
+}
+
+/**
  * Hook to subscribe to a module
  */
 export const useSubscribeToModule = () => {
@@ -93,6 +123,36 @@ export const useUnsubscribeFromModule = () => {
             // Invalidate relevant queries
             queryClient.invalidateQueries({ queryKey: ['moduleSubscription', moduleId] })
             queryClient.invalidateQueries({ queryKey: ['subscribedModules'] })
+        },
+    })
+}
+
+/**
+ * Hook to like a module
+ */
+export const useLikeModule = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: likeModuleQuery,
+        onSuccess: (_, moduleId) => {
+            queryClient.invalidateQueries({ queryKey: ['moduleLikeStatus', moduleId] })
+            queryClient.invalidateQueries({ queryKey: ['moduleLikesCount', moduleId] })
+        },
+    })
+}
+
+/**
+ * Hook to unlike a module
+ */
+export const useUnlikeModule = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: unlikeModuleQuery,
+        onSuccess: (_, moduleId) => {
+            queryClient.invalidateQueries({ queryKey: ['moduleLikeStatus', moduleId] })
+            queryClient.invalidateQueries({ queryKey: ['moduleLikesCount', moduleId] })
         },
     })
 }

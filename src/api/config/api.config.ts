@@ -48,6 +48,10 @@ export const API_CONFIG = {
       SUBSCRIBED: '/module/subscribed',
       IS_SUBSCRIBED: '/module/is-subscribed',
       IN_PROGRESS: '/module/in-progress',
+      HAS_LIKED: '/module/has-liked',
+      LIKE: '/module/like',
+      UNLIKE: '/module/unlike',
+      NUMBER_OF_LIKES: '/module/likes-count',
       DELETE: '/module/delete',
     }, MODULE_COMMENT: {
       GET_BY_MODULE: '/module-comment',
@@ -56,6 +60,13 @@ export const API_CONFIG = {
       UPDATE: '/module-comment/update',
       DELETE: '/module-comment/delete',
       GET_BY_USER: '/module-comment/user',
+      ADMIN: '/module-comment/admin',
+    }, REPORT: {
+      CREATE: '/report',
+      REASONS: '/report/reasons',
+      DETAILS: '/report/details',
+      SUMMARY: '/report/admin/summary',
+      TARGET_STATUS: '/report/target',
     }
   },
 } as const

@@ -5,9 +5,13 @@ import {
   useDeleteModule,
 } from '../../api/admin/admin.services'
 import Spinner from '../../components/feedback/Spinner'
+import ReportDetailsModal from '../../components/interaction/ReportDetailsModal'
+import { ReportTargetContext } from '../../types/report.types'
 
 const ModuleManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
+  const [sortBy, setSortBy] = useState<'recent' | 'reports'>('recent')
+  const [reportDetailsTarget, setReportDetailsTarget] = useState<ReportTargetContext | null>(null)
   const { data: modules, isLoading, error } = useAdminModules()
   const deleteModuleMutation = useDeleteModule()
 
@@ -23,6 +27,22 @@ const ModuleManagement: React.FC = () => {
         module.owner_id.toString().includes(searchTerm)
     )
   }, [modules, searchTerm])
+
+  const sortedModules = useMemo(() => {
+    if (!filteredModules) return []
+
+    const copy = [...filteredModules]
+    if (sortBy === 'reports') {
+      return copy.sort(
+        (a, b) => (b.report_count ?? 0) - (a.report_count ?? 0)
+      )
+    }
+
+    return copy.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    )
+  }, [filteredModules, sortBy])
 
   const handleDeleteModule = async (moduleId: number) => {
     if (
@@ -67,7 +87,7 @@ const ModuleManagement: React.FC = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="mb-4">
+      <div className="mb-4 space-y-3">
         <div className="relative">
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
@@ -84,6 +104,19 @@ const ModuleManagement: React.FC = () => {
             {searchTerm}&rdquo;
           </p>
         )}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-sm text-gray-600">Sort results by</span>
+          <select
+            value={sortBy}
+            onChange={(event) =>
+              setSortBy(event.target.value as 'recent' | 'reports')
+            }
+            className="w-full sm:w-auto border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-bfgreen-base"
+          >
+            <option value="recent">Most recent</option>
+            <option value="reports">Most reported</option>
+          </select>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg border">
@@ -104,12 +137,15 @@ const ModuleManagement: React.FC = () => {
                   Created
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Reports
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>{' '}
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredModules?.map((module) => (
+              {sortedModules?.map((module) => (
                 <tr key={module.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div>
@@ -151,6 +187,25 @@ const ModuleManagement: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(module.created_at).toLocaleDateString()}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <div className="flex items-center gap-3">
+                      <span>{module.report_count ?? 0}</span>
+                      {(module.report_count ?? 0) > 0 && (
+                        <button
+                          onClick={() =>
+                            setReportDetailsTarget({
+                              targetType: 'module',
+                              targetId: module.id,
+                              targetLabel: module.title || `Module #${module.id}`,
+                            })
+                          }
+                          className="text-bfblue-base hover:text-bfblue-dark text-xs font-semibold"
+                        >
+                          View
+                        </button>
+                      )}
+                    </div>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center gap-2">
                       <button
@@ -185,6 +240,11 @@ const ModuleManagement: React.FC = () => {
           </div>
         )}
       </div>
+      <ReportDetailsModal
+        isOpen={!!reportDetailsTarget}
+        target={reportDetailsTarget}
+        onClose={() => setReportDetailsTarget(null)}
+      />
     </div>
   )
 }
