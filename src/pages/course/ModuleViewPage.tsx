@@ -11,6 +11,10 @@ import {
   getModuleByIdQuery,
   getModuleCoursesQuery,
   Course,
+  hasLikedModuleQuery,
+  likeModuleQuery,
+  unlikeModuleQuery,
+  getModuleLikesCountQuery,
 } from '../../api/module/module.queries'
 import {
   useModuleSubscription,
@@ -113,6 +117,9 @@ const ModuleViewPage: React.FC = () => {
   const [moduleDetails, setModuleDetails] = useState<ModuleDetails | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [moduleLikes, setModuleLikes] = useState<number>(0)
+  const [isModuleLiked, setIsModuleLiked] = useState(false)
+  const [isLikeUpdating, setIsLikeUpdating] = useState(false)
 
   // User and subscription hooks
   const { data: currentUser, isLoading: isUserLoading } = useCurrentUser()
@@ -151,6 +158,35 @@ const ModuleViewPage: React.FC = () => {
     getModuleDetails()
   }, [moduleId])
 
+  useEffect(() => {
+    if (!moduleIdNumber) return
+
+    const fetchLikes = async () => {
+      try {
+        const likesCount = await getModuleLikesCountQuery(moduleIdNumber)
+        setModuleLikes(likesCount)
+      } catch (err) {
+        console.error('Failed to fetch module likes count:', err)
+        setModuleLikes(0)
+      }
+
+      if (!currentUser) {
+        setIsModuleLiked(false)
+        return
+      }
+
+      try {
+        const hasLiked = await hasLikedModuleQuery(moduleIdNumber)
+        setIsModuleLiked(Boolean(hasLiked))
+      } catch (err) {
+        console.error('Failed to fetch module like status:', err)
+        setIsModuleLiked(false)
+      }
+    }
+
+    fetchLikes()
+  }, [moduleIdNumber, currentUser])
+
   const handleLessonClick = (lessonId: number) => {
     // Check if user is authenticated and subscribed before allowing lesson access
     if (!currentUser) {
@@ -182,6 +218,39 @@ const ModuleViewPage: React.FC = () => {
     } catch (err) {
       console.error('Subscription action failed:', err)
       setError('Failed to update subscription. Please try again.')
+    }
+  }
+
+  const handleModuleLikeToggle = async () => {
+    if (!moduleIdNumber) return
+
+    if (!currentUser) {
+      goToLogin()
+      return
+    }
+
+    const previousLikedState = isModuleLiked
+    const previousLikes = moduleLikes
+
+    try {
+      setIsLikeUpdating(true)
+      setIsModuleLiked(!previousLikedState)
+      setModuleLikes((prev) => Math.max(0, prev + (previousLikedState ? -1 : 1)))
+
+      if (previousLikedState) {
+        await unlikeModuleQuery(moduleIdNumber)
+      } else {
+        await likeModuleQuery(moduleIdNumber)
+      }
+
+      const refreshedLikes = await getModuleLikesCountQuery(moduleIdNumber)
+      setModuleLikes(refreshedLikes)
+    } catch (err) {
+      console.error('Failed to toggle module like:', err)
+      setIsModuleLiked(previousLikedState)
+      setModuleLikes(previousLikes)
+    } finally {
+      setIsLikeUpdating(false)
     }
   }
 
@@ -241,11 +310,47 @@ const ModuleViewPage: React.FC = () => {
             <Breadcrumb className="mb-6" />
             <div className="mb-6">
               <div>
-                <div className="flex items-center mb-2">
-                  <BackButton className="mr-2" variant="link" />
-                  <h1 className="text-3xl font-bold text-bfbase-black break-words">
-                    {moduleDetails.title}
-                  </h1>
+                <div className="flex flex-col gap-3 mb-2 md:flex-row md:items-center md:justify-between">
+                  <div className="flex items-center">
+                    <BackButton className="mr-2" variant="link" />
+                    <h1 className="text-3xl font-bold text-bfbase-black break-words">
+                      {moduleDetails.title}
+                    </h1>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handleModuleLikeToggle}
+                      disabled={isLikeUpdating}
+                      className={`p-3 rounded-full border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bfgreen-base ${
+                        isModuleLiked
+                          ? 'bg-red-500 text-white border-red-500 hover:bg-red-600'
+                          : 'bg-white text-bfbase-grey border-bfbase-lightgrey hover:text-red-500'
+                      } ${isLikeUpdating ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      title={isModuleLiked ? 'Unlike this module' : 'Like this module'}
+                      aria-pressed={isModuleLiked}
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill={isModuleLiked ? 'currentColor' : 'none'}
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                    </button>
+                    <span className="text-sm text-bfbase-grey min-w-[80px] text-right">
+                      {moduleLikes > 0
+                        ? `${moduleLikes} ${moduleLikes === 1 ? 'like' : 'likes'}`
+                        : 'No likes yet'}
+                    </span>
+                  </div>
                 </div>
                 <p className="text-bfbase-grey mb-4 max-w-3xl text-lg break-words">
                   {moduleDetails.description}

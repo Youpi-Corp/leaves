@@ -48,6 +48,10 @@ export const API_CONFIG = {
       SUBSCRIBED: '/module/subscribed',
       IS_SUBSCRIBED: '/module/is-subscribed',
       IN_PROGRESS: '/module/in-progress',
+      HAS_LIKED: '/module/has-liked',
+      LIKE: '/module/like',
+      UNLIKE: '/module/unlike',
+      NUMBER_OF_LIKES: '/module/likes-count',
       DELETE: '/module/delete',
     }, MODULE_COMMENT: {
       GET_BY_MODULE: '/module-comment',
