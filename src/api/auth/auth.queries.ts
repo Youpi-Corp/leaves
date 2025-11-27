@@ -26,6 +26,24 @@ export const registerQuery = async (
     credentials: 'include',
     body: JSON.stringify(user),
   })
-  if (!response.ok) throw new Error(response.status.toString())
-  return (await response.json()).data
+
+  let body: any = null
+  try {
+    body = await response.json()
+  } catch (error) {
+    // Ignore JSON parsing issues and fall back to the defaults below
+  }
+
+  if (!response.ok) {
+    const message =
+      body?.message ||
+      body?.data?.message ||
+      body?.error ||
+      body?.errors?.[0]?.message ||
+      `Registration failed (${response.status}).`
+
+    throw new Error(message)
+  }
+
+  return body?.data
 }
