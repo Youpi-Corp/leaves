@@ -23,3 +23,5 @@ tsconfig.tsbuildinfo
 *.sln
 *.sw?
 .claude/*
+
+accessibility-report.json
