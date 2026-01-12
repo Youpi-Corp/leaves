@@ -9,7 +9,9 @@
     "build": "tsc && vite build",
     "lint": "eslint src",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "audit:eco": "docker run --rm -v \"$(pwd):/sitespeed.io\" -w /sitespeed.io sitespeedio/sitespeed.io:latest --config eco/sitespeed.json --browsertime.baseUrl \"$BF_BASE_URL\" --browsertime.loginEmail \"$BF_EMAIL\" --browsertime.loginPassword \"$BF_PASSWORD\" --spa --multi eco/userflow-after-login.mjs",
+    "audit:eco:local": "npx sitespeed.io --config eco/sitespeed.json --browsertime.baseUrl \"$BF_BASE_URL\" --browsertime.loginEmail \"$BF_EMAIL\" --browsertime.loginPassword \"$BF_PASSWORD\" --spa --multi eco/userflow-after-login.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
