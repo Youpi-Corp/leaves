@@ -8,7 +8,7 @@
     "dev:local": "vite --mode localhost",
     "build": "tsc && vite build",
     "lint": "eslint src",
-    "audit:a11y": "node auditAccessibility.js",
+    "audit:a11y": "node accessibility/auditAccessibility.js",
     "preview": "vite preview",
     "test": "vitest"
   },
