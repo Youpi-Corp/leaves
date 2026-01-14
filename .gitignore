@@ -23,5 +23,8 @@ tsconfig.tsbuildinfo
 *.sln
 *.sw?
 .claude/*
+
+accessibility-report.json
+eco/reports/
 eco/reports/
 sitespeed-result/
