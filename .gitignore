@@ -25,3 +25,4 @@ tsconfig.tsbuildinfo
 .claude/*
 
 accessibility-report.json
+eco/reports/
