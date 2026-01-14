@@ -1,5 +1,7 @@
 // eco/userflow-after-login.mjs
 
+import buildLoginScript from './login-script.mjs';
+
 const DEFAULT_PAGES = ['/login', '/', '/library', '/profile', '/edition/dashboard/', '/edition/editor'];
 
 function makeAlias(url) {
@@ -46,93 +48,10 @@ export default async function userFlow(context, commands) {
   await commands.navigate(loginUrl);
   await commands.wait.byTime(1000);
 
-  const href = await commands.js.run('return document.location.href');
-  const title = await commands.js.run('return document.title');
-  const text = await commands.js.run(
-    'return (document.body && document.body.innerText) ? document.body.innerText.slice(0, 200) : ""'
-  );
-  console.log('After navigate:', { href, title, text });
-
-  // --- Fill + submit (search document + same-origin iframes) ---
-  await commands.js.run(`
-    (function() {
-      function docsToSearch() {
-        const docs = [document];
-        const iframes = Array.from(document.querySelectorAll('iframe'));
-        for (const f of iframes) {
-          try {
-            if (f.contentDocument) docs.push(f.contentDocument);
-          } catch (e) {
-            // cross-origin iframe -> ignore
-          }
-        }
-        return docs;
-      }
-
-      function setValInDocs(selector, value) {
-        for (const doc of docsToSearch()) {
-          const el = doc.querySelector(selector);
-          if (!el) continue;
-
-          el.focus();
-
-          // React/Vue-safe native setter
-          const proto = el.tagName === 'TEXTAREA'
-            ? doc.defaultView.HTMLTextAreaElement.prototype
-            : doc.defaultView.HTMLInputElement.prototype;
-
-          const desc = Object.getOwnPropertyDescriptor(proto, 'value');
-          if (desc && typeof desc.set === 'function') {
-            desc.set.call(el, value);
-          } else {
-            el.value = value;
-          }
-
-          el.dispatchEvent(new doc.defaultView.Event('input', { bubbles: true }));
-          el.dispatchEvent(new doc.defaultView.Event('change', { bubbles: true }));
-          el.blur();
-          return true;
-        }
-        return false;
-      }
-
-      function clickValidate() {
-        for (const doc of docsToSearch()) {
-          const buttons = Array.from(doc.querySelectorAll('button'));
-          const btn = buttons.find(b => (b.innerText || '').trim() === 'Validate');
-          if (btn) {
-            btn.click();
-            return true;
-          }
-        }
-        return false;
-      }
-
-      const okEmail = setValInDocs('input[type="email"]', ${JSON.stringify(loginEmail)});
-      const okPass  = setValInDocs('input[type="password"]', ${JSON.stringify(loginPassword)});
-
-      // Helpful debug to surface in logs if needed (Browsertime may not return this, but keeps logic clear)
-      if (!okEmail || !okPass) {
-        // If you need deeper debug later, you can throw:
-        // throw new Error('Could not find email/password inputs in document or same-origin iframes');
-      }
-
-      const okClick = clickValidate();
-      if (!okClick) {
-        // fallback: click first submit button in any doc (avoid Search by preferring "Validate", but as fallback...)
-        for (const doc of docsToSearch()) {
-          const submit = doc.querySelector('button[type="submit"], input[type="submit"]');
-          if (submit) { submit.click(); break; }
-        }
-      }
-    })();
-  `);
+  await commands.js.run(buildLoginScript({ loginEmail, loginPassword }));
 
   const postLoginHref = await waitForLoginSuccess(commands, loginUrl, 30000);
   console.log('Logged in, URL is now:', postLoginHref);
-
-  // ---- Audit pages ----
-  const auditedPages = [];
 
   for (const pageUrl of pages) {
     const alias = makeAlias(pageUrl);
@@ -140,9 +59,7 @@ export default async function userFlow(context, commands) {
     await commands.measure.start(alias);
     await commands.navigate(pageUrl);
     await commands.measure.stop();
-
-    auditedPages.push(pageUrl);
   }
 
-  console.log(`Pages audited (${auditedPages.length}): ${auditedPages.join(', ')}`);
+  console.log(`Pages audited (${pages.length}): ${pages.join(', ')}`);
 }
