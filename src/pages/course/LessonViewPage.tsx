@@ -6,6 +6,7 @@ import Spinner from '../../components/feedback/Spinner'
 import Breadcrumb from '../../components/navigation/Breadcrumb'
 import BackButton from '../../components/navigation/BackButton'
 import { useNavigation } from '../../contexts/NavigationContext'
+import ReportModal from '../../components/interaction/ReportModal'
 import {
   getCourseByIdQuery,
   hasLikedCourseQuery,
@@ -14,6 +15,9 @@ import {
   getNumberOfLikesQuery,
 } from '../../api/course/course.queries'
 import { BaseWidgetProps } from '../../types/WidgetTypes'
+import { useCurrentUser } from '../../api/user/user.services'
+import { ReportTargetContext } from '../../types/report.types'
+import { FaFlag } from 'react-icons/fa'
 
 interface WidgetContent {
   id: string
@@ -103,11 +107,13 @@ const fetchLessonDetails = async (
 
 const LessonViewPage: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>()
-  const { goToLessonContent } = useNavigation()
+  const { goToLessonContent, goToLogin } = useNavigation()
   const [lessonDetails, setLessonDetails] = useState<LessonDetails | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isLiked, setIsLiked] = useState(false)
+  const [reportTarget, setReportTarget] = useState<ReportTargetContext | null>(null)
+  const { data: currentUser } = useCurrentUser()
 
   useEffect(() => {
     const getLessonDetails = async () => {
@@ -223,6 +229,20 @@ const LessonViewPage: React.FC = () => {
           : null
       )
     }
+  }
+
+  const handleReportLesson = () => {
+    if (!lessonDetails) return
+    if (!currentUser) {
+      goToLogin()
+      return
+    }
+
+    setReportTarget({
+      targetType: 'lesson',
+      targetId: lessonDetails.id,
+      targetLabel: lessonDetails.title,
+    })
   }
 
   const renderLessonOverview = () => {
@@ -424,6 +444,14 @@ const LessonViewPage: React.FC = () => {
                         {lessonDetails.likes === 1 ? 'like' : 'likes'}
                       </div>
                     )}
+                  <button
+                    type="button"
+                    onClick={handleReportLesson}
+                    className="inline-flex items-center gap-2 px-3 py-2 border border-bfbase-lightgrey rounded-lg text-sm text-bfbase-grey hover:text-bfred-base hover:border-bfred-base"
+                  >
+                    <FaFlag className="w-4 h-4" />
+                    Report
+                  </button>
                 </div>
               </div>
 
@@ -449,6 +477,15 @@ const LessonViewPage: React.FC = () => {
         ) : null}
       </div>
       <Footer />
+      {reportTarget && (
+        <ReportModal
+          isOpen={!!reportTarget}
+          onClose={() => setReportTarget(null)}
+          targetType={reportTarget.targetType}
+          targetId={reportTarget.targetId}
+          targetLabel={reportTarget.targetLabel}
+        />
+      )}
     </div>
   )
 }

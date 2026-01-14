@@ -10,7 +10,9 @@
     "lint": "eslint src",
     "audit:a11y": "node accessibility/auditAccessibility.js",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "audit:eco": "docker run --rm -v \"$(pwd):/sitespeed.io\" -w /sitespeed.io sitespeedio/sitespeed.io:latest --config eco/sitespeed.json --browsertime.baseUrl \"$BF_BASE_URL\" --browsertime.loginEmail \"$BF_EMAIL\" --browsertime.loginPassword \"$BF_PASSWORD\" --spa --multi eco/userflow-after-login.mjs",
+    "audit:eco:local": "npx sitespeed.io --config eco/sitespeed.json --browsertime.baseUrl \"$BF_BASE_URL\" --browsertime.loginEmail \"$BF_EMAIL\" --browsertime.loginPassword \"$BF_PASSWORD\" --spa --multi eco/userflow-after-login.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -29,7 +31,8 @@
     "react-markdown": "^10.1.0",
     "react-resizable": "^3.0.5",
     "react-router-dom": "^7.4.1",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",
@@ -41,6 +44,7 @@
     "@types/react-dom": "^19.0.4",
     "@types/react-grid-layout": "^1.3.5",
     "@types/react-resizable": "^3.0.8",
+    "@types/zxcvbn": "^4.4.5",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.23.0",
     "eslint-plugin-react": "^7.37.4",

@@ -1,4 +1,4 @@
-import { getApiUrl } from '../config/api.config'
+import { API_CONFIG, getApiUrl } from '../config/api.config'
 
 export interface AdminUser {
     id: number
@@ -9,6 +9,7 @@ export interface AdminUser {
     roles: string[]
     created_at: string
     updated_at: string
+    report_count?: number
 }
 
 export interface CreateUserRequest {
@@ -28,6 +29,7 @@ export interface AdminModule {
     owner_id: number
     created_at: string
     updated_at: string
+    report_count?: number
 }
 
 export interface AdminLesson {
@@ -38,6 +40,17 @@ export interface AdminLesson {
     owner_id: number
     created_at: string
     updated_at: string
+    report_count?: number
+}
+
+export interface AdminComment {
+    id: number
+    content: string
+    user_id: number
+    module_id: number
+    created_at: string
+    updated_at: string
+    report_count: number
 }
 
 // Helper function to make API calls
@@ -101,6 +114,10 @@ export const deleteLessonQuery = async (lessonId: number): Promise<void> => {
     await makeApiCall(getApiUrl(`/course/delete/${lessonId}`), {
         method: 'DELETE',
     })
+}
+
+export const getAdminCommentsQuery = async (): Promise<AdminComment[]> => {
+    return makeApiCall(getApiUrl(API_CONFIG.ENDPOINTS.MODULE_COMMENT.ADMIN))
 }
 
 // Role Management

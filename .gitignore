@@ -26,3 +26,5 @@ tsconfig.tsbuildinfo
 
 accessibility-report.json
 eco/reports/
+eco/reports/
+sitespeed-result/

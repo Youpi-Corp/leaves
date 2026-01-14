@@ -18,12 +18,16 @@ import {
 import { AdminUser, CreateUserRequest } from '../../api/admin/admin.queries'
 import Spinner from '../../components/feedback/Spinner'
 import Modal from '../../components/feedback/Modal'
+import ReportDetailsModal from '../../components/interaction/ReportDetailsModal'
+import { ReportTargetContext } from '../../types/report.types'
 
 const UserManagement: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [sortBy, setSortBy] = useState<'recent' | 'reports'>('recent')
+  const [reportDetailsTarget, setReportDetailsTarget] = useState<ReportTargetContext | null>(null)
 
   const {
     data: users,
@@ -50,6 +54,22 @@ const UserManagement: React.FC = () => {
         )
     )
   }, [users, searchTerm])
+
+  const sortedUsers = useMemo(() => {
+    if (!filteredUsers) return []
+
+    const copy = [...filteredUsers]
+    if (sortBy === 'reports') {
+      return copy.sort(
+        (a, b) => (b.report_count ?? 0) - (a.report_count ?? 0)
+      )
+    }
+
+    return copy.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    )
+  }, [filteredUsers, sortBy])
 
   const handleCreateUser = async (userData: CreateUserRequest) => {
     try {
@@ -115,7 +135,7 @@ const UserManagement: React.FC = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="mb-4">
+      <div className="mb-4 space-y-3">
         <div className="relative">
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
@@ -125,13 +145,26 @@ const UserManagement: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-bfgreen-base focus:border-transparent"
           />
-        </div>{' '}
+        </div>
         {searchTerm && (
           <p className="text-sm text-gray-600 mt-2">
             Found {filteredUsers.length} user(s) matching &ldquo;{searchTerm}
             &rdquo;
           </p>
         )}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-sm text-gray-600">Sort results by</span>
+          <select
+            value={sortBy}
+            onChange={(event) =>
+              setSortBy(event.target.value as 'recent' | 'reports')
+            }
+            className="w-full sm:w-auto border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-bfgreen-base"
+          >
+            <option value="recent">Most recent</option>
+            <option value="reports">Most reported</option>
+          </select>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg border">
@@ -152,12 +185,15 @@ const UserManagement: React.FC = () => {
                   Created
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Reports
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
-            </thead>{' '}
+            </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredUsers?.map((user) => (
+              {sortedUsers?.map((user) => (
                 <tr key={user.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -195,6 +231,25 @@ const UserManagement: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(user.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <div className="flex items-center gap-3">
+                      <span>{user.report_count ?? 0}</span>
+                      {(user.report_count ?? 0) > 0 && (
+                        <button
+                          onClick={() =>
+                            setReportDetailsTarget({
+                              targetType: 'user',
+                              targetId: user.id,
+                              targetLabel: user.pseudo || user.email,
+                            })
+                          }
+                          className="text-bfblue-base hover:text-bfblue-dark text-xs font-semibold"
+                        >
+                          View
+                        </button>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center gap-2">
@@ -252,6 +307,12 @@ const UserManagement: React.FC = () => {
           isRemoving={removeRoleMutation.isPending}
         />
       )}
+
+      <ReportDetailsModal
+        isOpen={!!reportDetailsTarget}
+        target={reportDetailsTarget}
+        onClose={() => setReportDetailsTarget(null)}
+      />
     </div>
   )
 }
