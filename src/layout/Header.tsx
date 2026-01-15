@@ -16,7 +16,7 @@ const Header: React.FC = () => {
           onClick={() => navigate('/')}
           accent="none"
           className="text-xl text-bfgreen-base font-bold hover:text-bfgreen-dark"
-          icon={<img src="/brainforest.svg" className="w-8 h-8" />}
+          icon={<img src="/brainforest.svg" className="w-8 h-8" alt="BrainForest logo" />}
         >
           BrainForest
         </Button>{' '}
