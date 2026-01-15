@@ -18,10 +18,12 @@ const LoginPage: React.FC = () => {
             <img
               src={BubbleLg}
               className="w-52 h-52 absolute -right-20 -top-20"
+              alt="Large decorative bubble"
             />
             <img
               src={BubbleSm}
               className="w-40 h-40 absolute -left-16 -bottom-12"
+              alt="Small decorative bubble"
             />
             <div className="relative">
               <LoginBox />
