@@ -289,6 +289,11 @@ const MatchingWidgetView: React.FC<WidgetViewProps<MatchingWidgetProps>> = ({
           )}{' '}
         </div>
         {question && <p className="text-gray-700">{question}</p>}
+        {onEdit && (
+          <p className="mt-2 text-xs text-red-600">
+            Resize this card so the Check Answer button stays visible.
+          </p>
+        )}
       </div>
 
       {/* Matching Interface */}

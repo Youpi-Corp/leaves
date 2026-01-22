@@ -27,12 +27,12 @@ export interface MultipleChoiceWidgetProps extends QuizWidgetProps {
 // View component for multiple choice questions
 const MultipleChoiceWidgetView: React.FC<
   QuizWidgetViewProps<MultipleChoiceWidgetProps>
-> = ({ widgetData, onAnswer, readonly = false }) => {
+> = ({ widgetData, onAnswer, onEdit, readonly = false }) => {
   const {
     question = '',
     options = [],
     allowMultiple = false,
-    showFeedback = false,
+    showFeedback = widgetData?.showFeedback ?? true,
     feedback = {},
   } = widgetData || {}
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
@@ -100,6 +100,11 @@ const MultipleChoiceWidgetView: React.FC<
           {widgetData.label}
         </h3>
         <p className="text-gray-700">{question}</p>
+        {onEdit && (
+          <p className="mt-2 text-xs text-red-600">
+            Resize this card so the Check Answer button stays visible.
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">
