@@ -183,6 +183,26 @@ const MultipleChoiceWidgetEdit: React.FC<
 
   // Add a safeguard to ensure options is always an array
   const options = widgetData.options || []
+  const canRemoveOption = options.length > 2
+
+  useEffect(() => {
+    if (options.length >= 2) return
+
+    const missingCount = 2 - options.length
+    const paddedOptions = [
+      ...options,
+      ...Array.from({ length: missingCount }, () => ({
+        id: uuidv4(),
+        text: '',
+        isCorrect: false,
+      })),
+    ]
+
+    onChange({
+      ...widgetData,
+      options: paddedOptions,
+    })
+  }, [onChange, options, widgetData])
 
   const handleAllowMultipleChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -228,6 +248,8 @@ const MultipleChoiceWidgetEdit: React.FC<
   }
 
   const removeOption = (id: string) => {
+    if (!canRemoveOption) return
+
     onChange({
       ...widgetData,
       options: options.filter((opt) => opt.id !== id),
@@ -381,8 +403,17 @@ const MultipleChoiceWidgetEdit: React.FC<
                 <button
                   type="button"
                   onClick={() => removeOption(option.id)}
-                  className="p-1 text-red-500 hover:bg-red-50 rounded"
-                  title="Delete option"
+                  disabled={!canRemoveOption}
+                  className={`p-1 rounded ${
+                    canRemoveOption
+                      ? 'text-red-500 hover:bg-red-50'
+                      : 'text-red-200 cursor-not-allowed'
+                  }`}
+                  title={
+                    canRemoveOption
+                      ? 'Delete option'
+                      : 'Keep at least 2 options'
+                  }
                 >
                   <FaTrash className="w-3 h-3" />
                 </button>
