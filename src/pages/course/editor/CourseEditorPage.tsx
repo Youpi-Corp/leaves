@@ -215,6 +215,10 @@ const CourseEditorPageContent = () => {
       } else {
         // Create new course
         response = await createCourseQuery(lessonData)
+        const createdId = response?.id
+        if (typeof createdId === 'number') {
+          navigate(`/edition/editor/${createdId}`, { replace: true })
+        }
       }
 
       console.log('Lesson operation status:', response)
