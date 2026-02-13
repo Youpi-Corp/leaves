@@ -1,45 +1,80 @@
-# Brainforest Frontend ("leaves") — Friendly Start
+# Brainforest - Leaves (Frontend)
 
-Hey! First time on GitHub? No stress. This repo is the **frontend** for Brainforest. The backend API lives in the **"sap"** project.
+This is the frontend for the Brainforest application, built with React and Vite. It provides the user interface for interacting with the Brainforest platform.
 
-## What you need (local run)
+## Features
 
-- **Node.js** (and npm)
+- User authentication (Login/Register)
+- Module creation and management
+- Interactive and responsive user interface
+- Accessibility and eco-design audits integrated
 
-## Quick start (local)
+## Tech Stack
 
-1) **Install dependencies**
+- **Framework**: [React](https://reactjs.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Testing**: [Vitest](https://vitest.dev/), [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- **Linting**: [ESLint](https://eslint.org/)
 
-```bash
-npm install
-```
+## Getting Started
 
-2) **(Optional) Point to your own API**
+### Prerequisites
 
-Create a file called `.env.local` and add:
+- [Node.js](https://nodejs.org/) (v20.x or higher)
+- [npm](https://www.npmjs.com/) (v10.x or higher)
+
+### Installation
+
+1.  Navigate to the frontend directory:
+    ```sh
+    cd brainforest/leaves
+    ```
+2.  Install the dependencies:
+    ```sh
+    npm install
+    ```
+
+### Environment Variables
+
+Create a `.env.local` file in the `leaves` directory and add the necessary environment variables.
 
 ```env
-VITE_API_BASE_URL=http://localhost:8080
+# .env.local
+VITE_API_BASE_URL=http://localhost:8080/api
 ```
 
-3) **Run the app**
+### Running the Development Server
 
-```bash
+To start the local development server, run:
+
+```sh
 npm run dev
 ```
 
-You should see the app at the URL Vite prints in your terminal.
+The application will be available at `http://localhost:5173` (or another port if 5173 is busy).
 
-## Deploying (for schools/communities)
+## Available Scripts
 
-If you want to host this for a group, you’ll usually need:
-- A Linux server (VPS)
-- A web server (Nginx)
-- A domain name + SSL (Let’s Encrypt)
+- `npm run dev`: Starts the development server with Hot Module Replacement (HMR).
+- `npm run build`: Compiles the TypeScript and builds the application for production.
+- `npm run lint`: Lints the codebase using ESLint.
+- `npm run test`: Runs unit and integration tests using Vitest.
+- `npm run audit:a11y`: Runs automated accessibility checks.
+- `npm run audit:eco`: Runs an eco-design audit using Sitespeed.io.
+- `npm run preview`: Serves the production build locally for previewing.
 
-There’s a more detailed deployment doc here:
-- `DEPLOYMENT.md`
+## Testing
 
----
+This project uses [Vitest](https://vitest.dev/) for testing. The tests are located in the `src/test` directory.
 
-Start local, breathe, and you’ll be fine.
+To run all tests:
+```sh
+npm test
+```
+
+## Contributing
+
+Contributions are welcome! Please read our `CONTRIBUTING.md` file for details on our code of conduct and the process for submitting pull requests.
+
+
