@@ -25,5 +25,5 @@ tsconfig.tsbuildinfo
 .claude/*
 
 accessibility-report.json
-./eco/reports
+./eco/rep*
 sitespeed-result/
